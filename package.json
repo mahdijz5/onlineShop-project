@@ -4,20 +4,22 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev" : "nodemon app",
-    "client" : "cd client && cd my-app && npm run dev",
-    "start" : "concurrently \"npm run dev\" \"npm run client\""
+    "dev": "nodemon app",
+    "client": "cd client && cd my-app && npm run dev",
+    "start": "concurrently \"npm run dev\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "concurrently": "^7.3.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^4.6.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
-    "mongoose": "^6.4.6",
-    "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "mongoose": "^6.4.6"
   }
 }
