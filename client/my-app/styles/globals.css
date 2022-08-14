@@ -36,6 +36,10 @@ input:focus-visible {
 	font-size: 25px;
 }
 
+.btn-warning {
+  background-color: #FF9F1C !important;
+  color : #fff !important;
+}
 /* button and hover effect ................ */
 
 .hvr-underline-from-center {
@@ -217,3 +221,25 @@ input:focus-visible {
   overflow: hidden !important;
 }
 /* dropdown ................. */
+
+.ck-content {
+  max-height: 350px !important;
+}
+
+/* >>>>>>>>>>>>>>>>>>>>>> products */
+
+.priceWithDiscount{
+	position: relative;
+	display : inline-block;
+}
+
+.priceWithDiscount::after {
+	content: " ";
+	position: absolute;
+	top: 40%;
+	bottom: 52%;
+	right: -5px;
+	left: -5px;
+	background-color: red;
+	transform : rotate(12deg)
+}

@@ -1,3 +1,20 @@
+.backIcon {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	color: white;
+	padding: 20px 23px 18px 23px;
+	background-color : #ff9f1c;
+	border-radius: 50%;
+	transition : 0.4s;
+	cursor: pointer;
+}
+
+.backIcon:hover {
+	color: white;
+	background-color : #2ec4b6;
+}
+
 w.formInp {
 	transition: 0.4s;
 	border: 1px solid #ff9f1c;

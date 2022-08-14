@@ -1,9 +1,17 @@
 import UserSwiper from "./userSwiper";
 
 import styles from "../styles/User.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {   faHome } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 const UserLayout = ({children}) => {
 	return (
 		<>
+			<Link href="/">
+				<a className={styles.backIcon}>
+			<FontAwesomeIcon icon={faHome}/>
+				</a>
+			</Link>
 			<div className={`${styles.body} row `}>
 				<div
 					className="col-lg-5 text-center"

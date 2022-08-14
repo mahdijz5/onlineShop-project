@@ -6,7 +6,7 @@ import Components from "./sidebarItems/Components";
 import Admin from "./sidebarItems/Admin";
 import Storage from "./sidebarItems/Storage";
 import Widgets from "./sidebarItems/Widgets";
-import Products from "./sidebarItems/products";
+import Products from "./sidebarItems/Products";
 
 const Sidebar = () => {
 	const [access, setAccess] = useState({});

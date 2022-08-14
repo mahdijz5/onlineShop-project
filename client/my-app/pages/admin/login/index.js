@@ -46,7 +46,7 @@ const signIn = () => {
 		event.preventDefault()
 		try {
 			const response = await AdminLogin(formValues)	
-			sessionStorage.setItem("token",response.data.token)						
+			localStorage.setItem("token",response.data.token)						
 			router.push("/admin/dashboard")
 		} catch (error) {
 			console.log(error)

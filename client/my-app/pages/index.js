@@ -1,4 +1,4 @@
-import HomeLayout from '../components/homeLayout'
+import HomeLayout from '../components/HomeLayout'
 import MainLayout from '../components/MainLayout'
 import OfferSwiper from '../components/OfferSwiper'
 

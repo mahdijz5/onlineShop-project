@@ -8,6 +8,8 @@ export const dashboardContext = createContext({
 
 export const AdminDashboardContext = createContext({
     styles : {},
+    toastNotif : () => {},
+    setPoint : () => {},
 })
 
 export const general = createContext({

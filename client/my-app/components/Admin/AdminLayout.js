@@ -9,9 +9,13 @@ import Meta from "../Meta";
 import {adminAuthenticated,refreshToken } from "../../services/auth";
 import { useEffect } from "react";
 import {  useRouter } from "next/router";
+import { toast , ToastContainer } from "react-toastify";
 
 const AdminLayout =({children}) => {
     const router = useRouter()
+
+   
+
 	useEffect(() => {
 		const auth = async () => {
 			try {
@@ -22,10 +26,10 @@ const AdminLayout =({children}) => {
                     },1000 * 200)
 					return;
 				} else if (status == 401) {
-					router.push("/404");
+					// router.push("/404");
 				}
 			} catch (error) {
-				router.push("/404");
+				// router.push("/404");
 			}
 		};
         
@@ -35,33 +39,56 @@ const AdminLayout =({children}) => {
 	}, []);
 
 
+	const toastNotif = (msg, status,delay) => {
+		setTimeout(() => {
+			if (status >= 200 && status < 300) {
+				toast.success(msg, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+				});
+			} else {
+				toast.error(msg, {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+				});
+			}
+		}, delay);
+	};
+
+	const setPoint = (number) => {
+		return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+	}
+
+
     return(
         <AdminDashboardContext.Provider value={{
             styles,
+            toastNotif,
+			setPoint,
         }}>
             <Meta title="داشبورد ادمین" />
         <AdminNav/>
         <div className="row" style={{}}>
-            <div className={`${styles.sidebar} col-2`} style={{
-                overflowY : "auto",
-                position : "fixed",
-                height : "91vh",
-                backgroundColor : "#FFFFFF",
-                boxShadow:
-                "0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%)",
-            }}>
+            <div className={`${styles.sidebar} col-2`}>
             <AdminSidebar />
             </div>
-            <div className="col-sm-10"  style={{
-                position:"fixed",
-                height : "91vh",
-                marginRight : "18%"
-            }}>
+            <div className={`${styles.container} col-sm-10`}>
                 {children} 
                 <AdminFooter/>
             </div>
             
         </div>
+        <ToastContainer/>
         </AdminDashboardContext.Provider>
     )
 }

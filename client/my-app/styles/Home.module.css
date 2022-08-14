@@ -62,6 +62,7 @@
   
   .navItem * {
     color : rgb(26, 26, 26)!important;
+    text-decoration: none;
   }
   .icon * {
     color : #2EC4B6 !important;

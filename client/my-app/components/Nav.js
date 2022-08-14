@@ -57,35 +57,33 @@ const Nav = () => {
 					</button>
 					<div className="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul className="navbar-nav me-auto mb-2 mb-lg-0">
+ 
+
 							<li
 								className={
-									styles.navItem + " nav-item hvr-underline-from-center p-0 m-0"
+									styles.navItem + " nav-item hvr-underline-from-center  "
 								}
 							>
-								<div>
-								<label for="touch">
-									<span>titre</span>
-								</label>
-								<input type="checkbox" id="touch" className="d-inline-block" />
-
-								<ul className="slide navbar-nav">
-									<li>
-										<Link href="#">
-											<a href="#"className="hvr-underline-from-center">ثبت نام</a>
-											
-										</Link>
-									</li>
-									<li>
-										<Link href="#">
-											<a href="#"className="hvr-underline-from-center">ورود</a>
-											
-										</Link>
-									</li>
-								</ul>
-								</div>
-
+								<Link href="/user/sign-in">
+									<a className=" text-dark  ">
+										ورود
+									</a>
+								</Link>
+								
+								
 							</li>
-
+							|
+							<li
+								className={
+									styles.navItem + " nav-item hvr-underline-from-center  "
+								}
+							>
+								<Link href="/user/sign-up">
+									<a className=" text-dark  ">
+										ثبت نام
+									</a>
+								</Link>
+							</li>
 							<li
 								className={
 									styles.navItem + " nav-item hvr-underline-from-center bouncy "

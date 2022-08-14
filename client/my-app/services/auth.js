@@ -30,7 +30,7 @@ export const register = (values) => {
 //@desc Check user is authenticated or no
 //@route POST SERVER_URI/user/auth
 export const userAuthenticated = () => {
-	const token = sessionStorage.getItem("token");
+	const token = localStorage.getItem("token");
 	const url = `${Server_UrI}/user/auth`;
 	return axios.post(url, null, {
 		headers: {
@@ -42,7 +42,7 @@ export const userAuthenticated = () => {
 //@desc Check user is Admin or no
 //@route POST SERVER_URI/admin/auth
 export const adminAuthenticated = () => {
-	const token = sessionStorage.getItem("token");
+	const token = localStorage.getItem("token");
 	const url = `${Server_UrI}/admin/auth`;
 	return axios.post(url, null, {
 		headers: {
@@ -55,14 +55,14 @@ export const adminAuthenticated = () => {
 //@route POST SERVER_URI/user/refresh-token
 export const refreshToken = async () => {
 	try {
-		const token = sessionStorage.getItem("token");
+		const token = localStorage.getItem("token");
 		const url = `${Server_UrI}/user/refresh-token`;
 		const {data , status} =await axios.post(url, null, {
 			headers: {
 				Authorization: `bearer ${token}`,
 			},
 		});
-		sessionStorage.setItem("token", data.token);
+		localStorage.setItem("token", data.token);
 		setTimeout(() => {
 			refreshToken();
 		}, 1000 * 200);
