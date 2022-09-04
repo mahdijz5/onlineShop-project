@@ -1,0 +1,30 @@
+{
+  "name": "onlineshop-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app",
+    "client": "cd ../client && npm run dev",
+    "start": "concurrently \"npm run dev\" \"npm run client\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "app-root-path": "^3.0.0",
+    "bcryptjs": "^2.4.3",
+    "concurrently": "^7.3.0",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^4.6.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-fileupload": "^1.4.0",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.4.6",
+    "nodemon": "^2.0.19",
+    "short-uuid": "^4.2.0",
+    "yup": "^0.32.11"
+  }
+}
