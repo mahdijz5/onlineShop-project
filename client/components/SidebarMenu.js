@@ -1,7 +1,5 @@
 import { useState } from "react";
 import styles from "../styles/Admin.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown,faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 const SidebarMenu = ({ children, title }) => {
 	const [state, setState] = useState(false);
@@ -25,7 +23,7 @@ const SidebarMenu = ({ children, title }) => {
 							float: "left",
 						}}
 						>	
-					{state ? <FontAwesomeIcon icon={faChevronDown} /> : (<FontAwesomeIcon icon={faChevronUp} />)}
+					{/* {state ? <FontAwesomeIcon icon={faChevronDown} /> : (<FontAwesomeIcon icon={faChevronUp} />)} */}
 						
 					</strong>
 				</div>

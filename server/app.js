@@ -27,6 +27,7 @@ express.static(path.join(__dirname, 'public'));
 //routes
 app.use("/user/",require("./routes/user"))
 app.use("/admin/",require("./routes/admin"))
+app.use("/product/",require("./routes/product"))
 
 app.listen(3001, ()=>{
     console.log("app is runnig on port 3001...")

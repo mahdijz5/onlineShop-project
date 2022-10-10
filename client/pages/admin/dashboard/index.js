@@ -1,13 +1,14 @@
 import MainLayout from "../../../components/MainLayout";
 import Meta from "../../../components/Meta";
 import AdminLayout from "../../../components/Admin/AdminLayout";
+import { Box } from "@mui/material";
 
 const userDashboard = () => {
 	return (
 		<>
-		
-            
-            <h1>Hello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello World</h1>
+            <Box>
+                <h1>12</h1>
+            </Box>
 		</>
 	);
 };

@@ -6,7 +6,7 @@ const HomeLayout =({children}) => {
     return(
         <>
         <Meta title="Home" />
-        <Nav/>
+        {/* <Nav/> */}
         {children}
         </>
     )

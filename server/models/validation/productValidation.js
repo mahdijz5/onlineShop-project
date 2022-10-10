@@ -6,7 +6,7 @@ exports.schema = Yup.object().shape({
     thumbnail : Yup.object().shape({
         size : Yup.number().max(3000000,'شما نمیتوانید بیشتر از 3 مگابایت اپلود کنید.'),
         name : Yup.string().required('لطا عکس بند انگشتی را انتخاب کنید.'),
-        mimeType : Yup.mixed().oneOf(['png','jpeg'],'فقط از پسوند png  و jpeg پشتیبانی میشود'),
+        mimetype : Yup.mixed().oneOf(['image/png','image/jpeg'],'فقط از پسوند png  و jpeg پشتیبانی میشود'),
 
     }),
     description : Yup.string(),

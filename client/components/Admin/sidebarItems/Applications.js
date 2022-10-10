@@ -1,55 +1,44 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faCartPlus,
-	faCreditCard,
-	faDiamond,
-	faList,
-	faMagic,
-	faMessage,
-	faShoppingBag,
-	faShoppingCart,
-	faSquare,
-	faTasks,
-	faTruck,
-	faUser,
-	faUserPlus,
-	faX,
-} from "@fortawesome/free-solid-svg-icons";
+
 import NavLink from "../../NavLink";
 import styles from "../../../styles/Admin.module.css";
+import { useState } from "react";
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { ChatBubble, ExpandLess, ExpandMore, ListAlt } from "@mui/icons-material";
 
 function Applications() {
-  return (
-    <div>
-					<h4 className={`${styles.sidebarHeaders}`}> برنامه ها </h4>
-					<NavLink
-						href=""
-						activeClassName={
-							styles.activeSidebarItems + " " + styles.underLineFromRight
-						}
-					>
-						<a
-							className={`${styles.sidebarItem} d-block hvr-underline-from-right`}
-						>
-							<FontAwesomeIcon icon={faMessage} className={`${styles.sidebarIcons} px-2`} />
-							پیام رسان
-						</a>
+	const [open,setOpen] = useState(false)
+	return (
+		<div>
+				<List>
+				<ListItemButton onClick={() => setOpen((open) => !open)}>
+					<ListItemText >
+						<Typography variant="h5" color={'primary'} px={'25px'} fontWeight="bold">برنامه ها</Typography>
+					</ListItemText>
+					{open ? <ExpandLess color="primary" /> : <ExpandMore color="primary" />}
+				</ListItemButton>
+				<Collapse in={open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+							<ListItemButton>
+								<ListItemIcon>
+									<ListAlt/>
+								</ListItemIcon>
+								<ListItemText primary="کار های روزمره" />
+							</ListItemButton>
+						</NavLink>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+						<ListItemButton>
+							<ListItemIcon>
+								<ChatBubble />
+							</ListItemIcon>
+							<ListItemText primary="پیامرسان" />
+						</ListItemButton> 
 					</NavLink>
-					<NavLink
-						href=""
-						activeClassName={
-							styles.activeSidebarItems + " " + styles.underLineFromRight
-						}
-					>
-						<a
-							className={`${styles.sidebarItem} d-block hvr-underline-from-right`}
-						>
-							<FontAwesomeIcon icon={faTasks} className={`${styles.sidebarIcons} px-2`} />
-							لیست وظایف
-						</a>
-					</NavLink>
-				</div>
-  )
+					</List>
+				</Collapse>
+				</List>
+		</div>
+	)
 }
 
 export default Applications

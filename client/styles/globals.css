@@ -6,12 +6,25 @@ body {
 }
 
 @font-face {
-  font-family: BNazanin;
-  src: url(/font/BNazanin.woff);
+  font-family: "Vazir";
+  src: url("/fonts/Vazir.woff2") format("woff2"),
+      url("/fonts/Vazir.woff") format("woff"),
+      url("/fonts/Vazir.eot") format("eot"),
+      url("/fonts/Vazir.ttf") format("ttf");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
 }
+
 @font-face {
-  font-family: Lalezar;
-  src: url(/font/Lalezar-Regular.woff);
+  font-family: "Roboto";
+  src: url("/fonts/Roboto-Regular.woff2") format("woff2"),
+      url("/fonts/Roboto-Regular.woff") format("woff"),
+      url("/fonts/Roboto-Regular.eot") format("eot"),
+      url("/fonts/Roboto-Regular.ttf") format("ttf");
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
 }
 
 a {
@@ -21,17 +34,23 @@ a {
 
 * {
 	box-sizing: border-box;
-  font-family: Bnazanin !important;
+  font-family: Vazir , Roboto ;
 }
 
-h1,h2,h3,h4,h5,h6 {
-  font-family: Lalezar !important;
-}
 
 input:focus-visible,input:focus {
 	outline: none !important;
   box-shadow: unset !important;
   box-shadow: none !important;
+}
+
+
+button:focus {
+  outline: none !important;
+}
+
+a{
+  text-decoration: none !important;
 }
 
 .nav-item {

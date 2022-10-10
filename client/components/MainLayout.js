@@ -1,13 +1,29 @@
-import Head from "next/head";
 import Meta from "./Meta";
-import Nav from "./Nav";
+import rtlPlugin from 'stylis-plugin-rtl';
+import { CacheProvider, ThemeProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
 
-const MainLayout =({children}) => {
+import { theme } from "./ui/theme"
 
-    return(
+const MainLayout = ({ children }) => {
+    // Create rtl cache
+    const cacheRtl = createCache({
+        key: 'muirtl',
+        stylisPlugins: [prefixer, rtlPlugin],
+    });
+
+    return (
         <>
-        <Meta title="Home" />
-        {children}
+            <Meta title="Home" />
+            <CacheProvider value={cacheRtl}>
+                <ThemeProvider theme={theme()} >
+                    <div dir='rtl'>
+                        {children}
+                    </div>
+
+                </ThemeProvider>
+            </CacheProvider>
         </>
     )
 }

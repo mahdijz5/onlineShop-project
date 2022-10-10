@@ -1,6 +1,5 @@
-export const  Primary = "#2EC4B6";
-export const  Secondary = "#FF9F1C";
-export const  Foreground = "#FFFFFF";
-export const  LightSecondry = "#FFBF69";
-export const  LightPrimary = "#CBF3F0";
-export const  Dark = "#111"
+export const  Primary = "#7F77E0";
+export const  Secondary = "#3A354D";
+export const  Foreground = "#3A354D";
+export const  Success = "#20D489";
+ 

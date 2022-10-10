@@ -1,43 +1,44 @@
-import styles from "../../../styles/Admin.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faCreditCard,
-	faShoppingCart,
-} from "@fortawesome/free-solid-svg-icons";
+
 import NavLink from "../../NavLink";
+import styles from "../../../styles/Admin.module.css";
+import { useState } from "react";
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { ExpandLess, ExpandMore, PointOfSale, Store } from "@mui/icons-material";
 
 function Statistics() {
-  return (
-    <div>
-					<h4 className={`${styles.sidebarHeaders}`}> امار ها </h4>
-					<NavLink
-						href=""
-						activeClassName={
-							styles.activeSidebarItems + " " + styles.underLineFromRight
-						}
-					>
-						<a
-							className={`${styles.sidebarItem}  d-block hvr-underline-from-right`}
-						>
-							<FontAwesomeIcon icon={faShoppingCart} className={`${styles.sidebarIcons} px-2`} />
-							فروش ها
-						</a>
+	const [open,setOpen] = useState(false)
+	return (
+		<div>
+				<List>
+				<ListItemButton onClick={() => setOpen((open) => !open)}>
+					<ListItemText >
+						<Typography variant="h5" color={'primary'} px={'25px'} fontWeight="bold">آمار ها</Typography>
+					</ListItemText>
+					{open ? <ExpandLess color="primary" /> : <ExpandMore color="primary" />}
+				</ListItemButton>
+				<Collapse in={open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+							<ListItemButton>
+								<ListItemIcon>
+									<PointOfSale/>
+								</ListItemIcon>
+								<ListItemText primary="فروش" />
+							</ListItemButton>
+						</NavLink>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+						<ListItemButton>
+							<ListItemIcon>
+								<Store />
+							</ListItemIcon>
+							<ListItemText primary=" تجارت" />
+						</ListItemButton>
 					</NavLink>
-					<NavLink
-						href=""
-						activeClassName={
-							styles.activeSidebarItems + " " + styles.underLineFromRight
-						}
-					>
-						<a
-							className={`${styles.sidebarItem}  d-block hvr-underline-from-right`}
-						>
-							<FontAwesomeIcon icon={faCreditCard} className={`${styles.sidebarIcons} px-2`} />
-							تجارت
-						</a>
-					</NavLink>
-				</div>
-  )
+					</List>
+				</Collapse>
+				</List>
+		</div>
+	)
 }
 
 export default Statistics

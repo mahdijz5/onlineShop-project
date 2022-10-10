@@ -1,109 +1,122 @@
 import { useContext, useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import _ from "lodash"
-import { DebounceInput } from 'react-debounce-input';
 import { useRouter } from "next/router";
 
 
 import MainLayout from "../../../../components/MainLayout";
 import AdminLayout from "../../../../components/Admin/AdminLayout";
 import { AdminDashboardContext } from "../../../../context/context";
-import { Secondary } from "../../../../helpers/color";
-import styles from "../../../../styles/admin/Product.module.css";
-import { getAllCategories, getAllProducts } from "../../../../services/adminDashboard";
-import Pagination from "../../../../components/Pagination";
-import ProductTable from "../../../../components/Admin/sidebarItems/ProductTable";
+import ProductTable from "../../../../components/Admin/ProductTable";
+import { Fab, Stack } from "@mui/material";
+import { Add, Search } from "@mui/icons-material";
+import SearchPanel from "../../../../components/ui/SearchPanel";
+import { getAllBrands, getAllCategories, getAllProducts } from "../../../../services/product";
+import AppPagination from "../../../../components/ui/Pagination";
+import AddProduct from "../../../../components/Admin/addProduct";
+import { createProduct } from "../../../../services/adminDashboard";
+import { toastNotif } from "../../../../helpers/tools";
 
-const viewProducts = ({ products: getAllProducts, categories, productPerPage, numberOfProducts, currentPage }) => {
+const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, numberOfProducts, brands }) => {
     const router = useRouter()
-    const { selectedProducts,selectProduct,getSelectedCategories,setSelectedCategories,removeCategory,addCategory,handleChangeSearch } = useContext(AdminDashboardContext)
+    const { selectedProducts, selectProduct } = useContext(AdminDashboardContext)
     const [products, setProducts] = useState([])
+    const [getNumberOfProducts,setNumberOfProducts] = useState(numberOfProducts)
+    const [openSearch, setOpenSearch] = useState(false)
+    const [openAddProduct, setOpenAddProduct] = useState(false)
+    const [getSelectedCategories, setSelectedCategories] = useState([]);
+    const [getThumbnail,setThumbnail] = useState([])
 
     useEffect(() => {
-        console.log(getAllProducts)
-        setProducts(getAllProducts)
-        if (router.query != {} && router.query.category != undefined && router.query.category != '') {
-            setSelectedCategories(router.query.category.split(','))
-        }
+        setProducts(getAllOfProducts)
+        setNumberOfProducts(numberOfProducts)
     }, [])
 
+    const onSubmit = async(product) => {
 
+		try {
+		const data = new FormData()
+		data.set("name" , 	product.name)
+		data.set("price" , 	product.price)
+		data.set("discount",product.discount)
+		data.set("amount" , product.amount)
+		data.set("description" , product.description)
+		data.set("brand" , product.brand)
+		data.set("categories" , getSelectedCategories)
+		getThumbnail.map((file) => {
+			data.append("thumbnail" , file)
+		})
+		const response =await createProduct(data)
+        const { data: Allproducts } = await getAllProducts(router.query.page || 1, 10, router.query.search || "", router.query.category || "",false,router.query.price||"",router.query.discount||"",router.query.brand||"")
+		setProducts([...Allproducts.products])
+        console.log([...Allproducts.products])
+        setNumberOfProducts((prev) => prev+1)
+        toastNotif(response.data.message, response.status, 0);
+		} catch (error) {
+            console.log(error)
+			if(error.response.data.message) {
+			toastNotif(error.response.data.message, error.response.status, 0);
+			}
+		}
 
-    
+	};
 
     return (
         <>
-            <div className="w-100 text-center my-3">
-                <DebounceInput debounceTimeout={1000} type="text" placeholder="جستجو کنید" onChange={handleChangeSearch} value={router.query.search} className="form-control d-inline-block text-center w-50" style={{
-                    border: `1px solid ${Secondary}`
-                }} />
-                <select
-                    className={`form-control ${styles.input} mb-2 w-25 d-inline-block`}
-                    onChange={(event) => {
-                        addCategory(event);
-                    }}
-                >
-                    <option>دسته ایی برای محصول خود انتخاب کنید</option>
-                    {categories
-                        ? categories.map((cate, index) => (
-                            <option key={index} >{cate.title}</option>
-                        ))
-                        : null}
-                </select>
-                <br />
-                {getSelectedCategories.map((cate, index) => (
-                    <div
-                        key={index}
-                        className={styles.selectedCategories + " d-inline-block"}
-                        onClick={() => {
-                            removeCategory(cate);
-                        }}
-                    >
-                        <FontAwesomeIcon icon={faX} size={"xs"} />
-                        <div className="d-inline-block">
-                            <span className="mx-2">{cate} </span>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            <ProductTable products={products} currentPage={currentPage} productPerPage={productPerPage}  selectProduct={selectProduct} selectedProducts={selectedProducts}/>
-            <Pagination numberOfItems={numberOfProducts} currentPage={currentPage} itemPerPage={productPerPage} />
+            <ProductTable products={products} productPerPage={productPerPage} selectProduct={selectProduct} selectedProducts={selectedProducts} />
+            <AppPagination numberOfItems={getNumberOfProducts} itemPerPage={productPerPage} />
+            <SearchPanel open={openSearch} setOpen={setOpenSearch} pathBase={router.pathname} categories={categories} brands={brands} maxPrice={9000000000} />
+            <AddProduct getSelectedCategories={getSelectedCategories} setSelectedCategories={setSelectedCategories} setThumbnail={setThumbnail} onSubmit={onSubmit} categories={categories} brands={brands} open={openAddProduct} setOpen={setOpenAddProduct}/>
+            <Stack sx={{ right: {xs: "10px",sm : "50px"}, bottom: {xs: "10px",sm : "50px"}, position: "fixed" }} spacing={2}>
+                <Fab color="warning"   onClick={() => {
+                    setOpenSearch(true)
+                }}>
+                    <Search />
+                </Fab>
+                <Fab color="success" onClick={() => {
+                    setOpenAddProduct(true)
+                }}>
+                    <Add />
+                </Fab>
+            </Stack>
         </>
     );
 };
 
 export const getServerSideProps = async (context) => {
-    let products = []
-    let numberOfProducts = 0
-    let currentPage = 1
-    let productPerPage = 1
-    let Allcategories = []
-    
     const { data: categories } = await getAllCategories();
-
+    const { data: brands } = await getAllBrands();
     try {
+        let products = []
+        let numberOfProducts = 0
+        let productPerPage = 1
+
+
         //getAllProducts(Page | limit | searchQuery | category)
-        const { data: product } = await getAllProducts(context.query.page || 1 , 10 , context.query.search || "" , context.query.category || "");
+        const { data: Allproducts } = await getAllProducts(context.query.page || 1, 10, context.query.search || "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
+        products = [...Allproducts.products]
+        numberOfProducts = Allproducts.numberOfItems
+        productPerPage = Allproducts.itemPerPage
 
-        products= product.products
-        numberOfProducts= product.numberOfItems
-        currentPage= +context.query.page || +product.currentPage
-        productPerPage= product.itemPerPage
-        Allcategories= categories.categories
+        return {
+            props: {
+                products,
+                numberOfProducts,
+                productPerPage,
+                brands: brands.brands,
+                categories: categories.categories,
+            },
+        };
     } catch (error) {
-        Allcategories= categories.categories
+        console.log(error);
+        return {
+            props: {
+                products: [],
+                numberOfProducts: 0,
+                productPerPage: 1,
+                brands: brands.brands,
+                categories: categories.categories,
+            },
+        };
     }
-
-    return {
-        props: {
-            products,
-            numberOfProducts,
-            currentPage,
-            productPerPage,
-            categories : Allcategories,
-        },
-    };
 };
 
 viewProducts.getLayout = (page) => {

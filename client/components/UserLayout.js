@@ -1,8 +1,6 @@
 import UserSwiper from "./userSwiper";
 
 import styles from "../styles/User.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {   faHome } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 const UserLayout = ({children}) => {
 	return (

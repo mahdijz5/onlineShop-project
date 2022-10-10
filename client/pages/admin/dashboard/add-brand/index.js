@@ -2,9 +2,6 @@ import ReactDOM  from "react-dom";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faTrash,faMark } from "@fortawesome/free-solid-svg-icons";
-import { confirmAlert } from "react-confirm-alert";
 
 import AdminLayout from "../../../../components/Admin/AdminLayout";
 import MainLayout from "../../../../components/MainLayout";
@@ -15,7 +12,7 @@ import {
 	getAllBrands,
 } from "../../../../services/adminDashboard";
 import { AdminDashboardContext } from "../../../../context/context";
-import { confirmation, toastNotif } from "../../../../helpers/tools";
+import {  toastNotif } from "../../../../helpers/tools";
 
 const addBrand = ({ brands }) => {
 	const router = useRouter();
@@ -150,7 +147,7 @@ const addBrand = ({ brands }) => {
 														className="btn btn-danger mx-1 p-2"
 										
 														onClick={() => {
-															confirmation("ایا مطمعنی ؟","شما میخواهید این برند را حذف کنید ؟",handleDelete,allBrands[index]._id)
+															// confirmation("ایا مطمعنی ؟","شما میخواهید این برند را حذف کنید ؟",handleDelete,allBrands[index]._id)
 														}}
 													>
 														<FontAwesomeIcon icon={faTrash} />

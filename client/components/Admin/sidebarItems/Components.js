@@ -1,134 +1,63 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faCartPlus,
-	faCreditCard,
-	faDiamond,
-	faList,
-	faMagic,
-	faMessage,
-	faShoppingBag,
-	faShoppingCart,
-	faSquare,
-	faTasks,
-	faTruck,
-	faUser,
-	faUserPlus,
-	faX,
-} from "@fortawesome/free-solid-svg-icons";
-import NavLink from "../../NavLink";
-import SidebarMenu from "../../SidebarMenu"; 
-import styles from "../../../styles/Admin.module.css";
 
-function components() {
-  return (
-    <div>
-					<h4 className={`${styles.sidebarHeaders}`}> کامپوننت ها </h4>
-					<SidebarMenu title="عناصر">
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								<FontAwesomeIcon icon={faDiamond} className={`${styles.sidebarIcons} px-2`} />
-								دکمه ها
-							</a>
+import NavLink from "../../NavLink";
+import styles from "../../../styles/Admin.module.css";
+import { useState } from "react";
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import {  Diamond, ExpandLess, ExpandMore } from "@mui/icons-material";
+
+function Components() {
+	const [open, setOpen] = useState(false)
+	return (
+		<div>
+			<List>
+				<ListItemButton onClick={() => setOpen((open) => !open)}>
+					<ListItemText >
+						<Typography variant="h5" color={'primary'} px={'25px'} fontWeight="bold">کامپوننت ها</Typography>
+					</ListItemText>
+					{open ? <ExpandLess color="primary" /> : <ExpandMore color="primary" />}
+				</ListItemButton>
+				<Collapse in={open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+							<ListItemButton>
+								<ListItemIcon>
+									<Diamond />
+								</ListItemIcon>
+								<ListItemText primary="دکمه ها" />
+							</ListItemButton>
 						</NavLink>
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								<FontAwesomeIcon icon={faList} className={`${styles.sidebarIcons} px-2`} />
-								دراپ داون
-							</a>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+							<ListItemButton>
+								<ListItemIcon>
+									<Diamond />
+
+								</ListItemIcon>
+								<ListItemText primary="دراپ داون" />
+							</ListItemButton>
 						</NavLink>
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								<FontAwesomeIcon icon={faMagic} className={`${styles.sidebarIcons} px-2`} />
-								آیکون ها
-							</a>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+							<ListItemButton>
+								<ListItemIcon>
+									<Diamond />
+
+								</ListItemIcon>
+								<ListItemText primary="آیکون ها" />
+							</ListItemButton>
 						</NavLink>
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								<FontAwesomeIcon icon={faSquare} className={`${styles.sidebarIcons} px-2`} />
-								کارد ها
-							</a>
+						<NavLink href="" activeClassName={styles.activeSidebarItems}>
+							<ListItemButton>
+								<ListItemIcon>
+									<Diamond />
+
+								</ListItemIcon>
+								<ListItemText primary="کارد ها" />
+							</ListItemButton>
 						</NavLink>
-					</SidebarMenu>
-					<SidebarMenu title="صفحه ها">
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								sign in
-							</a>
-						</NavLink>
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								sign up
-							</a>
-						</NavLink>
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								forget password
-							</a>
-						</NavLink>
-						<NavLink
-							href=""
-							activeClassName={
-								styles.activeSidebarItems + " " + styles.underLineFromRight
-							}
-						>
-							<a
-								className={`${styles.sidebarItem} ${styles.sidebarMenuItem} d-block hvr-underline-from-right`}
-							>
-								contact us
-							</a>
-						</NavLink>
-					</SidebarMenu>
-				</div>
-  )
+					</List>
+				</Collapse>
+			</List>
+		</div>
+	)
 }
 
-export default components
+export default Components

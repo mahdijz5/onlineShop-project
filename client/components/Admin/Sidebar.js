@@ -1,12 +1,13 @@
-import {  useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import Statistics from "./sidebarItems/Statistics";
 import Applications from "./sidebarItems/Applications";
 import Components from "./sidebarItems/Components";
 import Admin from "./sidebarItems/Admin";
 import Storage from "./sidebarItems/Storage";
-import Widgets from "./sidebarItems/Widgets";
 import Products from "./sidebarItems/Products";
+import { Divider, Stack } from "@mui/material";
+
+import styles from "../../styles/Admin.module.css"
 
 const Sidebar = () => {
 	const [access, setAccess] = useState({});
@@ -18,41 +19,43 @@ const Sidebar = () => {
 			Components: "Components",
 			AdminAccess: "AdminAccess",
 			Storage: "Storage",
-			Widgets: "Widgets",
-			Products : "Products"
+			Products: "Products"
 		});
 	}, []);
 
 	return (
 		<>
+			<Stack direction={'column'}  sx={{overflowY : "auto",backgroundColor : "white" ,zIndex : "2" }} className={styles.sidebar} pb="60px" width="300px"  height="100%" position={'fixed'}>
 			{access.Statistics == "Statistics" ? (
-				<Statistics/>
+				<Statistics />
 			) : null}
-
+			<Divider />
 			{access.Applications == "Applications" ? (
-				<Applications/>
+				<Applications />
 			) : null}
+			<Divider />
 
 			{access.Components == "Components" ? (
-				<Components/>
+				<Components />
 			) : null}
 
+			<Divider />
 			{access.Products == "Products" ? (
-				<Products/>
+				<Products />
 			) : null}
+			<Divider />
 
 			{access.Storage == "Storage" ? (
-				<Storage/>
+				<Storage />
 			) : null}
+			<Divider />
 
 			{access.AdminAccess == "AdminAccess" ? (
-				<Admin/>
+				<Admin />
 			) : null}
 
 
-			{access.Widgets == "Widgets" ? (
-				<Widgets/>
-			) : null}
+			</Stack>
 		</>
 	);
 };

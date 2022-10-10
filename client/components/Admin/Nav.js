@@ -1,69 +1,94 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faSearch,
-	faShoppingCart,
-	faUser,
-} from "@fortawesome/free-solid-svg-icons";
 
-import { Primary, Foreground, Secondary } from "../../helpers/color";
-import styles from "../../styles/Admin.module.css";
-import { useRef } from "react";
+import { AppBar, Avatar, Badge, Box, Button, IconButton, InputBase, Toolbar, Typography, useScrollTrigger } from "@mui/material";
 
-const AdminNav = () => {
+import { Home, Logout, Menu, Notifications, Remove } from "@mui/icons-material";
+import styled from "@emotion/styled";
+import { cloneElement, useState } from "react";
+
+const StyledToolbar = styled(Toolbar)({
+	display: "flex",
+	justifyContent: "space-between"
+})
+
+const IconBox = styled(Box)({
+	display: "flex",
+	justifyContent: "space-between",
+	gap: "10px",
+})
+
+function ElevationScroll(props) {
+	const { children } = props;
+	const trigger = useScrollTrigger({
+		disableHysteresis: true,
+		threshold: 0,
+	});
+
+	return cloneElement(children, {
+		elevation: trigger ? 4 : 0,
+	});
+}
+
+
+
+const AdminNav = ({ sidebarRef }) => {
+	const [showSidebar, setShowSidebar] = useState(false)
+
+	const openSidebar = () => {
+		const display = sidebarRef.current.style.display;
+		sidebarRef.current.style.display = display == "block" ? "none" : "block"
+	}
+
 	return (
 		<>
-			<link href="/components/navSearch/style.scss" rel="stylesheet" />
-			<nav
-				className="navbar navbar-expand-lg navbar-light  "
-				style={{
-					boxShadow:
-						"0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%)",
-					backgroundColor: Foreground,
-					color: Primary,
-				}}
-			>
-				<div className="container-fluid text-light">
-					<Link href="#">
-						<a className="navbar-brand text-light">
-							<Image src="/icon/brand.png" height={50} width={50} />
-						</a>
-					</Link>
-					<Link href="#">
-						<a className="navbar-brand text-light">
-							<Image src="/icon/profile.png" height={50} width={50} />
-						</a>
-					</Link>
-					<div className="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-							<li className={" nav-item "}>
-								 
-							</li>
-							<li
-								className={
-									styles.navItem + " nav-item hvr-underline-from-center"
-								}
+		<Box visibility={'hidden'} mb={"57px"}></Box>
+			<ElevationScroll >
+
+				<AppBar position="fixed" sx={{marginBottom : "500px"}}>
+					<StyledToolbar>
+						<Box display={'flex'} alignItems="center"  >
+							<IconButton
+								size="large"
+								edge="start"
+								color="inherit"
+								aria-label="menu"
+								sx={{ mr: 2, display: { xs: "block", lg: 'none' } }}
+								onClick={() => {
+										openSidebar()
+										setShowSidebar((p) => !p)
+									}} 
 							>
-								<Link href="#">
-									<a className="nav-link">Link</a>
-								</Link>
-							</li>
-							<li
-								className={
-									styles.navItem + " nav-item hvr-underline-from-center bouncy"
-								}
-							>
-								<Link href="#">
-									<a className=" text-light">
-										<FontAwesomeIcon icon={faShoppingCart} />
-									</a>
-								</Link>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</nav>
+								{!showSidebar ? (
+									<Menu/>
+								) : (<Remove />)}
+
+							</IconButton>
+							{/* //TODO  */}
+							<Avatar />
+							<Typography variant={"h5"} mx={1} sx={{ display: { xs: "none", lg: "block" } }}>Mahdi</Typography>
+
+
+						</Box>
+
+						<Box width={'40%'} bgcolor="white" borderRadius={"10px"}>
+							<InputBase sx={{ display: "block", padding: "0 10px" }} placeholder="چیزی بنویسید ...." />
+						</Box>
+						<IconBox>
+							<IconButton
+								color="inherit" >
+								<Home />
+							</IconButton>
+							<IconButton color="inherit"  >
+								<Badge badgeContent={3} color={'error'}>
+									<Notifications />
+								</Badge>
+							</IconButton>
+							<IconButton color="inherit" >
+								<Logout />
+							</IconButton>
+						</IconBox>
+					</StyledToolbar>
+				</AppBar>
+			</ElevationScroll>
 		</>
 	);
 };

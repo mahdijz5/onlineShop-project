@@ -14,10 +14,6 @@ router.post("/auth",adminController.adminAuth)
 
 //* Category >>>>>>>>>>>
 
-//@desc get all categories
-//@route GET  /admin/dashboard/all-categories
-router.get("/dashboard/all-categories",adminController.getAllCategories)
-
 //@desc handle creating new category
 //@route POST  /admin/dashboard/add-category
 router.post("/dashboard/add-category",adminController.createCategory)
@@ -31,10 +27,6 @@ router.put("/dashboard/edit-category/:id",adminController.editCategory)
 router.delete("/dashboard/delete-category/:id",adminController.removeCategory)
 
 //* Brand >>>>>>>>>>>
-
-//@desc get all brands
-//@route GET  /admin/dashboard/all-brands
-router.get("/dashboard/all-brands",adminController.getAllBrands)
 
 //@desc handle creating new brand
 //@route POST  /admin/dashboard/add-brand
@@ -50,10 +42,6 @@ router.delete("/dashboard/delete-brand/:id",adminController.removeBrand)
 
 //* Peoduct >>>>>>>>>>>>>>>
 
-//@desc get all products
-//@route GET  /admin/dashboard/all-products
-router.get("/dashboard/all-products",adminController.getAllProducts)
-
 //@desc handle creating new product
 //@route POST  /admin/dashboard/add-product
 router.post("/dashboard/add-product",adminController.addProduct)
@@ -66,8 +54,8 @@ router.delete("/dashboard/delete-products/:id",adminController.removeSelectedPro
 //@route PUT  /admin/dashboard/edit-product
 router.put("/dashboard/edit-product/:id",adminController.editProduct)
 
-//@desc get single product
-//@route GET  /admin/dashboard/product/:id
-router.get("/dashboard/get-product/:id",adminController.getProduct)
+//@desc just for changing the amount of product
+//@route PUT  /admin/dashboard/change-amount-product/:id
+router.put("/dashboard/change-amount-product/:id",adminController.changeAmount)
 
 module.exports = router

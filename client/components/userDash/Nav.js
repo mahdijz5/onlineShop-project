@@ -1,11 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faSearch,
-	faShoppingCart,
-	faUser,
-} from "@fortawesome/free-solid-svg-icons";
+ 
 
 import { Primary, Foreground, Secondary } from "../../helpers/color";
 import styles from "../../styles/User.module.css";

@@ -16,7 +16,7 @@ import ProductForm from "../../../../components/Admin/ProductForm";
 
 function addProduct({ categories, brands }) {
 	const router = useRouter()
-
+	
 	const [getAllCategories, setCategories] = useState([]);
 	const [getAllBrands, setBrands] = useState([]);
 	const [getSelectedCategories, setSelectedCategories] = useState([]);
@@ -54,23 +54,35 @@ function addProduct({ categories, brands }) {
 		setProduct({ ...product, [event.target.name]: event.target.value });
 	};
 
+	const refreshStates = () => {
+		setProduct({
+			name :"",
+			price: 0,
+			discount: 0,
+			brand : "",
+			description : ""
+		})
+		setSelectedCategories([])
+		setThumbnail('')
+	}
+
 	const onSubmit = async(e) => {
 		e.preventDefault()
 		try {
 		const data = new FormData()
-		data.set("name" , product.name)
-		data.set("price" , product.price)
-		data.set("discount" , product.discount)
+		data.set("name" , 	product.name)
+		data.set("price" , 	product.price)
+		data.set("discount",product.discount)
 		data.set("amount" , product.amount)
 		data.set("description" , product.description)
 		data.set("brand" , product.brand)
 		data.set("categories" , getSelectedCategories)
 		data.set("thumbnail" , getThumbnail)
 		const response =await createProduct(data)
-		router.replace(router.asPath);
-		toastNotif(response.data.message, response.status, 1000);
+		refreshStates()
+		toastNotif(response.data.message, response.status, 0);
 		} catch (error) {
-			if(error.response.data.message) {
+			if(error.response.data.message) { 
 			toastNotif(error.response.data.message, error.response.status, 0);
 			}
 		}

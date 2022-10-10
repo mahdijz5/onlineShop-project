@@ -2,8 +2,6 @@ import ReactDOM  from "react-dom";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil, faTrash,faMark } from "@fortawesome/free-solid-svg-icons";
 
 import AdminLayout from "../../../../components/Admin/AdminLayout";
 import MainLayout from "../../../../components/MainLayout";
@@ -11,11 +9,13 @@ import {
 	addCategory as addNewCategory,
 	deleteCategory,
 	editCategory as editCategoryRequest ,
-	getAllCategories,
 } from "../../../../services/adminDashboard";
+import {
+	getAllCategories
+} from "../../../../services/product";
 import { AdminDashboardContext } from "../../../../context/context";
-import Button from "../../../../components/UiComponents/Button";
-import { confirmation, toastNotif } from "../../../../helpers/tools";
+import Button from "../../../../components/ui/Button";
+import {  toastNotif } from "../../../../helpers/tools";
 
 const addCategory = ({ categories }) => {
 	const router = useRouter();
@@ -45,7 +45,7 @@ const addCategory = ({ categories }) => {
 				refreshData();
 			}
 		} catch (error) {
-			toastNotif(error.response.data.message, error.response.status, 0);
+			toastNotif(error.response.data.message, error.response.status, 0)
 		}
 	};
 
@@ -154,7 +154,6 @@ const addCategory = ({ categories }) => {
 															confirmation("آیا مطمعنی ؟","از پاک کردن این دسته اطمینان دارید ؟",handleDelete,allCategories[index]._id)
 														}}
 													>
-														<FontAwesomeIcon icon={faTrash} />
 													</button>
 													<div id={`edit${index}`} className="d-none h-auto" >
 														<input className="form-control d-inline-block" placeholder="عنوان جدیدی را بنویسید" value={editCategory} onChange={(e) => {
@@ -171,7 +170,6 @@ const addCategory = ({ categories }) => {
 													<button className="btn btn-warning mx-1 p-2" onClick={()=> {
 														showEdit(index)
 													}}>
-														<FontAwesomeIcon icon={faPencil} />
 													</button>
 												</div>
 											</td>

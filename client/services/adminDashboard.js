@@ -11,13 +11,6 @@ export const addCategory = (data) => {
     return axios.post(url,{title : data})
 }
 
-//@desc get all categories
-//@route GET  Server_UrI/admin/dashboard/all-categories
-export const getAllCategories = () => {
-    const url = `${Server_UrI}/admin/dashboard/all-categories`
-    return axios.get(url)
-}
-
 //@desc handle deleting category
 //@route DELETE  Server_UrI/admin/dashboard/delete-category
 export const deleteCategory = (id) => {
@@ -41,13 +34,6 @@ export const addBrand = (data) => {
     return axios.post(url,{title : data})
 }
 
-//@desc get all brands
-//@route GET  Server_UrI/admin/dashboard/all-brands
-export const getAllBrands = () => {
-    const url = `${Server_UrI}/admin/dashboard/all-brands`
-    return axios.get(url)
-}
-
 //@desc handle deleting brand
 //@route DELETE  Server_UrI/admin/dashboard/delete-brand
 export const deleteBrand = (id) => {
@@ -62,17 +48,11 @@ export const editBrand = (id,title) => {
     return axios.put(url , {title})
 }
 
-//@desc get all products
-//@route GET  Server_UrI/admin/dashboard/all-products
-export const getAllProducts = (page,limit,search,categories) => {
-    const url = encodeURI(`${Server_UrI}/admin/dashboard/all-products?page=${page}&limit=${limit}&search=${search}&categories=${categories}`)
-    return axios.get(url)
-}
-
 //@desc handle creating new product
 //@route POST  Server_UrI/admin/dashboard/add-product
 export const createProduct = (data) => {
     const url = `${Server_UrI}/admin/dashboard/add-product`
+   
     return axios.post(url , data,{
         headers: {
             'Content-Type': 'multipart/form-data'
@@ -100,10 +80,10 @@ export const editProduct = (product,id) => {
 }
 
 //@desc get Single product
-//@route GET  Server_UrI/admin/dashboard/get-product
-export const getSingleProduct = (id) => {
-    const url = `${Server_UrI}/admin/dashboard/get-product/${id}`
-    return axios.get(url)
+//@route PUT  Server_UrI/admin/dashboard/get-product
+export const changeAmountOfProduct = (value,id) => {
+    const url = `${Server_UrI}/admin/dashboard/change-amount-product/${id}`
+    return axios.put(url,{value})
 }
 
  

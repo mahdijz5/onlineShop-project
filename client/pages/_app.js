@@ -1,9 +1,5 @@
 import "../styles/globals.css";
-import "@fortawesome/fontawesome-svg-core/styles.css";
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-confirm-alert/src/react-confirm-alert.css';
-import { config } from "@fortawesome/fontawesome-svg-core";
-config.autoAddCss = false;
 
 import {Router} from "next/router"
 import { useState } from "react";

@@ -24,9 +24,7 @@ const OfferSwiper = () => {
 
 	return (
 		<>
-			<div style={{
-				marginTop: "77px"
-			}}>
+			<div>
 			<Swiper
 				modules={[Navigation, Pagination, Autoplay,EffectFade]}
 				slidesPerView={1} 

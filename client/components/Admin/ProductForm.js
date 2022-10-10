@@ -3,159 +3,156 @@ import dynamic from "next/dynamic";
 const CKEditor = dynamic(() => import("../CKEditor.js"), {
 	ssr: false,
 });
-import { FiCloudLightning, FiX } from 'react-icons/fi';
-
-import Button from '../UiComponents/Button';
-import styles from "../../styles/admin/Product.module.css";
+ 
+ 
 import { setPoint } from '../../helpers/tools';
+import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 
 
-function ProductForm({ onSubmit,setThumbnail,removeCategory,onProductChange,getAllCategories,getAllBrands,addCategory,product,getSelectedCategories }) {
+
+function ProductForm({ onSubmit, setThumbnail, removeCategory, onProductChange, getAllCategories, getAllBrands, addCategory, product, getSelectedCategories }) {
+ 
 	return (
 		<form
-			className={`row w-100 pb-5 border-1 ${styles.addProductContainer}`}
+			className={`row w-100 pb-5 border-1 `}
 			onSubmit={(e) => {
 				onSubmit(e)
 			}}
 		>
-			<div className="col-md-3 position-relative h-25  p-5 pb-0 text-center">
+			<Stack direction={{sm : "column" , md : "row"}} gap={2}>
+				<Stack width='100%' spacing={2}>
 
-				<div>
+					<Box display="flex" justifyContent={"center"}>
 
-					<label htmlFor="formFile" className="w-100 mb-3">
-						<a className="btn"><img src="/icon/add.png" alt="" className="w-100" /></a>
-					</label>
-					<input name="thumbnail" type="file" id="formFile" hidden onChange={(e) => {
-						setThumbnail(e.target.files[0])
-					}} />
-				</div>
-				<h4 className={styles.lableInput}>تعداد :</h4>
-						{console.log(product.brand.title)}
-				<input
-					type="number"
-					name="amount"
-					value={product.amount}
-					onChange={(e) => {
-						onProductChange(e);
-					}}
-					style={{fontSize : "15px"}}
-					className={`form-control ${styles.input} mb-3`}
-					placeholder="لطفا تعداد محصول را وارد کنید(پیشفرض:‌0)"
-				/>
-				<hr/>
-				<h4 className={styles.lableInput}>قیمت :</h4>
-						{console.log(product.brand.title)}
-				<input
-					type="number"
-					name="price"
-					value={product.price}
-					className={`form-control ${styles.input}`}
-					onChange={(e) => {
-						onProductChange(e);
-					}}
-					placeholder="لطفا قیمت محصول را وارد کنید"
-				/>
-				<h4 className={styles.lableInput}>درصد تخفیف :</h4>
-				<input
-					type="number"
-					name="discount"
-					value={product.discount }
-					className={`form-control ${styles.input}`}
-					placeholder=" *درصد تخفیف را وارد کنید"
-					onChange={(e) => {
-						onProductChange(e);
-					}}
-				/>
+						<label htmlFor="formFile"  >
+							<a  ><img src="/icon/add.png" style={{width : "200px"}} /></a>
+						</label>
+						<input name="thumbnail" type="file" id="formFile" multiple hidden onChange={(e) => {
+							console.log(e.target.files)
+							setThumbnail((prev)=> { 
+								return [...e.target.files]
+							})
+						}} />
+					</Box>
+					<TextField label="تعداد :" variant="outlined"
+						name="amount"
+						id="amount"
+						value={product.amount}
+						onChange={(e) => {
+							onProductChange(e);
+						}} />
 
-				{product.discount != 0 ? (
-					<div>
-						<h3 className="m-0 mt-2">
-							{setPoint(
-								product.price - (product.price * product.discount) / 100
-							)}
-						</h3>
-						<h4 className={`text-center priceWithDiscount`}>
-							{setPoint(product.price)}
-						</h4>
-					</div>
-				) : (
-					<h3 className="mt-2">{setPoint(product.price)}</h3>
-				)}
-			</div>
+					<TextField label="قیمت :" variant="outlined"
+						name="price"
+						value={product.price}
+						onChange={(e) => {
+							onProductChange(e);
+						}} />
 
-			<div className="col-md-9">
-				<h4 className={styles.lableInput}>نام :</h4>
-				<input className={`form-control ${styles.input}`} name="name" placeholder="نام محصول را وارد کنید" value={product.name} onChange={(e) => {
-					onProductChange(e);
-				}} />
-				<h4 className={styles.lableInput}>برند :</h4>
-				<select
-					className={`form-control ${styles.input}`}
-					name="brand"
-					value={product.brand}
-					onChange={(e) => {
-						onProductChange(e);
-					}}
-				>
-					<option value="11">برند محصول را انتخاب کنید</option>
-					{getAllBrands
-						? getAllBrands.map((brand, index) => (
-							<option key={index}>{brand.title}</option>
-						))
-						: null}
-				</select>
-				<h4 className={styles.lableInput}>دسته :</h4>
-				<div className="mb-5">
-					<select
-						className={`form-control ${styles.input} mb-2`}
-						onChange={(event) => {
-							addCategory(event);
-						}}
-					>
-						<option>دسته ایی برای محصول خود انتخاب کنید</option>
-						{getAllCategories
-							? getAllCategories.map((cate, index) => (
-								<option key={index}>{cate.title}</option>
-							))
-							: null}
-					</select>
-					{getSelectedCategories.map((cate, index) => (
-						<div
-							key={index}
-							className={styles.selectedCategories + " d-inline-block"}
-							onClick={() => {
-								removeCategory(cate);
-							}}
-						>
-							<FiX/>
-							<div className="d-inline-block">
-								<span className="mx-2">{cate} </span>
+					<TextField label="تخفیف :" variant="outlined"
+						name="discount"
+						value={product.discount}
+						onChange={(e) => {
+							onProductChange(e);
+						}} />
+
+					<Box textAlign={'center'}>
+						{product.discount != 0 ? (
+							<div>
+								<Typography variant='h4' >
+									{setPoint(
+										product.price - (product.price * product.discount) / 100
+									)}
+								</Typography>
+								<Typography variant='h4' className={`  priceWithDiscount`}>
+									{setPoint(product.price)}
+								</Typography>
 							</div>
-						</div>
-					))}
-				</div>
-				<div></div>
+						) : (
+							<h3  >{setPoint(product.price)}</h3>
+						)}
+					</Box>
+				</Stack>
 
-				<CKEditor
-					data={product.description}
-					config={{
-						language: "fa",
-					}}
-					onChange={(event, editor) => {
-						const data = editor.getData();
-						const e = {
-							target: {
-								name: "description",
-								value: data,
-							},
-						};
-						onProductChange(e);
-					}}
-				/>
-			</div>
-			<Button type="submit" theme="light" className="me-auto ms-5 mt-3">تایید</Button>
+				<Stack gap={2} width={{md : "40%", lg : "100%"}}>
+					<TextField label="نام :" variant="outlined"
+						name="name"
+						value={product.name}
+						onChange={(e) => {
+							onProductChange(e);
+						}} />
+
+
+					<FormControl fullWidth >
+						<InputLabel id="brandInp">برند</InputLabel>
+						<Select
+							name='brand'
+							onChange={(e) => { 
+								onProductChange(e)
+							}}
+							labelId="brandInp"
+							id="brand"
+							label="برند"
+						>
+							{getAllBrands
+								? getAllBrands.map((brand, index) => (
+									<MenuItem key={index} value={brand.title}>{brand.title}</MenuItem>
+								))
+								: null}
+						</Select>
+
+					</FormControl>
+
+					<FormControl fullWidth >
+						<InputLabel id="CategoryInp">دسته ها</InputLabel>
+						<Select
+
+							onChange={(e) => addCategory(e)}
+							labelId="CategoryInp"
+							id="category"
+							label="دسته ها"
+						>
+							{getAllCategories
+								? getAllCategories.map((brand, index) => (
+									<MenuItem key={index} value={brand.title}>{brand.title}</MenuItem>
+								))
+								: null}
+						</Select>
+						<Stack direction={'row'} spacing={1} mt={2} >
+						{getSelectedCategories.map((cate, index) => (
+                            <Chip key={index} label={cate} variant="outlined" onDelete={() => {
+                                removeCategory(cate)
+                            }} />
+                        ))} 
+                    </Stack>
+						 
+					</FormControl>
+
+
+
+					<CKEditor
+						data={product.description}
+						config={{
+							language: "fa",
+						}}
+						onChange={(event, editor) => {
+							const data = editor.getData();
+							const e = {
+								target: {
+									name: "description",
+									value: data,
+								},
+							};
+							onProductChange(e);
+						}}
+					/>
+				</Stack>
+			</Stack>
+			<Button type="submit" variant="contained" >تایید</Button>
 		</form>
 	)
 }
 
 export default ProductForm
+
+ 

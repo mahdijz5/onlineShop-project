@@ -1,42 +1,50 @@
-import AdminNav from "./Nav";
-import AdminFooter from "./Footer";
-import AdminSidebar from "./Sidebar";
+import dynamic from "next/dynamic";
 import styles from "../../styles/Admin.module.css"
+const AdminNav = dynamic(() => import('./Nav'), {
+	suspense: true,
+})
+const AdminFooter = dynamic(() => import('./Footer'), {
+	suspense: true,
+})
+const AdminSidebar = dynamic(() => import('./Sidebar'), {
+	suspense: true,
+})
 
-import { Primary } from "../../helpers/color";
-import  {AdminDashboardContext} from "../../context/context";
+import { AdminDashboardContext } from "../../context/context";
 import Meta from "../Meta";
-import {adminAuthenticated,refreshToken } from "../../services/auth";
-import { useEffect,useState } from "react";
-import {  useRouter,Router } from "next/router";
+// import {adminAuthenticated,refreshToken } from "../../services/auth";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, Router } from "next/router";
 import { ToastContainer } from "react-toastify";
 import Loader from "../Loader";
+import { Box, Container, NoSsr, Skeleton, Stack } from "@mui/material";
 
-const AdminLayout =({children}) => {
+const AdminLayout = ({ children }) => {
 	const router = useRouter()
 
 	const [getSelectedCategories, setSelectedCategories] = useState([]);
-	const [loading,setLoading] = useState(false)
+	const [loading, setLoading] = useState(false)
+	const sidebarRef = useRef(null)
 
 	// authintication>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	useEffect(() => {
-		const auth = async () => {
-			try {
-				const { data, status } = await adminAuthenticated();
-				if (status == 200) {
-					setTimeout(() => {
-						refreshToken();
-					},1000 * 200)
-					return;
-				} else if (status == 401) {
-					// router.push("/404");
-				}
-			} catch (error) {
-				// router.push("/404");
-			}
-		};     
-		auth();
-	}, []);
+	// useEffect(() => {
+	// 	const auth = async () => {
+	// 		try {
+	// 			const { data, status } = await adminAuthenticated();
+	// 			if (status == 200) {
+	// 				setTimeout(() => {
+	// 					refreshToken();
+	// 				},1000 * 200)
+	// 				return;
+	// 			} else if (status == 401) {
+	// 				// router.push("/404");
+	// 			}
+	// 		} catch (error) {
+	// 			// router.push("/404");
+	// 		}
+	// 	};     
+	// 	auth();
+	// }, []);
 
 	//loading spinner>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	Router.events.on("routeChangeStart", (url) => {
@@ -48,56 +56,43 @@ const AdminLayout =({children}) => {
 		setLoading(false)
 	})
 
-
-	//search>>>>>>>>>>>>>>>>>>
-	const addCategory = (e) => {
-        setSelectedCategories((prev) => {
-            return [...prev, e.target.value];
-        });
-        router.push(`${router.pathname}?search=${router.query.search}&category=${getSelectedCategories}${getSelectedCategories.length > 0 ? "," : ''}${e.target.value}`)
-    };
-
-    const removeCategory = (cate) => {
-        setSelectedCategories((prev) => {
-            const prevCategories = [...prev];
-            const removed = _.remove(prevCategories, (c) => {
-                return c == cate;
-            });
-            router.push(`${router.pathname}?search=${router.query.search}&category=${prevCategories}`)
-            return prevCategories;
-        });
-    };
-
-    const handleChangeSearch = (event) => {
-        router.replace(`${router.pathname}?search=${event.target.value}&category=${getSelectedCategories}`)
-    }
+	return (
 
 
-
-    return(
-        <AdminDashboardContext.Provider value={{
-            styles,
+		<AdminDashboardContext.Provider value={{
+			styles,
 			getSelectedCategories,
 			setSelectedCategories,
-			removeCategory,
-			addCategory,
-			handleChangeSearch,
-        }}>
-            <Meta title="داشبورد ادمین" />
-        <AdminNav/>
-        <div className="row" style={{}}>
-            <div className={`${styles.sidebar} col-2`}>
-            <AdminSidebar />
-            </div>
-            <div className={`${styles.container} col-sm-10`} style={{overflowY: "auto"}}>
-				{loading ? <Loader/> :  children }
-                <AdminFooter/>
-            </div>
-            
-        </div>
-        <ToastContainer/>
-        </AdminDashboardContext.Provider>
-    )
+		}}>
+			<Meta title="داشبورد ادمین" />
+			<Suspense fallback={<Skeleton animation="wave" variant="rectangular" width={"100%"} height={70} />}>
+				<AdminNav sidebarRef={sidebarRef} />
+			</Suspense>
+
+			<Stack direction={'row'} p={0}>
+				<Box width={"400px"} display={{ xs: "none", lg: "block" }} ref={sidebarRef}>
+					<Suspense fallback={<Skeleton animation="pulse" variant="rectangular" width={"300px"} height={"100vh"} />}  >
+						<AdminSidebar />
+					</Suspense>
+				</Box>
+
+
+				 
+					<Container width={"100%"}  >
+						{loading ? <Loader /> : children}
+					</Container>
+				 
+			</Stack>
+			<Suspense fallback={`Loading...`}>
+				<AdminFooter />
+			</Suspense>
+
+
+			<ToastContainer />
+
+		</AdminDashboardContext.Provider>
+
+	)
 }
 
 export default AdminLayout;
