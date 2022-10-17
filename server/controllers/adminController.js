@@ -114,19 +114,22 @@ exports.editCategory = async (req, res, next) => {
     }
 }
 
-exports.removeCategory = async (req, res, next) => {
-    try {
-        const id = req.params.id
-        const category = await Category.findOne({ _id: id })
-        if (!category) {
-            res.status(404).json({ "message": "این دسته وجود ندارد" })
-            next()
+exports.removeCategory = (req, res, next) => {
+    const cId = req.params.id
+    const categoriesId = cId.split(',')
+    categoriesId.map(async (id, index) => {
+        try {
+            const category = await Category.findOne({ _id: id })
+            if (!category) {
+                res.status(404).json({ "message": "این دسته وجود ندارد" })
+                next()
+            }
+            await category.remove()
+        } catch (error) {
+            next(error)
         }
-        await category.remove()
-        res.status(200).json({ "message": "دسته با موفقیت حذف شد" })
-    } catch (error) {
-        next(error)
-    }
+    })
+    res.status(200).json({ "message": "دسته با موفقیت حذف شد" })
 }
 
 //* brand_ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -168,19 +171,22 @@ exports.editBrand = async (req, res, next) => {
     }
 }
 
-exports.removeBrand = async (req, res, next) => {
-    try {
-        const id = req.params.id
-        const brand = await Brand.findOne({ _id: id })
-        if (!brand) {
-            res.status(404).json({ "message": "این برند وجود ندارد" })
-            next()
+exports.removeBrand = (req, res, next) => {
+    const bId = req.params.id
+    const brandsId = bId.split(',')
+    brandsId.map(async (id, index) => {
+        try {
+            const brand = await Brand.findOne({ _id: id })
+            if (!brand) {
+                res.status(404).json({ "message": "این برند وجود ندارد" })
+                next()
+            }
+            await brand.remove()
+        } catch (error) {
+            next(error);
         }
-        await brand.remove()
-        res.status(200).json({ "message": "برند با موفقیت حذف شد" })
-    } catch (error) {
-        next(error)
-    }
+    })
+    res.status(200).json({ "message": "برند با موفقیت حذف شد" })
 }
 
 //* product >>>>>>>>>>>>>>>>>>>>>>>>
@@ -190,15 +196,15 @@ exports.addProduct = async (req, res, next) => {
     if (!req.files) {
         return res.status(400).json({ "message": "لطفا تصویری را برای محصول اپلود کنید" })
     }
-    let filesNameList= []
+    let filesNameList = []
     const allCategories = []
     const { description, brand: brandTitle, categories, price, name, amount, discount } = await req.body;
 
     try {
 
-        fileUpload(req.files, '/public/uploads/', async (filesList, filesName) => {
+        fileUpload(req.files, process.env.THUMBNAIL_ADRESS, async (filesList, filesName) => {
             filesList.map((thumbnail) => {
-                
+
                 Product.productValidation({ ...req.body, thumbnail }).catch((error) => {
                     console.log(error);
                     if (error.errors && error.errors.length > 0) {
@@ -218,15 +224,15 @@ exports.addProduct = async (req, res, next) => {
         //* Get categories
         if (categories != '') {
             const everyCategory = _.split(categories, ",")
-            everyCategory.map(async (c) => {
+            for (const c of everyCategory) {
                 const category = await Category.findOne({ title: c })
                 if (!category) {
                     res.status(400).json({ "message": "لطفا مقدار دسته را تغییر ندهید" })
+                } else {
+                    allCategories.push(category.id)
                 }
-                allCategories.push(category._id)
-            })
+            }
         }
-
 
         await Product.create({
             name,
@@ -256,7 +262,7 @@ exports.removeSelectedProducts = async (req, res, next) => {
                 res.status(404).json({ "message": "محصول مورد نظر یافت نشد" })
             }
             product.thumbnail.map((thumbnail) => {
-                fs.unlink(`${appRoot}/public/uploads/${thumbnail}`, (err) => {
+                fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADRESS}${thumbnail}`, (err) => {
                     if (err) next(err)
                 })
             })
@@ -271,71 +277,81 @@ exports.removeSelectedProducts = async (req, res, next) => {
 
 exports.editProduct = async (req, res, next) => {
     const id = req.params.id
-    if (!req.files) {
-        return res.status(400).json({ "message": "لطفا تصویری را برای محصول اپلود کنید" })
-    }
-    const { description, brand: brandTitle, categories, price, discount, name, amount } = await req.body;
-    const thumbnail = req.files.thumbnail
-    const thumbnailName = `${short.generate()}${short.generate()}_${thumbnail.name}`
-    const uploadPath = `${appRoot}/public/uploads/${thumbnailName}`
+    let filesNameList = []
+    const allCategories = []
+    const { description, brand: brandTitle, categories, price, name, amount, discount } = await req.body;
 
     try {
-        const allCategories = []
-
-        if (!brandTitle || brandTitle == '') {
-            return res.status(400).json({ "message": "لطفا برند محصول را وارد کنید" })
+        const product = await Product.findOne({ _id: id })
+        console.log(req.files)
+        if(!product) {
+            res.status(400).json({"message" : "محصول مورد نظر یافت نشد"})
         }
+        
+        if (req.files !== null) {
+            fileUpload(req.files, process.env.THUMBNAIL_ADRESS, async (filesList, filesName) => {
+                filesList.map((thumbnail) => {
 
-        await Product.productValidation({ ...req.body, thumbnail })
-
-        if (categories != '') {
-            const everyCategory = _.split(categories, ",")
-            everyCategory.map(async (c) => {
-                const category = await Category.findOne({ title: c })
-                if (!category) {
-                    res.status(400).json({ "message": "لطفا مقدار دسته را تغییر ندهید" })
-                }
-                allCategories.push(category._id)
+                    Product.productValidation({ ...req.body, thumbnail }).catch((error) => {
+                        console.log(error);
+                        if (error.errors && error.errors.length > 0) {
+                            res.status(400).json({ "message": error.errors[0] })
+                        }
+                    })
+                    product.thumbnail.map((thumbnail) => {
+                        fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADRESS}${thumbnail}`, (err) => {
+                            if (err) next(err)
+                        })
+                    })
+                    product.thumbnail = filesName
+                })
             })
         }
 
-        const title = brandTitle;
-        const brand = await Brand.findOne({ title: title })
-        const product = await Product.findOne({ _id: id })
-        const prevThumnvail = product.thumbnail;
-
-        product.name = name;
-        product.description = description;
-        product.brand = brand;
-        product.price = parseInt(price);
-        product.discount = discount && discount != undefined ? parseInt(discount) : 0;
-        product.amount = amount && amount != undefined ? parseInt(amount) : 0;
-        product.thumbnail = thumbnailName;
-        product.categories = allCategories;
-
-        product.save()
-
-        fs.unlink(`${appRoot}/public/uploads/${prevThumnvail}`, (err) => {
-            if (err) next(err)
-        })
-
-        thumbnail.mv(uploadPath, (err) => {
-            if (err) {
-                return next(err);
-            }
-        })
-
-        res.status(201).json({ "message": "محصول با موفقیت ساخته شد." })
-    } catch (error) {
-        console.log(error)
-        if (error.errors && error.errors.length > 0) {
-            res.status(400).json({ "message": error.errors[0] })
-
+        //* Get brand
+        if (!brandTitle || brandTitle == '') {
+            return res.status(400).json({ "message": "لطفا برند محصول را وارد کنید" })
         }
+        const brand = await Brand.findOne({ title: brandTitle })
+
+        //* Get categories
+        if (categories != '') {
+            const everyCategory = _.split(categories, ",")
+            for (const c of everyCategory) {
+                const category = await Category.findOne({ title: c })
+                if (!category) {
+                    res.status(400).json({ "message": "لطفا مقدار دسته را تغییر ندهید" })
+                } else {
+                    allCategories.push(category.id)
+                }
+
+            }
+        }
+
+        product.name = name
+        product.description = description
+        product.brand = brand
+        product.amount = amount && amount != undefined ? parseInt(amount) : 0
+        product.price = parseInt(price)
+        product.discount = discount && discount != undefined ? parseInt(discount) : 0
+            product.categories = allCategories
+
+        await product.save()
+        
+
+        res.status(201).json({ "message": "محصول با موفقیت ویرایش شد." })
+    } catch (error) {
         next(error)
     }
+
 }
 
+exports.deleteAllProducts = async (req, res) => {
+    const products = await Product.find({})
+    products.map(async (p) => {
+        await p.remove()
+    })
+}
 
 
 exports.changeAmount = async (req, res, next) => {

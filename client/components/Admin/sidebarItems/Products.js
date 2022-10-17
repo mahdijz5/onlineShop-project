@@ -34,7 +34,7 @@ function Products() {
 								<ListItemText primary="اضافه کردن دسته جدید" />
 							</ListItemButton>
 						</NavLink>
-						<NavLink href="/admin/dashboard/view-brand" activeClassName={styles.activeSidebarItems}>
+						<NavLink href="/admin/dashboard/add-brand" activeClassName={styles.activeSidebarItems}>
 							<ListItemButton>
 								<ListItemIcon>
 									<AddCircle />

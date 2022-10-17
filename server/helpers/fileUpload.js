@@ -12,7 +12,7 @@ exports.fileUpload = (files, path,callback) => {
             const uploadPath = `${appRoot}${path}${thumbnailName}`
             thumbnail.mv(uploadPath, (err) => {
                 if (err) {
-                    return next(err);
+                    console.log(err)
                 }
             })
             filesList.push(thumbnail)

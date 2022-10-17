@@ -58,4 +58,7 @@ router.put("/dashboard/edit-product/:id",adminController.editProduct)
 //@route PUT  /admin/dashboard/change-amount-product/:id
 router.put("/dashboard/change-amount-product/:id",adminController.changeAmount)
 
+router.post("/dashboard/delete-All-products",adminController.deleteAllProducts)
+
+
 module.exports = router

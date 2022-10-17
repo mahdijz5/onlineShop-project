@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import MainLayout from "../../../../components/MainLayout";
 import AdminLayout from "../../../../components/Admin/AdminLayout";
-import { AdminDashboardContext } from "../../../../context/context";
+import { AdminDashboardContext, ViewProductsContext } from "../../../../context/context";
 import ProductTable from "../../../../components/Admin/ProductTable";
 import { Fab, Stack } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
@@ -12,16 +12,17 @@ import SearchPanel from "../../../../components/ui/SearchPanel";
 import { getAllBrands, getAllCategories, getAllProducts } from "../../../../services/product";
 import AppPagination from "../../../../components/ui/Pagination";
 import AddProduct from "../../../../components/Admin/addProduct";
-import { createProduct } from "../../../../services/adminDashboard";
+import { createProduct, editProduct } from "../../../../services/adminDashboard";
 import { toastNotif } from "../../../../helpers/tools";
+import EditProduct from "../../../../components/Admin/EditProduct";
 
 const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, numberOfProducts, brands }) => {
     const router = useRouter()
-    const { selectedProducts, selectProduct } = useContext(AdminDashboardContext)
     const [products, setProducts] = useState([])
     const [getNumberOfProducts,setNumberOfProducts] = useState(numberOfProducts)
     const [openSearch, setOpenSearch] = useState(false)
     const [openAddProduct, setOpenAddProduct] = useState(false)
+    const [openEditProduct, setOpenEditProduct] = useState({status  : false , id : ""})
     const [getSelectedCategories, setSelectedCategories] = useState([]);
     const [getThumbnail,setThumbnail] = useState([])
 
@@ -30,6 +31,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
         setNumberOfProducts(numberOfProducts)
     }, [])
 
+    console.log(getSelectedCategories)
     const onSubmit = async(product) => {
 
 		try {
@@ -59,12 +61,50 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
 
 	};
 
+    const onSubmitEdit = async(product) => {
+
+		try {
+		const data = new FormData()
+		data.set("name" , 	product.name)
+		data.set("price" , 	product.price)
+		data.set("discount",product.discount)
+		data.set("amount" , product.amount)
+		data.set("description" , product.description)
+		data.set("brand" , product.brand)
+		data.set("categories" , getSelectedCategories)
+		getThumbnail.map((file) => {
+			data.append("thumbnail" , file)
+		})
+		const response =await editProduct(data , openEditProduct.id)
+        const { data: Allproducts } = await getAllProducts(router.query.page || 1, 10, router.query.search || "", router.query.category || "",false,router.query.price||"",router.query.discount||"",router.query.brand||"")
+		setProducts([...Allproducts.products])
+        console.log([...Allproducts.products])
+        setNumberOfProducts((prev) => prev+1)
+        toastNotif(response.data.message, response.status, 0);
+		} catch (error) {
+            console.log(error)
+			if(error.response.data.message) {
+			toastNotif(error.response.data.message, error.response.status, 0);
+			}
+		}
+
+	};
+
     return (
-        <>
-            <ProductTable products={products} productPerPage={productPerPage} selectProduct={selectProduct} selectedProducts={selectedProducts} />
+        <ViewProductsContext.Provider value={{
+            getSelectedCategories,
+            categories,
+            brands,
+            onSubmit,
+            onSubmitEdit,
+            setSelectedCategories,
+            setThumbnail
+        }}>
+            <ProductTable products={products} setOpenEdit={setOpenEditProduct} />
             <AppPagination numberOfItems={getNumberOfProducts} itemPerPage={productPerPage} />
             <SearchPanel open={openSearch} setOpen={setOpenSearch} pathBase={router.pathname} categories={categories} brands={brands} maxPrice={9000000000} />
-            <AddProduct getSelectedCategories={getSelectedCategories} setSelectedCategories={setSelectedCategories} setThumbnail={setThumbnail} onSubmit={onSubmit} categories={categories} brands={brands} open={openAddProduct} setOpen={setOpenAddProduct}/>
+            <AddProduct   open={openAddProduct} setOpen={setOpenAddProduct}/>
+            <EditProduct open={openEditProduct} setOpen={setOpenEditProduct}/>
             <Stack sx={{ right: {xs: "10px",sm : "50px"}, bottom: {xs: "10px",sm : "50px"}, position: "fixed" }} spacing={2}>
                 <Fab color="warning"   onClick={() => {
                     setOpenSearch(true)
@@ -77,7 +117,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
                     <Add />
                 </Fab>
             </Stack>
-        </>
+        </ViewProductsContext.Provider>
     );
 };
 

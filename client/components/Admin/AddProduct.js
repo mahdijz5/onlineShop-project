@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
 
 import { createProduct } from "../../services/adminDashboard"; 
@@ -9,6 +9,7 @@ import { Modal, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import {Clear} from "@mui/icons-material"
 import styled from "@emotion/styled";
+import { ViewProductsContext } from "../../context/context";
 
 
 const StyledBox = styled(Box)(({theme}) => ({
@@ -33,10 +34,10 @@ const StyledBox = styled(Box)(({theme}) => ({
  
 }))
 
-function AddProduct({ categories, brands,open,setOpen,onSubmit,setThumbnail,getSelectedCategories,setSelectedCategories }) {
-	const router = useRouter()
-	
-	const [getAllCategories, setCategories] = useState([]);
+function AddProduct({open,setOpen}) {
+
+	const {brands,getSelectedCategories,categories,onSubmit,setSelectedCategories,setThumbnail} = useContext(ViewProductsContext)
+	const [getAllCategories, setCategories] = useState([categories]);
 	const [getAllBrands, setBrands] = useState([]);
 
 	const [product, setProduct] = useState({
@@ -68,7 +69,6 @@ function AddProduct({ categories, brands,open,setOpen,onSubmit,setThumbnail,getS
 	};
 	
 	const onProductChange = (event) => {
-		console.log(brands);
 		setProduct({ ...product, [event.target.name]: event.target.value });
 	};
 
@@ -109,5 +109,3 @@ function AddProduct({ categories, brands,open,setOpen,onSubmit,setThumbnail,getS
 
 
 export default AddProduct;
-{/* */}
-//

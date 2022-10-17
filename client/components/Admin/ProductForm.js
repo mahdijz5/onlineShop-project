@@ -1,35 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import dynamic from "next/dynamic";
 const CKEditor = dynamic(() => import("../CKEditor.js"), {
 	ssr: false,
 });
- 
- 
+import {Add} from "@mui/icons-material"
+
 import { setPoint } from '../../helpers/tools';
 import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import ThumbnailSwiper from "../ui/ThumbnailSwipre"
 
 
 
-function ProductForm({ onSubmit, setThumbnail, removeCategory, onProductChange, getAllCategories, getAllBrands, addCategory, product, getSelectedCategories }) {
- 
+function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProductChange, getAllCategories, getAllBrands, addCategory, product, thumbnail, getSelectedCategories, edit }) {
+	const [getThumbnail, setThumbnails] = useState([])
+	const [isPending, startTransition] = useTransition()
+	useEffect(() => {
+		startTransition(() => {
+			setThumbnails(thumbnail)
+		})
+	}, [thumbnail])
 	return (
 		<form
 			className={`row w-100 pb-5 border-1 `}
 			onSubmit={(e) => {
 				onSubmit(e)
+				setThumbnail([])
+				setOpen({status : false , id : ""})
 			}}
 		>
-			<Stack direction={{sm : "column" , md : "row"}} gap={2}>
+			<Stack direction={{ sm: "column", md: "row" }} gap={2}>
 				<Stack width='100%' spacing={2}>
 
 					<Box display="flex" justifyContent={"center"}>
 
-						<label htmlFor="formFile"  >
-							<a  ><img src="/icon/add.png" style={{width : "200px"}} /></a>
-						</label>
+
+						{edit ?
+							isPending ? null : (
+								<Box position="relative">
+									<ThumbnailSwiper thumbnail={getThumbnail} width={"200px"} height={"200px"} />
+									<label htmlFor="formFile" >
+										<a><Add sx={{position : "absolute",top : "0" , left : "0",zIndex : "3",backgroundColor:"white",borderRadius : "5px",cursor : "pointer"}} /> </a>
+									</label>
+								</Box>
+							)
+							: (
+								<label htmlFor="formFile" >
+									<a><img src="/icon/add.png" style={{ width: "200px" }} /></a>
+								</label>
+							)}
+
 						<input name="thumbnail" type="file" id="formFile" multiple hidden onChange={(e) => {
 							console.log(e.target.files)
-							setThumbnail((prev)=> { 
+							setThumbnail((prev) => {
 								return [...e.target.files]
 							})
 						}} />
@@ -74,7 +96,7 @@ function ProductForm({ onSubmit, setThumbnail, removeCategory, onProductChange, 
 					</Box>
 				</Stack>
 
-				<Stack gap={2} width={{md : "40%", lg : "100%"}}>
+				<Stack gap={2} width={{ md: "40%", lg: "100%" }}>
 					<TextField label="نام :" variant="outlined"
 						name="name"
 						value={product.name}
@@ -87,9 +109,10 @@ function ProductForm({ onSubmit, setThumbnail, removeCategory, onProductChange, 
 						<InputLabel id="brandInp">برند</InputLabel>
 						<Select
 							name='brand'
-							onChange={(e) => { 
+							onChange={(e) => {
 								onProductChange(e)
 							}}
+							value={product.brand}
 							labelId="brandInp"
 							id="brand"
 							label="برند"
@@ -118,14 +141,14 @@ function ProductForm({ onSubmit, setThumbnail, removeCategory, onProductChange, 
 								))
 								: null}
 						</Select>
-						<Stack direction={'row'} spacing={1} mt={2} >
-						{getSelectedCategories.map((cate, index) => (
-                            <Chip key={index} label={cate} variant="outlined" onDelete={() => {
-                                removeCategory(cate)
-                            }} />
-                        ))} 
-                    </Stack>
-						 
+						<Stack direction={'row'} gap={1} mt={2} maxWidth={"100%"} flexWrap={'wrap'} >
+							{getSelectedCategories.map((cate, index) => (
+								<Chip key={index} label={cate} variant="outlined" onDelete={() => {
+									removeCategory(cate)
+								}} />
+							))}
+						</Stack>
+
 					</FormControl>
 
 
@@ -155,4 +178,3 @@ function ProductForm({ onSubmit, setThumbnail, removeCategory, onProductChange, 
 
 export default ProductForm
 
- 

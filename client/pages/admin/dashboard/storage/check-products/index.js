@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import _ from "lodash"
-import { DebounceInput } from 'react-debounce-input';
+
 import { useRouter } from "next/router";
 
 
@@ -10,7 +10,6 @@ import { AdminDashboardContext } from "../../../../../context/context";
 import { Secondary } from "../../../../../helpers/color";
 import styles from "../../../../../styles/admin/Product.module.css";
 import { changeAmountOfProduct, getAllCategories, getAllProducts } from "../../../../../services/adminDashboard";
-import Pagination from "../../../../../components/Pagination";
 import ProductTable from "../../../../../components/Admin/ProductTable";
 import { toastNotif } from "../../../../../helpers/tools";
 
@@ -44,9 +43,9 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
     return (
         <>
             <div className="w-100 text-center my-3">
-                <DebounceInput debounceTimeout={1000} type="text" placeholder="جستجو کنید" onChange={handleChangeSearch} value={router.query.search} className="form-control d-inline-block text-center w-50" style={{
+                {/* <DebounceInput debounceTimeout={1000} type="text" placeholder="جستجو کنید" onChange={handleChangeSearch} value={router.query.search} className="form-control d-inline-block text-center w-50" style={{
                     border: `1px solid ${Secondary}`
-                }} />
+                }} /> */}
                 <select
                     className={`form-control ${styles.input} mb-2 w-25 d-inline-block`}
                     onChange={(event) => {
@@ -77,7 +76,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
                 ))}
             </div>
             <ProductTable products={products} currentPage={currentPage} productPerPage={productPerPage}  selectProduct={selectProduct} selectedProducts={selectedProducts} setAmount={setAmount} amount={amount}  onAmountSubmit={onAmountSubmit}/>
-            <Pagination numberOfItems={numberOfProducts} currentPage={currentPage} itemPerPage={productPerPage} />
+            {/* <Pagination numberOfItems={numberOfProducts} currentPage={currentPage} itemPerPage={productPerPage} /> */}
         </>
     );
 };

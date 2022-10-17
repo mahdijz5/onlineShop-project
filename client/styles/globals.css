@@ -68,6 +68,23 @@ a{
   border-radius: 50% !important;
 }
 
+/* width */
+.niceScroll::-webkit-scrollbar {
+	width: 8px;
+}
+
+/* Track */
+.niceScroll::-webkit-scrollbar-track {
+	background-color: #fff;
+}
+
+/* Handle */
+.niceScroll::-webkit-scrollbar-thumb {
+	background: #f1f1f1;
+	border-radius: 10px;
+}
+
+
 /* button and hover effect ................ */
 
 .hvr-underline-from-center {

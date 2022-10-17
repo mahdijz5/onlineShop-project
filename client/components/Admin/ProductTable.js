@@ -9,7 +9,7 @@ import {  setPoint, toastNotif } from '../../helpers/tools';
 import { removeSelectedProducts } from '../../services/adminDashboard';
 import Confirmation from '../ui/Confirmation';
 
-function ProductTable({ products : allProducts, noCheckBox, productPerPage, amount, setAmount, onAmountChange, onAmountSubmit }) {
+function ProductTable({ products : allProducts, noCheckBox ,setOpenEdit}) {
     const router = useRouter()
     const [selectedProducts, setSelectedProducts] = useState([])
     const [open,setOpen] = useState(false)
@@ -64,7 +64,7 @@ function ProductTable({ products : allProducts, noCheckBox, productPerPage, amou
             }}><Delete /></Button>
             {" "}
             <Button sx={{ visibility: selectedProducts.length == 1 ? 'visible' : "hidden" }} color="warning" variant="contained" onClick={() => {
-                router.push(`/admin/dashboard/edit-product/${selectedProducts[0]}`)
+                setOpenEdit({status : true , id : selectedProducts[0]})
             }}><Edit /></Button>
             </Box>
 
@@ -97,15 +97,21 @@ function ProductTable({ products : allProducts, noCheckBox, productPerPage, amou
                                         {product.name}
                                     </Link>
                                 </TableCell>
-                                <TableCell align="right">{product.brand.title}</TableCell>
-                                <TableCell align="right">{product.categories.map((category, index) => (
+                                <TableCell align="right">
+                                {product.brand ? (product.brand.title) : null}
+                                
+                                </TableCell>
+                                <TableCell align="right">
+                                
+                                    {product.categories.length > 0 ? product.categories.map((category, index) => (
                                     <div key={index}>
                                         <Link href={'/product/[id]'} as={`/brand/${product._id}`} >
-                                            <a>{category.title}</a>
+                                          <a>{category.title}</a>
                                         </Link>
                                         <br />
                                     </div>
-                                ))}</TableCell>
+                                )) : null}
+                                </TableCell>
                                 <TableCell align="right"> {product.discount == 0 ? (<Typography>
                                     {setPoint(product.price)}
                                 </Typography>) : (<>

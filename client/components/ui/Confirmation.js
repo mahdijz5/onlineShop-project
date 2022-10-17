@@ -45,6 +45,7 @@ const Confirmation = ({ open, setOpen, title, description, func,funcParameter })
                             {"  "}
                             <Button variant="contained" sx={{ display: "inline-block" }} color="success" onClick={() => {
                                 func(funcParameter)
+                                handleClose()
                             }} >
                                 بله
                             </Button>

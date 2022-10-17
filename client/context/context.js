@@ -18,3 +18,13 @@ export const AdminDashboardContext = createContext({
 
 export const general = createContext({
 })
+
+export const ViewProductsContext = createContext({
+    setSelectedCategories : () => {},
+    setThumbnail : () => {},
+    onSubmit : () => {},
+    onSubmitEdit : () => {},
+    categories : [],
+    brands : [],
+    getSelectedCategories : [],
+})
