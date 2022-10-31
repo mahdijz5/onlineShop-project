@@ -21,8 +21,8 @@ export const getAllBrands = () => {
 
 //@desc get all products
 //@route GET  Server_UrI/product/all-products
-export const getAllProducts = (page,limit,search,categories,giveAll,price,discount,brand) => {
-    const url = encodeURI(`${Server_UrI}/product/all-products?page=${page}&limit=${limit}&search=${search}&categories=${categories}&price=${price}&discount=${discount}&brand=${brand}&giveAll=${giveAll}`)
+export const getAllProducts = (page,limit,sort,search,categories,giveAll,price,discount,brand) => {
+    const url = encodeURI(`${Server_UrI}/product/all-products?page=${page}&sort=${sort}&limit=${limit}&search=${search}&categories=${categories}&price=${price}&discount=${discount}&brand=${brand}&giveAll=${giveAll}`)
     return axios.get(url)
 }
 

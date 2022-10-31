@@ -19,6 +19,9 @@ export const theme = () => {
             disable : {
                 main : "#757575"
             },
+            danger : {
+                main : "#e63946"
+            },
             text: {
                 primary: "#3A354D"
             }

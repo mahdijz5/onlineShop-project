@@ -47,7 +47,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
 			data.append("thumbnail" , file)
 		})
 		const response =await createProduct(data)
-        const { data: Allproducts } = await getAllProducts(router.query.page || 1, 10, router.query.search || "", router.query.category || "",false,router.query.price||"",router.query.discount||"",router.query.brand||"")
+        const { data: Allproducts } = await getAllProducts(router.query.page || 1, 10,"",router.query.search || "", router.query.category || "",false,router.query.price||"",router.query.discount||"",router.query.brand||"")
 		setProducts([...Allproducts.products])
         console.log([...Allproducts.products])
         setNumberOfProducts((prev) => prev+1)
@@ -130,8 +130,8 @@ export const getServerSideProps = async (context) => {
         let productPerPage = 1
 
 
-        //getAllProducts(Page | limit | searchQuery | category)
-        const { data: Allproducts } = await getAllProducts(context.query.page || 1, 10, context.query.search || "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
+        //getAllProducts(Page | limit | sort | searchQuery | category | price | discount | brand)
+        const { data: Allproducts } = await getAllProducts(context.query.page || 1, 10, context.query.sort , context.query.search || "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
         products = [...Allproducts.products]
         numberOfProducts = Allproducts.numberOfItems
         productPerPage = Allproducts.itemPerPage

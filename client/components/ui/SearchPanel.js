@@ -54,8 +54,8 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
                 search : router.query.search,
                 categories : router.query.category != '' &&router.query.category != undefined ? router.query.category.split(',') : [],
                 brand : router.query.brand    ? router.query.brand : "",
-                price : router.query.price && router.query.price != undefined ? router.query.price.split(',') : [0,maxPrice ? maxPrice : 900000000],
-                discount : router.query.discount && router.query.price != undefined ? router.query.discount.split(',') : [0,100],
+                price : router.query.price && router.query.price != undefined ? router.query.price.split('_') : [0,maxPrice ? maxPrice : 900000000],
+                discount : router.query.discount && router.query.price != undefined ? router.query.discount.split('_') : [0,100],
             }
         })
     },[])
@@ -98,7 +98,19 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
     }
 
     const onsubmit = () => {
-        router.replace(`${pathBase}?search=${query.search}&category=${query.categories}&brand=${query.brand}&discount=${query.discount}&price=${query.price}`)
+        // router.push(`${pathBase}?search=${query.search}&category=${query.categories}&brand=${query.brand}&discount=${query.discount}&price=${query.price}`)
+        const queries = {
+            ...router.query,
+            ...query,
+            price : `${query.price[0]}_${query.price[1]}`,
+            discount : `${query.discount[0]}_${query.discount[1]}`,
+        }
+        router.push({
+            pathname : pathBase,
+            query : {
+                ...queries
+            }
+        })
     }
 
 

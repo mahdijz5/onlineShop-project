@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import styles  from "../styles/Home.module.css"
 import "swiper/css";
-import { Navigation, Pagination, Autoplay ,EffectFade} from "swiper";
+import { Navigation, Pagination, Autoplay, EffectFade } from "swiper";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
@@ -25,38 +24,42 @@ const OfferSwiper = () => {
 	return (
 		<>
 			<div>
-			<Swiper
-				modules={[Navigation, Pagination, Autoplay,EffectFade]}
-				slidesPerView={1} 
-				navigation
-				effect="fade"
-				pagination={{
-					clickable: true,
-				}}
-				centeredSlides={true}
-				loop
-				autoplay={{
-					delay: 2500,
-					disableOnInteraction: false,
-				}}			>
-				{swiperImgs
-					? swiperImgs.map((img, index) => (
+				<Swiper
+					modules={[Navigation, Pagination, EffectFade,Autoplay]} // Autoplay,
+					spaceBetween={0}
+      				slidesPerView={2}
+					navigation
+					effect="fade"
+					pagination={{
+						clickable: true,
+					}}
+					centeredSlides={true}
+					loop
+					autoplay={{
+						delay: 2500,
+						disableOnInteraction: false,
+					}}			
+					>
+					{swiperImgs
+						? swiperImgs.map((img, index) => (
+
 							<SwiperSlide
 								key={index}
 								style={{
 									objectFit: "cover",
-									height :"500px"
+									height: "330px",
 								}}
 							>
 								<Link href="#">
 									<a>
-										<Image src={"/images/" + img} layout="fill" alt=""/>
+										<Image src={"/images/" + img} layout="fill"  alt="" />
 									</a>
 								</Link>
 							</SwiperSlide>
-					  ))
-					: null}
-			</Swiper>
+
+						))
+						: null}
+				</Swiper>
 			</div>
 		</>
 	);

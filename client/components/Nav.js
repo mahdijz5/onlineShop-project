@@ -1,90 +1,135 @@
-import Image from "next/image";
-import Link from "next/link";
-import { useRef } from "react";
-import { FiChevronDown, FiShoppingCart, FiUser, FiSearch,FiX } from "react-icons/fi"
+import {getAllCategories,getAllBrands} from "../services/product"  
 
-import { Primary, Foreground, Secondary } from "../helpers/color";
-import styles from "../styles/nav.module.css";
-import NavLink from "./NavLink"
-import SimpleSearch from "./SimpleSearch";
-import DropDown from "./ui/DropDown";
+import { AppBar, Box, Stack, Toolbar, Typography, useScrollTrigger } from "@mui/material";
+import { Favorite, Menu,Person,Search, ShoppingCart } from "@mui/icons-material";
+import styled from "@emotion/styled";
+import { cloneElement, useEffect, useState } from "react";
+import Link from "next/link";
+import SearchPanel from "./ui/SearchPanel";
+import { useRouter } from "next/router";
+
+const StyledToolbar = styled(Toolbar)(({theme}) => ({
+	display: "flex",
+	justifyContent: "space-between",
+	alignItems : 'stretch',
+	padding: "0 !important",
+	borderBottom: `1px solid ${theme.palette.primary.light}`,
+}))
+
+const RightOptionBox = styled(Box)(({ theme }) => ({
+	":hover": {
+		backgroundColor: theme.palette.primary.dark
+	},
+	borderRight: `1px solid ${theme.palette.primary.light}`,
+	padding: "19px",
+	height: "100%",
+	transition : "0.2s",
+	display : "flex",
+	alignItems : "center",
+
+}))
+
+const LeftOptionBox = styled(Box)(({ theme }) => ({
+	":hover": {
+		backgroundColor: theme.palette.primary.dark
+	},
+	borderLeft: `1px solid ${theme.palette.primary.light}`,
+	padding: "19px",
+	height: "100%",
+	transition : "0.2s",
+	display : "flex",
+	alignItems : "center",
+
+}))
+
+function ElevationScroll(props) {
+	const { children } = props;
+	const trigger = useScrollTrigger({
+		disableHysteresis: true,
+		threshold: 0,
+	});
+
+	return cloneElement(children, {
+		elevation: trigger ? 4 : 0,
+	});
+}
+
+
 
 const Nav = () => {
-	const searchPage = useRef(null)
+	const router = useRouter()
+	const [openSearch,setOpenSearch] = useState(false)
+	const [categories,setCategories] = useState([])
+	const [brands,setBrands] = useState([])
 
-	const openSearchPage = () => {
-		searchPage.current.classList = styles.openSearchPage
-	}
+	useEffect(() => {
+		const fetchData =async () => {
+			const {data : allBrands} = await getAllBrands()  
+			const {data : allCategories} = await getAllCategories()
+			setCategories(allCategories.categories)  
+			setBrands(allBrands.brands)  
+		}	
+
+		fetchData()
+	},[])
 
 	return (
-		<div className={styles.navContainer}>
+		<>
+			<Box visibility={'hidden'} mb={"57px"}></Box>
+			<ElevationScroll >
 
-			<nav className={`${styles.nav} m-0 `}>
-				<div className="row w-100 m-0 p-3 pb-0 text-center">
-					<div className="col-sm-3 mt-5 ">
-						<div className={`${styles.myCart} d-inline-block`}>
-							<Link href={''}>
-								<h5>
-									<FiShoppingCart className="ms-1" />
-									سبد خرید
-								</h5>
+				<AppBar position="fixed" sx={{ marginBottom: "500px" }}>
+					<StyledToolbar>
+						<Stack direction={"row"} height="64px" >
+							<Link href="">
+								<a>
+									<RightOptionBox >
+										<ShoppingCart />
+									</RightOptionBox>
+								</a>
 							</Link>
-						</div>
-						<div className="d-inline-block me-3" style={{ fontSize: "20px", cursor: "pointer" }}>
-							<FiUser />
-						</div>
-					</div>
-					<div className="col-sm-6 text-center">
-						<h1 className={styles.header}>Brand</h1>
-					</div>
-					<div className="col-sm-3  mt-5" >
-						<div className="d-inline-block ms-auto" style={{ cursor: "pointer" }} onClick={() => {
-							openSearchPage()
-						}} >
-							<h1 className="mb-3"><FiSearch /></h1>
-						</div>
-					</div>
-				</div>
-				<div style={{ padding: "0 430px" }}>
-					<hr />
-				</div>
-				<div className="text-center m-0 pe-5 pb-5 pt-3">
-					<div>
-						<NavLink href={"/"} activeClassName={styles.activeLink}>
-							<a className={`${styles.navItem} `}>
-								<h4 className="d-inline-block">خانه</h4>
-							</a>
-						</NavLink>
-						<NavLink href={"/about"} activeClassName={styles.activeLink}>
-							<a className={`${styles.navItem} `}>
-								<h4 className="d-inline-block">درباره ما</h4>
-							</a>
-						</NavLink>
-						<NavLink href={"/contact-us"} activeClassName={styles.activeLink}>
-							<a className={`${styles.navItem} `}>
-								<h4 className="d-inline-block">ارتباط با ما</h4>
-							</a>
-						</NavLink>
-						<a className={`${styles.navItem} `}>
-							
-								<DropDown triggerText={`<h4 className="d-inline-block">دسته ها </h4>`} classForTrigger={styles.DropDown}/>
+							<Link href="">
+								<a>
+									<RightOptionBox>
+										<Favorite />
+									</RightOptionBox>
+								</a>
+							</Link>
+							<Link href="">
+								<a>
+									<RightOptionBox >
+										<Person />
+									</RightOptionBox>
+								</a>
+							</Link>
+						</Stack>
 
-						</a>
-					</div>
-				</div>
-			</nav>
-			{/* //searchPage */}
-			<div className="d-none" ref={searchPage} >
-				<div className={` m-4 d-inline-block ${styles.closeSearchBtn}`} onClick={() => {
-					searchPage.current.classList = styles.closeSearchPage
-				}}>
-					<FiX className=" " />
-				</div>
-				<SimpleSearch address="/search"/>
-			</div>
-		</div>
+						<Stack direction={"row"} width={'40%'}  height="64px" alignItems={"center"} justifyContent="center">
+							<Link href="/"><Typography variant="h6" > MahdiJz </Typography></Link>
+						</Stack>
+
+						<Stack direction={"row"} height="64px" >
+							<Link href="">
+								<a>
+									<LeftOptionBox>
+										<Menu /> <Typography display="inline-block" > دسته ها</Typography>
+									</LeftOptionBox>
+								</a>
+							</Link>
+
+									<LeftOptionBox onClick={() => {
+										setOpenSearch(true)
+									}} >
+										<Search />
+									</LeftOptionBox>
+
+						</Stack>
+					</StyledToolbar>
+				</AppBar>
+			</ElevationScroll>
+			<SearchPanel open={openSearch} setOpen={setOpenSearch} brands={brands} categories={categories} pathBase={`/search`}/>
+		</>
 	);
 };
 
 export default Nav;
-

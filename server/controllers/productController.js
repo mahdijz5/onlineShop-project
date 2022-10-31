@@ -47,18 +47,26 @@ exports.getAllProducts = async (req, res, next) => {
         const search = req.query.search || false
         const category = req.query.categories || false
         const brand = req.query.brand || false
-        const price = req.query.price ?  req.query.price.split(',') || false : false
-        const discount =  req.query.discount ? req.query.discount.split(',') || false : false
+        const price = req.query.price ?  req.query.price.split('_') || false : false
+        const discount =  req.query.discount ? req.query.discount.split('_') || false : false
         const searching = req.query.search || req.query.categories || discount || price ||brand ? true : false;
         const itemPerPage = req.query.limit
+        const sortBy = req.query.sort || false
 
         //mongoDb Queries 
         const placeHolderQ = {'none' : ""}
         const textSearchQuery = search ? { $text: { $search: search } } : placeHolderQ
-        const brandQuery = brand ? {brand : brand} : placeHolderQ
         const priceQuery = price ? {price : {$gte : price[0],$lte : price[1]}} : placeHolderQ
         const discountQuery = discount ? {discount : {$gte : +discount[0],$lte : +discount[1]}} : placeHolderQ
         let categorySearchQuery = placeHolderQ
+        let brandQuery = placeHolderQ
+        if(brand) {
+
+            console.log(req.query)
+            const singleBrand = await Brand.findOne({title : brand})
+            console.log(singleBrand)
+            brandQuery =  {brand : {_id : singleBrand.id}} 
+        }
         if (category) {
             const categoryQuery = req.query.categories.split(',')
             const categories = []
@@ -66,12 +74,34 @@ exports.getAllProducts = async (req, res, next) => {
                 const category = await Category.findOne({ title: c })
                 categories.push({ _id: category.id })
             }
-            console.log(categories)
             categorySearchQuery = { categories: { $all: categories } }
+        }
+                            //sort
+        let sortByQuery = {}
+        if(sortBy) {
+            switch (sortBy) {
+                case "popularity":
+                    sortByQuery = {rate : "desc"}
+                    break;
+                case "latest":
+                    sortByQuery = {createdAt: "desc"}
+                    break;
+                case "costly":
+                    sortByQuery = {price: "desc"}
+                    break;
+                case "cheap":
+                    sortByQuery = {price: "asc"}
+                    break;
+                default:
+                    sortByQuery = {createdAt: "desc"}
+                    break;
+            }
+        }else {
+            sortByQuery = {createdAt: "desc"}
         }
 
            //send Products
-           const sendData = (products, numberOfItems) => {
+            const sendData = (products, numberOfItems) => {
             if (!products || products.length == 0) {
                 res.status(404).json({ "message": "محصولی وجود ندارد", products: [] })
             } else {
@@ -87,14 +117,13 @@ exports.getAllProducts = async (req, res, next) => {
         if (searching) {
             const numberOfFilteredItems = await Product.find({ ...textSearchQuery, ...categorySearchQuery,...brandQuery,...priceQuery,...discountQuery  }).countDocuments()
             const filteredproducts = await Product.find({ ...textSearchQuery, ...categorySearchQuery ,...brandQuery,...priceQuery,...discountQuery}).sort({
-                createdAt: "desc"
+                ...sortByQuery
             }).populate('categories').populate('brand').limit(itemPerPage).skip((page - 1) * itemPerPage)
             sendData(filteredproducts, numberOfFilteredItems)
         } else {
             const numberOfItems = await Product.find().countDocuments()
-            console.log(numberOfItems)
             const products = await Product.find().sort({
-                createdAt: "desc"
+                ...sortByQuery
             }).populate('categories').populate('brand').limit(itemPerPage).skip((page - 1) * itemPerPage)
             sendData(products, numberOfItems)
         }
@@ -103,3 +132,5 @@ exports.getAllProducts = async (req, res, next) => {
         next(error)
     }
 }
+
+

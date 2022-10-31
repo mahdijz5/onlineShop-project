@@ -28,3 +28,8 @@ export const ViewProductsContext = createContext({
     brands : [],
     getSelectedCategories : [],
 })
+
+export const HomeLayoutContext = createContext({
+    categories : [],
+    brands : [],
+})
