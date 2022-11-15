@@ -1,5 +1,6 @@
-import HomeLayout from '../../components/HomeLayout'
-import MainLayout from '../../components/MainLayout'
+import HomeLayout from '../../components/Layouts/HomeLayout'
+import MainLayout from '../../components/Layouts/MainLayout'
+import Meta from '../../components/Meta';
 import SearchBody from '../../components/Search/SearchBody';
 import SearchTemplate from '../../components/Search/SearchTemplate';
 import { getAllBrands, getAllCategories, getAllProducts } from "../../services/product";
@@ -8,6 +9,7 @@ import { getAllBrands, getAllCategories, getAllProducts } from "../../services/p
 const search = ({ categories, productPerPage, numberOfProducts, brands, latestProducts }) => {
     return (
         <>
+            <Meta title="جستجو"/>
             <SearchTemplate brands={brands} categories={categories}>
                 <SearchBody products={latestProducts}/>
             </SearchTemplate>
@@ -16,7 +18,6 @@ const search = ({ categories, productPerPage, numberOfProducts, brands, latestPr
 }
 
 export const getServerSideProps = async (context) => {
-    console.log("getServerSideProps is on the way..........")
     const { data: categories } = await getAllCategories();
     const { data: brands } = await getAllBrands();
     try {

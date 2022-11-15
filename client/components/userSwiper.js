@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import styles  from "../styles/User.module.css"
 import "swiper/css";
 import { Autoplay ,EffectFade} from "swiper";
 import "swiper/css/navigation";
@@ -22,12 +21,14 @@ const UserSwiper = () => {
 
 	return (
 		<>
-			<div className="w-100 h-100" style={{
+			<div   style={{
                 position : 'relative',
-                overflow: "hidden"
+                overflow: "hidden",
+				height : "100%",
+				width : "100%"
 			}}>
 			<Swiper
-                className={`w-100 h-100 ${styles.swiper}`}
+                // className={` ${styles.swiper}`}
 				modules={[Autoplay,EffectFade]}
 				slidesPerView={1} 
 				effect="fade"
@@ -35,22 +36,22 @@ const UserSwiper = () => {
 				loop
 				autoplay={{
 					delay: 2500,
-					disableOnInteraction: false,
+					disableOnInteraction: true,
 				}}	
                 style={{
                     overflow: "hidden !important",
-                    position:"relative",
-                    top : 0,
-                    right : 0,
-                    left : 0,
-                    bottom : 0,
+					height : "100%",
+					width :"1005"
                 }}		
                 >
 				{swiperImgs
 					? swiperImgs.map((img, index) => (
 							<SwiperSlide
 								key={index}
-                                className="w-100 h-100"
+                                style={{
+									width : "100%",
+									height : "100%"
+								}}
 							>
 								<Link href="#">
 									<a>

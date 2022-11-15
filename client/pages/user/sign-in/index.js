@@ -1,150 +1,125 @@
 import Link from "next/link";
-import Image  from 'next/image';
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { useState ,useTransition} from "react";
+import { useState, useTransition } from "react";
 
 import Meta from "../../../components/Meta";
-import User from "../../../styles/User.module.css";
-import UserLayout from "../../../components/UserLayout";
-import MainLayout from "../../../components/MainLayout";
+import UserLayout from "../../../components/Layouts/UserLayout";
+import MainLayout from "../../../components/Layouts/MainLayout";
 import { login } from "../../../services/auth";
+import {  Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
+import Loader from "../../../components/Loader";
+import { toastNotif } from "../../../helpers/tools";
 
 const signIn = () => {
 	const router = useRouter();
-	const [isPending,startTransition] = useTransition()
-	const [formValues,setFormValues] = useState({
-		email : "",
-		password : "",
-		rememberMe : "",
-	}) 
+	const [isPending, startTransition] = useTransition()
+	const [formValues, setFormValues] = useState({
+		email: "",
+		password: "",
+		rememberMe: "",
+	})
 
-
-	const signInNotif = (msg, status) => {
-		if (status == 201) {
-			toast.success(msg, {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		} else {
-			toast.error(msg, {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		}
-	};
 
 	const onSubmit = (event) => {
 		event.preventDefault()
-		startTransition(async()=> {
+		startTransition(async () => {
 			try {
 
-				const response = await login(formValues)	
-				localStorage.setItem("token",response.data.token)	
-				router.push("/dashboard")
+				const response = await login(formValues)
+				localStorage.setItem("accessToken", response.data.accessToken)
+				localStorage.setItem("refreshToken", response.data.refreshToken)
+				console.log(response.data)
+				// router.push("/dashboard")
 			} catch (error) {
 				console.log(error)
-				signInNotif(error.response.data.message,error.response.data.status)
+				toastNotif(error.response.data.message, error.response.data.status,0)
 			}
-		})					
+		})
 	}
 
 	return (
 		<div>
 			<Meta title="احزار هویت" />
-						{isPending ? <Image src="/icon/loader.gif" layout="responsive" width={150} height={150}/> : (
-							<form
-							onSubmit={(event) => {
-								onSubmit(event)
-							}}
-							method="post"
-							className="input-group w-50 d-inline-block p-0"
-							style={{
-								position: "absolute",
-								top: "50%",
-								left: "50%",
-								transform: "translate(-50%, -50%)",
-								overflow: "hidden",
-							}}
-						>
-							<h1 className="mb-2">ورود</h1>
-							<input
-								id="email"
-								placeholder="ایمیل خود را وارد کنید"
-								name="email"
-								className={User.formInp + " form-control w-100 mb-3"}
-								value={formValues.email}
-								onChange={(event) => {
-									setFormValues({
-										...formValues,
-										[event.target.name] : event.target.value
-									})
-								}}
-							/>
-							<input
-								type="password"
-								id="password"
-								placeholder="رمز عبور خود را وارد کنید"
-								name="password"
-								className={User.formInp + " form-control w-100 mb-3"}
-								value={formValues.password}
-								onChange={(event) => {
+			{isPending ? <Loader/> : (
+				<form
+					onSubmit={(event) => {
+						onSubmit(event)
+					}}
+					method="post"
+					className="input-group w-50 d-inline-block p-0"
+					style={{
+						position: "absolute",
+						top: "50%",
+						left: "50%",
+						transform: "translate(-50%, -50%)",
+						overflow: "hidden",
+					}}
+				>
+					<Stack gap={"15px"} justifyContent="center">
+						<h1 className="mb-2">ورود</h1>
+						<TextField
+							label="ایمیل"
+							name="email"
+							value={formValues.email}
+							onChange={(event) => {
 								setFormValues({
 									...formValues,
-									[event.target.name] : event.target.value
-								})}}
-							/>
-							<div className="form-check d-inline-block" style={{
-								textAlign : "right",
-							}}>
-								<input
-									className="form-check-input"
-									type="checkbox"
+									[event.target.name]: event.target.value
+								})
+							}}
+						/>
+						<TextField
+							type="password"
+							label="رمز عبور"
+							name="password"
+							value={formValues.password}
+							onChange={(event) => {
+								setFormValues({
+									...formValues,
+									[event.target.name]: event.target.value
+								})
+							}}
+						/>
+
+						<FormGroup>
+							<FormControlLabel control={
+								<Checkbox
 									name="rememberMe"
-									id="flexCheckIndeterminate"
 									value="remember-me"
 									onChange={(event) => {
-									setFormValues({
-									...formValues,
-									[event.target.name] : !formValues.rememberMe
-									})}}
-								/>
-								<label className="form-check-label" htmlfor="flexCheckIndeterminate">
-									مرا به خاطر بسپار
-								</label>
-							</div>
-							<br/>
-							<button
-								type="submit"
-								className="button2 hvr-bounce-to-top bouncy"
-							>
-								تایید
-							</button>
-							<br />
-							<Link href="/user/sign-up">حساب کاربری ایی ندارم.</Link>
-						</form>
-						)}
-			<ToastContainer/>
+										setFormValues({
+											...formValues,
+											[event.target.name]: !formValues.rememberMe
+										})
+									}} />
+							} label="مرا بخاطر بسپار" />
+						</FormGroup>
+
+						<Button type="submit" variant="contained">
+							تایید
+						</Button>
+						<Link href="/user/sign-up">
+							<a>
+								<Typography color='text.primary'>
+									حساب کاربری ایی ندارم
+								</Typography>
+							</a>
+						</Link>
+					</Stack>
+				</form>
+			)}
+			<ToastContainer />
 		</div>
 	);
 };
 
 signIn.getLayout = function getLayout(page) {
 	return (
-	  <MainLayout>
-		<UserLayout>{page}</UserLayout>
-	  </MainLayout>
+		<MainLayout>
+			<UserLayout>{page}</UserLayout>
+		</MainLayout>
 	)
-  }
+}
 
 export default signIn;

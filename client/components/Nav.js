@@ -95,7 +95,7 @@ const Nav = () => {
 									</RightOptionBox>
 								</a>
 							</Link>
-							<Link href="">
+							<Link href="/user/sign-in">
 								<a>
 									<RightOptionBox >
 										<Person />

@@ -28,10 +28,11 @@ function ElevationScroll(props) {
 	});
 }
 
-
+ 
 
 const AdminNav = ({ sidebarRef }) => {
 	const [showSidebar, setShowSidebar] = useState(false)
+ 
 
 	const openSidebar = () => {
 		const display = sidebarRef.current.style.display;
@@ -74,6 +75,9 @@ const AdminNav = ({ sidebarRef }) => {
 						</Box>
 						<IconBox>
 							<IconButton
+								onClick={() => {
+									console.log('21443')
+								}}
 								color="inherit" >
 								<Home />
 							</IconButton>

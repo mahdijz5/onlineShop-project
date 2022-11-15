@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import AdminLayout from "../../../../components/Admin/AdminLayout";
-import MainLayout from "../../../../components/MainLayout";
+import MainLayout from "../../../../components/Layouts/MainLayout";
 import {
 	addCategory as addNewCategory,
 	deleteCategory,

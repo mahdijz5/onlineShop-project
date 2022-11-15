@@ -1,7 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 
 import "swiper/css";
 import { Navigation,EffectFade} from "swiper";
@@ -39,9 +38,9 @@ const ThumbnailSwipre = ({height , width,thumbnail}) => {
 									
 								}}
 							>
-										<Image src={"/uploads/thumbnail/" + img} style={{borderRadius : "10px",cursor : "unset"}} layout="responsive" width={width} height={height} alt=""/>
+										<Image src={"/uploads/thumbnail/" + img} style={{borderRadius : "10px",cursor : "unset"  }} layout="fill" alt=""/>
 							</SwiperSlide>
-					  ))
+						))
 					: null}
 			</Swiper>
 			</Box>

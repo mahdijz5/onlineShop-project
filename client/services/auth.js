@@ -1,73 +1,68 @@
 import axios from "axios";
+import { authorization } from "../middlewares/authorization";
 
-const Server_UrI = process.env.SERVER_URI || "http://localhost:3001";
+const Server_UrI = process.env.AUTH_SERVER_URI || "http://localhost:3002/auth";
 
 axios.defaults = {
 	withCredentials: true,
 };
 
 //@desc handle login
-//@route POST SERVER_URI/user/sign-in
+//@route POST SERVER_URI/sign-in
 export const login = (values) => {
-	const url = `${Server_UrI}/user/sign-in`;
-	return axios.post(url, values);
-};
-
-//@desc handle login as admin
-//@route POST SERVER_URI/user/admin/login
-export const AdminLogin = (values) => {
-	const url = `${Server_UrI}/admin/login`;
+	const url = `${Server_UrI}/sign-in`;
 	return axios.post(url, values);
 };
 
 //@desc handle regestring user
-//@route POST SERVER_URI/user/sign-up
+//@route POST SERVER_URI/sign-up
 export const register = (values) => {
-	const url = `${Server_UrI}/user/sign-up`;
+	const url = `${Server_UrI}/sign-up`;
 	return axios.post(url, values);
 };
 
 //@desc Check user is authenticated or no
-//@route POST SERVER_URI/user/auth
-export const userAuthenticated = () => {
-	const token = localStorage.getItem("token");
-	const url = `${Server_UrI}/user/auth`;
-	return axios.post(url, null, {
+//@route POST SERVER_URI/auth
+export const userAuthenticated = (callback) => {
+	const token = localStorage.getItem("accessToken")
+	const url = `${Server_UrI}/auth`;
+	axios.post(url, null, {
 		headers: {
 			Authorization: `bearer ${token}`,
 		},
-	});
-};
-
-//@desc Check user is Admin or no
-//@route POST SERVER_URI/admin/auth
-export const adminAuthenticated = () => {
-	const token = localStorage.getItem("token");
-	const url = `${Server_UrI}/admin/auth`;
-	return axios.post(url, null, {
-		headers: {
-			Authorization: `bearer ${token}`,
-		},
-	});
+	}).then((data) => {
+		callback(data)
+	}).catch(async (err) => {
+		authorization(err.response, (data) => {
+			if(data.status == 401 || data.status == 403) {
+				callback({status : 401})
+			}else {
+				userAuthenticated((data) => {
+					if (data.status == 401 || data.status == 403) {
+						callback({ status: 401 })
+					} else {
+						callback(data)
+					}
+				})				
+			}
+		})
+	})
 };
 
 //@desc to refresh to token to keep user authenticated when user is online
-//@route POST SERVER_URI/user/refresh-token
+//@route POST SERVER_URI/refresh-token
 export const refreshToken = async () => {
 	try {
-		const token = localStorage.getItem("token");
-		const url = `${Server_UrI}/user/refresh-token`;
-		const {data , status} =await axios.post(url, null, {
+		const token = localStorage.getItem("refreshToken");
+		const url = `${Server_UrI}/refresh-token`;
+		const response = axios.post(url, null, {
 			headers: {
 				Authorization: `bearer ${token}`,
 			},
 		});
-		localStorage.setItem("token", data.token);
-		setTimeout(() => {
-			refreshToken();
-		}, 1000 * 200);
-		return status;
+
+		return response;
 	} catch (error) {
-        console.log(error)
-    }
+		return error
+	}
 };

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 
-import MainLayout from "../../../../components/MainLayout";
+import MainLayout from "../../../../components/Layouts/MainLayout";
 import AdminLayout from "../../../../components/Admin/AdminLayout";
 import { AdminDashboardContext, ViewProductsContext } from "../../../../context/context";
 import ProductTable from "../../../../components/Admin/ProductTable";

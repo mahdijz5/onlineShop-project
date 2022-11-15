@@ -1,20 +1,23 @@
-const jwt = require('jwt');
+const jwt = require('jsonwebtoken');
 const Admin = require('../models/admins');
 
-exports.auth = async(req,res,next) => {
+exports.auth = async (req, res, next) => {
+    console.log(req.get("Authorization"))
+    const token = req.get("Authorization").split(' ')[1]
     try {
-        const token = req.get("Authorization")
-        if(!token) {
+        if (!token) {
             const error = new Error("مجوز کافی ندارید")
             error.statusCode = 401
             throw error
-        }else {
-            jwt.verify(token ,process.env.JWT_SECRET,(err,decodedToken) => {
-                if(err) {
-                    next(err)
-                }else {
+        } else {
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
+                if (err) {
+                    const error = new Error("مجوز کافی ندارید")
+                    error.statusCode = 403
+                    throw error
+                } else {
                     req.userId = decodedToken.id
-                    next();
+                    next()
                 }
             })
         }
@@ -23,26 +26,26 @@ exports.auth = async(req,res,next) => {
     }
 }
 
-exports.adminAuth = async(req,res,next) => {
+exports.adminAuth = async (req, res, next) => {
     try {
         const token = req.get("Authorization")
-        if(!token) {
+        if (!token) {
             const error = new Error("مجوز کافی ندارید")
             error.statusCode = 401
             throw error
-        }else {
-            jwt.verify(token ,process.env.JWT_SECRET,async(err,decodedToken) => {
-                if(err) {
+        } else {
+            jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decodedToken) => {
+                if (err) {
                     next(err)
-                }else {
-                    const admin =await Admin.findOne({email : decodedToken.email}).catch(err => console.log(err))
-                    if(!admin) {
+                } else {
+                    const admin = await Admin.findOne({ email: decodedToken.email }).catch(err => console.log(err))
+                    if (!admin) {
                         const error = new Error("مجوز کافی ندارید")
                         error.statusCode = 401
                         throw error
-                    }else {
-                    req.userId = decodedToken.id
-                    next();
+                    } else {
+                        req.userId = decodedToken.id
+                        res.status(200).json({"message" : "شما مجاز هستید"})
                     }
                 }
             })

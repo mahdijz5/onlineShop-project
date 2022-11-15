@@ -5,8 +5,10 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app",
+    "devAuth": "nodemon authServer",
     "client": "cd ../client && npm run dev",
-    "start": "concurrently \"npm run dev\" \"npm run client\""
+    "start": "concurrently \"npm run dev\" \"npm run devAuth\" \"npm run client\"",
+    "server": "concurrently \"npm run dev\" \"npm run devAuth\""
   },
   "author": "",
   "license": "ISC",

@@ -1,6 +1,6 @@
-import MainLayout from "../../components/MainLayout";
+import MainLayout from "../../components/Layouts/MainLayout";
 import Meta from "../../components/Meta";
-import DashLayout from "../../components/userDash/DashLayout";
+import DashboardLayout from "../../components/dashboard/DashboardLayout";
 
 const userDashboard = () => {
 	return (
@@ -14,7 +14,7 @@ const userDashboard = () => {
 userDashboard.getLayout = (page) => {
     return (
         <MainLayout>
-            <DashLayout>{page}</DashLayout>
+            <DashboardLayout>{page}</DashboardLayout>
         </MainLayout>
     )
 }

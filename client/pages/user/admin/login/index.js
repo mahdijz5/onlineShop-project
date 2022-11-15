@@ -3,10 +3,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/router";
 
 import Meta from "../../../../components/Meta";
-import User from "../../../../styles/User.module.css";
 import { useState } from "react";
-import UserLayout from "../../../../components/UserLayout";
-import MainLayout from "../../../../components/MainLayout";
+import UserLayout from "../../../../components/Layouts/UserLayout";
+import MainLayout from "../../../../components/Layouts/MainLayout";
 import { login } from "../../../../services/auth";
 
 const signIn = () => {
@@ -75,7 +74,7 @@ const signIn = () => {
 								id="email"
 								placeholder="ایمیل خود را وارد کنید"
 								name="email"
-								className={User.formInp + " form-control w-100 mb-3"}
+								className={ " form-control w-100 mb-3"}
 								value={formValues.email}
 								onChange={(event) => {
 									setFormValues({
@@ -89,7 +88,7 @@ const signIn = () => {
 								id="password"
 								placeholder="رمز عبور خود را وارد کنید"
 								name="password"
-								className={User.formInp + " form-control w-100 mb-3"}
+								className={ " form-control w-100 mb-3"}
 								value={formValues.password}
 								onChange={(event) => {
 								setFormValues({

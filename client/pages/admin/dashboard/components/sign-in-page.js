@@ -1,6 +1,6 @@
 
 import AdminLayout from "../../../../components/Admin/AdminLayout";
-import MainLayout from "../../../../components/MainLayout";
+import MainLayout from "../../../../components/Layouts/MainLayout";
 
 function signInPage() {
   return (

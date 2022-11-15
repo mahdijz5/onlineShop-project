@@ -29,7 +29,15 @@ const userSchema = new mongoose.Schema({
     profileImg : {
 		type : String,
 		default : 'placeholder.png'
-	}
+	},
+    Cart : [{
+		type : mongoose.Schema.Types.ObjectId,
+		ref : 'Product'
+	}],
+    Comments : [{
+		type : mongoose.Schema.Types.ObjectId,
+		ref : 'Product'
+	}],
 });
 
 //middleWare

@@ -1,12 +1,12 @@
+import { Stack } from '@mui/material';
 import Image from 'next/image';
-import styles from '../styles/Loader.module.css';
 
 const Loader = () => {
     return(
         <>
-            <div styles={styles.container}>
-            <Image src="/icon/loader.svg"   layout="fill" height={50} width={50}/>
-            </div>
+            <Stack width="100%" height="100%" justifyContent={"center"} alignItems="center">
+            <Image src="/icon/loader.svg"   height={"200px"} width={"200px"}/>
+            </Stack>
         </>
     )
 }

@@ -10,10 +10,14 @@ const StyledBox = styled(Box)(({ theme }) => ({
     left: "100px",
     right: "100px",
     bottom: "100px",
-    height: "1650px",
+    [theme.breakpoints.down('md')]: {
+        right : 0,
+        left : 0
+    },
     backgroundColor: "white",
     zIndex: "2",
-    boxShadow: "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px"
+    boxShadow: "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px",
+    overflowY : "auto"
 
 }))
 
@@ -21,14 +25,16 @@ const Container = styled(Box)({
     height: "1750px",
 })
 
-const MainBody = ({ children }) => {
+const MainBody = ({ children,offerSwiper }) => {
     return (
         <Container>
-            <StyledBox>
+            <StyledBox className="niceScroll">
                 <Box  width="100%" height="100%">
-                    <Box height="20%">
+                    {offerSwiper ? (
+                        <Box height="20%">
                         <OfferSwiper />
                     </Box>
+                    ) : null}
                     <Box height="80%">
                     {children}
                     </Box>

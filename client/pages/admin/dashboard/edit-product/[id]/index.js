@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
 
 import AdminLayout from "../../../../../components/Admin/AdminLayout";
-import MainLayout from "../../../../../components/MainLayout";
+import MainLayout from "../../../../../components/Layouts/MainLayout";
 import {
     getAllCategories,
     getAllBrands,

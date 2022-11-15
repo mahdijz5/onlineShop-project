@@ -1,6 +1,5 @@
-import MainLayout from "../../../components/MainLayout";
-import Meta from "../../../components/Meta";
-import AdminLayout from "../../../components/Admin/AdminLayout";
+import MainLayout from "../../components/Layouts/MainLayout";
+import AdminLayout from "../../components/Admin/AdminLayout";
 
 const userDashboard = () => {
 	return (

@@ -1,6 +1,8 @@
 import styled from "@emotion/styled"
 import { BookmarkAddOutlined, ShoppingCartOutlined } from "@mui/icons-material"
 import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material"
+import Link from "next/link"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { setPoint } from "../../helpers/tools"
 import styles from "../../styles/ProductCard.module.css"
@@ -32,6 +34,7 @@ const StyledIconButton = styled(IconButton)({
 })
 
 const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
+    const router = useRouter() 
     const [product, setProduct] = useState(singleProduct)
     useEffect(() => {
         setProduct(singleProduct)
@@ -72,9 +75,13 @@ const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
                     <StyledIconButton >
                         <BookmarkAddOutlined />
                     </StyledIconButton>
-                    <StyledIconButton>
+                    <Link href="/product/[id]" as={`/product/${product._id}`}>
+                        <a>
+                        <StyledIconButton >
                         <ShoppingCartOutlined />
                     </StyledIconButton>
+                        </a>
+                    </Link>
                 </HoverBox>
             </StyledCard>
         </>

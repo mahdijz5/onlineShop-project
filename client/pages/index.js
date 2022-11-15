@@ -2,12 +2,11 @@ import { Box, Stack } from '@mui/material'
 import { useRouter } from 'next/router'
 import PopularRow from '../components/Home/PopularRow'
 import OffRow from '../components/Home/OffRow'
-import HomeLayout from '../components/HomeLayout'
-import MainLayout from '../components/MainLayout'
-import Nav from '../components/Nav'
-import OfferSwiper from '../components/OfferSwiper'
+import HomeLayout from '../components/Layouts/HomeLayout'
+import MainLayout from '../components/Layouts/MainLayout'
 import LatestRow from '../components/Home/LatestRow'
 import { getAllBrands, getAllCategories, getAllProducts } from "../services/product";
+import Meta from '../components/Meta'
 
 
 const Home =({  categories, productPerPage, numberOfProducts, brands,latestProducts,popularProducts }) => {
@@ -15,6 +14,7 @@ const Home =({  categories, productPerPage, numberOfProducts, brands,latestProdu
   const router = useRouter()
   return (
     <>
+         <Meta title="Home" />
         <Stack >
           <Box width="100%" height="100%" >
               <PopularRow products={popularProducts}/>
