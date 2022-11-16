@@ -3,7 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
 
 import AdminLayout from "../../../../../components/Admin/AdminLayout";
-import MainLayout from "../../../../../components/Layouts/MainLayout";
+import MainLayout from "../../../../../layouts/MainLayout";
 import {
     getAllCategories,
     getAllBrands,
@@ -66,7 +66,7 @@ const editProduct = ({ singleProduct, categories, brands }) => {
         try {
             const data = new FormData()
             data.set("name", product.name)
-            data.set("price", product.price)
+            data.set("price", product.price.low)
             data.set("discount", product.discount)
             data.set("description", product.description)
             data.set("brand", product.brand)

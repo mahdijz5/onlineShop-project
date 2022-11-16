@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import { HomeLayoutContext } from "../../context/context";
-import { getAllBrands, getAllCategories } from "../../services/product";
-import Footer from "../Footer";
-import Header from "../Header";
-import MainBody from "../MainBody";
-import Nav from "../Nav";
+import { HomeLayoutContext } from "../context/context";
+import { getAllBrands, getAllCategories } from "../services/product";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import MainContainer from "../containers/MainContainer";
+import Nav from "../components/Nav";
 
 const HomeLayout = ({ children }) => {
     const [categories,setCategories] = useState([])
@@ -29,9 +29,9 @@ const HomeLayout = ({ children }) => {
         <Box width={"100%"} height={"100%"} position="relative">
             <Nav />
             <Header />
-            <MainBody offerSwiper={true}>
+            <MainContainer suggestionSwiper={true}>
                 {children}
-            </MainBody>
+            </MainContainer>
             <Footer/>
         </Box>
         </HomeLayoutContext.Provider>

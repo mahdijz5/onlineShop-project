@@ -6,8 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import Meta from "../../../components/Meta";
 import { userSchema } from "../../../validation/userRegister";
 import { useRouter } from "next/router";
-import UserLayout from "../../../components/Layouts/UserLayout";
-import MainLayout from "../../../components/Layouts/MainLayout";
+import UserLayout from "../../../layouts/UserLayout";
+import MainLayout from "../../../layouts/MainLayout";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import TextFieldWrapper from "../../../components/ui/TextFieldWrapper";
 

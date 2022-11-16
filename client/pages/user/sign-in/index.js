@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 import { useState, useTransition } from "react";
 
 import Meta from "../../../components/Meta";
-import UserLayout from "../../../components/Layouts/UserLayout";
-import MainLayout from "../../../components/Layouts/MainLayout";
+import UserLayout from "../../../layouts/UserLayout";
+import MainLayout from "../../../layouts/MainLayout";
 import { login } from "../../../services/auth";
 import {  Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
 import Loader from "../../../components/Loader";

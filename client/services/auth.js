@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authorization } from "../middlewares/authorization";
+import { authorization } from "../helpers/authorization";
 
 const Server_UrI = process.env.AUTH_SERVER_URI || "http://localhost:3002/auth";
 

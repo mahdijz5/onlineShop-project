@@ -3,17 +3,17 @@ import { Router, useRouter } from 'next/router';
 import { useState } from 'react'
 import { AttachMoney, Bolt, Favorite, MoneyOff, Sort } from "@mui/icons-material"
 
-import Loader from '../Loader';
+import Loader from '../components/Loader';
 import styled from '@emotion/styled';
 import Link from 'next/link';
-import SearchSidebar from './SearchSidebar';
+import SearchSidebar from '../components/Search/SearchSidebar';
 
 const DivededBox = styled(Box)(({theme}) => ({
 
 }))
 
 
-const SearchTemplate = ({ children }) => {
+const SearchContainer = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
 
@@ -60,4 +60,4 @@ const SearchTemplate = ({ children }) => {
   )
 }
 
-export default SearchTemplate
+export default SearchContainer

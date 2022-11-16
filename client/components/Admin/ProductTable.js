@@ -113,16 +113,16 @@ function ProductTable({ products : allProducts, noCheckBox ,setOpenEdit}) {
                                 )) : null}
                                 </TableCell>
                                 <TableCell align="right"> {product.discount == 0 ? (<Typography>
-                                    {setPoint(product.price)}
+                                    {setPoint(product.price.low)}
                                 </Typography>) : (<>
                                     <Typography className="mx-2  ">
                                         {setPoint(
-                                            product.price - (product.price * product.discount) / 100
+                                            product.price.low - (product.price.low * product.discount) / 100
                                         )}
                                     </Typography>
 
                                     <Typography className={`mx-1 text-center  priceWithDiscount`}>
-                                        {setPoint(product.price)}
+                                        {setPoint(product.price.low)}
                                     </Typography>
                                 </>)}</TableCell>
                                 <TableCell align="right">{product.amount}</TableCell>

@@ -1,13 +1,13 @@
 import { Divider, Stack } from '@mui/material'
 import { useRouter } from 'next/router'
 import  { useEffect } from 'react'
-import MainLayout from '../../../components/Layouts/MainLayout'
-import ProductLayout from '../../../components/Layouts/ProductLayout'
+import MainLayout from '../../../layouts/MainLayout'
+import ProductLayout from '../../../layouts/ProductLayout'
 import Meta from '../../../components/Meta'
 import ProductBody from '../../../components/Product/ProductBody'
 import ProductComments from '../../../components/Product/ProductComments'
-import RelatedRow from '../../../components/Product/RelatedRow'
-import { getSingleProduct } from '../../../services/product'
+import RelatedSwiper from '../../../components/Swipers/RelatedSwiper'
+import { getAllProducts, getSingleProduct } from '../../../services/product'
 
 function product({ product }) {
     const router = useRouter()
@@ -25,7 +25,7 @@ function product({ product }) {
                     <Stack>
                         <ProductBody product={product} />
                         <Divider />
-                        <RelatedRow/>
+                        <RelatedSwiper/>
                         <Divider />
                         <ProductComments />
                     </Stack>
@@ -41,7 +41,10 @@ function product({ product }) {
 export const getServerSideProps = async (context) => {
     console.log(context.query)
     try {
+
+         //getAllProducts(Page | limit | sort | searchQuery | category | price | discount | brand)
         const { data: product } = await getSingleProduct(context.query.id)
+        const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 8, "latest" , "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
 
         return {
             props: {

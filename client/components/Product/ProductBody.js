@@ -3,7 +3,7 @@ import { CheckCircleOutline, Clear, Favorite, ShoppingCart } from '@mui/icons-ma
 import { Box, Button, Chip, Divider, IconButton, Paper, Rating, Stack, Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { setPoint } from '../../helpers/tools'
-import ThumbnailSwipre from '../ui/ThumbnailSwipre'
+import ThumbnailSwipre from '../Swipers/ThumbnailSwipre'
 
 const FixedIcons = styled(Stack)({
   position: "fixed",
@@ -55,11 +55,11 @@ function ProductBody({ product }) {
                 <Box height="90%" textAlign="center">
                   {product.discount > 0 ? (
                     <>
-                      <Typography variant='h5' className="priceWithDiscount">{setPoint(product.price)}</Typography>
-                      <Typography variant='h5' >{setPoint(product.price - ((product.price * product.discount) / 100))}</Typography>
+                      <Typography variant='h5' className="priceWithDiscount">{setPoint(product.price.low)}</Typography>
+                      <Typography variant='h5' >{setPoint(product.price.low - ((product.price.low * product.discount) / 100))}</Typography>
                     </>
                   ) : (
-                    <Typography variant='h5'>{setPoint(product.price)}</Typography>
+                    <Typography variant='h5'>{setPoint(product.price.low)}</Typography>
                   )}
                   <Divider />
                   {product.discount > 20 ? (

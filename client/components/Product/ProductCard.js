@@ -68,7 +68,7 @@ const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
                 </CardContent>
                 <Box p={1}>
                     <Typography variant="body2" color="primary.main" >
-                        {setPoint(product.price)} تومان
+                        {setPoint(product.price.low)} تومان
                     </Typography>
                 </Box>
                 <HoverBox className={styles.actionBox}>
