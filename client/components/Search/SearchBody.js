@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Box, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 
-import ProductCard from "../ui/ProductCard"
+import ProductCard from "../Product/ProductCard"
 
 const StyledBox = styled(Box)(({theme}) => ({
     display : "flex",

@@ -7,7 +7,7 @@ import {Add} from "@mui/icons-material"
 
 import { setPoint } from '../../helpers/tools';
 import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
-import ThumbnailSwiper from "../ui/ThumbnailSwipre"
+import ThumbnailSwiper from "../Swipers/ThumbnailSwipre"
 
 
 
@@ -66,7 +66,7 @@ function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProduct
 
 					<TextField label="قیمت :" variant="outlined"
 						name="price"
-						value={product.price}
+						value={product.price.low}
 						onChange={(e) => {
 							onProductChange(e);
 						}} />
@@ -83,15 +83,15 @@ function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProduct
 							<div>
 								<Typography variant='h4' >
 									{setPoint(
-										product.price - (product.price * product.discount) / 100
+										product.price.low - (product.price.low * product.discount) / 100
 									)}
 								</Typography>
 								<Typography variant='h4' className={`  priceWithDiscount`}>
-									{setPoint(product.price)}
+									{setPoint(product.price.low)}
 								</Typography>
 							</div>
 						) : (
-							<h3  >{setPoint(product.price)}</h3>
+							<h3  >{setPoint(product.price.low)}</h3>
 						)}
 					</Box>
 				</Stack>

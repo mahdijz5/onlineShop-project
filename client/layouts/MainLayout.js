@@ -1,10 +1,10 @@
-import Meta from "../Meta";
+import Meta from "../components/Meta";
 import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 
-import { theme } from "../ui/theme"
+import { theme } from "../components/ui/theme"
 
 const MainLayout = ({ children }) => {
     // Create rtl cache

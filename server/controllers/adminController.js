@@ -239,7 +239,7 @@ exports.addProduct = async (req, res, next) => {
             description,
             brand,
             amount: amount && amount != undefined ? parseInt(amount) : 0,
-            price: parseInt(price),
+            price: price,
             discount: discount && discount != undefined ? parseInt(discount) : 0,
             thumbnail: filesNameList,
             categories: allCategories,
@@ -332,7 +332,7 @@ exports.editProduct = async (req, res, next) => {
         product.description = description
         product.brand = brand
         product.amount = amount && amount != undefined ? parseInt(amount) : 0
-        product.price = parseInt(price)
+        product.price.low = parseInt(price)
         product.discount = discount && discount != undefined ? parseInt(discount) : 0
             product.categories = allCategories
 

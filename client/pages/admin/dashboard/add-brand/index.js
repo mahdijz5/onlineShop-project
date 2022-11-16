@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import AdminLayout from "../../../../components/Admin/AdminLayout";
-import MainLayout from "../../../../components/Layouts/MainLayout";
+import MainLayout from "../../../../layouts/MainLayout";
 import {
 	addBrand as addNewBrand,
 	deleteBrand,

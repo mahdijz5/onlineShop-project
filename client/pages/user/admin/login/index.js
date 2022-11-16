@@ -4,8 +4,8 @@ import { useRouter } from "next/router";
 
 import Meta from "../../../../components/Meta";
 import { useState } from "react";
-import UserLayout from "../../../../components/Layouts/UserLayout";
-import MainLayout from "../../../../components/Layouts/MainLayout";
+import UserLayout from "../../../../layouts/UserLayout";
+import MainLayout from "../../../../layouts/MainLayout";
 import { login } from "../../../../services/auth";
 
 const signIn = () => {

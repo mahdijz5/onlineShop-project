@@ -5,7 +5,7 @@ import { Favorite, Menu,Person,Search, ShoppingCart } from "@mui/icons-material"
 import styled from "@emotion/styled";
 import { cloneElement, useEffect, useState } from "react";
 import Link from "next/link";
-import SearchPanel from "./ui/SearchPanel";
+import SearchPanel from "./Search/SearchPanel";
 import { useRouter } from "next/router";
 
 const StyledToolbar = styled(Toolbar)(({theme}) => ({

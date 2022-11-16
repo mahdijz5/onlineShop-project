@@ -1,8 +1,8 @@
-import HomeLayout from '../../components/Layouts/HomeLayout'
-import MainLayout from '../../components/Layouts/MainLayout'
+import HomeLayout from '../../layouts/HomeLayout'
+import MainLayout from '../../layouts/MainLayout'
 import Meta from '../../components/Meta';
 import SearchBody from '../../components/Search/SearchBody';
-import SearchTemplate from '../../components/Search/SearchTemplate';
+import SearchContainer from '../../containers/SearchContainer';
 import { getAllBrands, getAllCategories, getAllProducts } from "../../services/product";
 
 
@@ -10,9 +10,9 @@ const search = ({ categories, productPerPage, numberOfProducts, brands, latestPr
     return (
         <>
             <Meta title="جستجو"/>
-            <SearchTemplate brands={brands} categories={categories}>
+            <SearchContainer brands={brands} categories={categories}>
                 <SearchBody products={latestProducts}/>
-            </SearchTemplate>
+            </SearchContainer>
         </>
     )
 }
@@ -27,7 +27,7 @@ export const getServerSideProps = async (context) => {
 
 
         //getAllProducts(Page | limit | sort | searchQuery | category | price | discount | brand)
-        const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 8, context.query.sort || "latest", context.query.search || "", context.query.category || "", false, context.query.price || "", context.query.discount || "", context.query.brand || "")
+        const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 222, context.query.sort || "latest", context.query.search || "", context.query.category || "", false, context.query.price || "", context.query.discount || "", context.query.brand || "")
         latestProducts = [...allLatestProducts.products]
 
         return {

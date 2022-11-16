@@ -1,4 +1,4 @@
-import MainLayout from "../../components/Layouts/MainLayout";
+import MainLayout from "../../layouts/MainLayout";
 import Meta from "../../components/Meta";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 

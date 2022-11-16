@@ -1,10 +1,10 @@
 import styled from '@emotion/styled'
-import { Box } from '@mui/material'
+import { Box, Paper } from '@mui/material'
 import React from 'react'
 
-import OfferSwiper from "./OfferSwiper"
+import SuggestionSwiper from "../components/swipers/SuggestionSwiper"
 
-const StyledBox = styled(Box)(({ theme }) => ({
+const StyledBox = styled(Paper)(({ theme }) => ({
     position: "absolute",
     top: "185px",
     left: "100px",
@@ -16,7 +16,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     },
     backgroundColor: "white",
     zIndex: "2",
-    boxShadow: "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px",
+    // boxShadow: "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px",
     overflowY : "auto"
 
 }))
@@ -25,14 +25,14 @@ const Container = styled(Box)({
     height: "1750px",
 })
 
-const MainBody = ({ children,offerSwiper }) => {
+const MainContainer = ({ children,suggestionSwiper }) => {
     return (
         <Container>
-            <StyledBox className="niceScroll">
+            <StyledBox className="niceScroll" elevation={6} >
                 <Box  width="100%" height="100%">
-                    {offerSwiper ? (
+                    {suggestionSwiper ? (
                         <Box height="20%">
-                        <OfferSwiper />
+                        <SuggestionSwiper />
                     </Box>
                     ) : null}
                     <Box height="80%">
@@ -44,4 +44,4 @@ const MainBody = ({ children,offerSwiper }) => {
     )
 }
 
-export default MainBody
+export default MainContainer

@@ -1,9 +1,8 @@
 import { Box } from '@mui/material'
-import React from 'react'
-import Footer from '../Footer'
-import Header from '../Header'
-import MainBody from '../MainBody'
-import Nav from '../Nav'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
+import MainContainer from '../containers/MainContainer'
+import Nav from '../components/Nav'
 
 function ProductLayout({ children }) {
     return (
@@ -11,9 +10,9 @@ function ProductLayout({ children }) {
             <Box width={"100%"} height={"100%"} position="relative">
                 <Nav />
                 <Header/>
-                <MainBody>
+                <MainContainer>
                     {children}
-                </MainBody>
+                </MainContainer>
                 <Footer />
             </Box>
         </>

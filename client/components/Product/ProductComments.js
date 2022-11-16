@@ -13,6 +13,9 @@ const Comment = styled(Paper)(({ theme }) => ({
     padding: "50px",
     paddingBottom : "40px",
     maxWidth: "60%",
+    [theme.breakpoints.down('lg')]: {
+        minWidth: "100%",
+    },
     position: "relative",
     marginLeft : "21px"
 

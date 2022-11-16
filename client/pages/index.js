@@ -1,10 +1,10 @@
 import { Box, Stack } from '@mui/material'
 import { useRouter } from 'next/router'
-import PopularRow from '../components/Home/PopularRow'
-import OffRow from '../components/Home/OffRow'
-import HomeLayout from '../components/Layouts/HomeLayout'
-import MainLayout from '../components/Layouts/MainLayout'
-import LatestRow from '../components/Home/LatestRow'
+import PopularSwiper from '../components/Swipers/PopularSwiper'
+import OfferSwiper from '../components/Swipers/OfferSwiper'
+import HomeLayout from '../layouts/HomeLayout'
+import MainLayout from '../layouts/MainLayout'
+import LatestSwiper from '../components/Swipers/LatestSwiper'
 import { getAllBrands, getAllCategories, getAllProducts } from "../services/product";
 import Meta from '../components/Meta'
 
@@ -17,13 +17,13 @@ const Home =({  categories, productPerPage, numberOfProducts, brands,latestProdu
          <Meta title="Home" />
         <Stack >
           <Box width="100%" height="100%" >
-              <PopularRow products={popularProducts}/>
+              <PopularSwiper products={popularProducts}/>
           </Box> 
           <Box width="100%" height="100%" >
-              <OffRow products={popularProducts}/>
+              <OfferSwiper products={popularProducts}/>
           </Box>
           <Box width="100%" height="100%" >
-              <LatestRow products={latestProducts}/>
+              <LatestSwiper products={latestProducts}/>
           </Box>
         </Stack>
     </>

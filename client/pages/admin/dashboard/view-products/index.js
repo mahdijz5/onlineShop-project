@@ -2,13 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 
-import MainLayout from "../../../../components/Layouts/MainLayout";
-import AdminLayout from "../../../../components/Admin/AdminLayout";
+import MainLayout from "../../../../layouts/MainLayout";
+import AdminLayout from "../../../../layouts/AdminLayout";
 import { AdminDashboardContext, ViewProductsContext } from "../../../../context/context";
 import ProductTable from "../../../../components/Admin/ProductTable";
 import { Fab, Stack } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
-import SearchPanel from "../../../../components/ui/SearchPanel";
+import SearchPanel from "../../../../components/Search/SearchPanel";
 import { getAllBrands, getAllCategories, getAllProducts } from "../../../../services/product";
 import AppPagination from "../../../../components/ui/Pagination";
 import AddProduct from "../../../../components/Admin/addProduct";
@@ -37,7 +37,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
 		try {
 		const data = new FormData()
 		data.set("name" , 	product.name)
-		data.set("price" , 	product.price)
+		data.set("price" , 	product.price.low)
 		data.set("discount",product.discount)
 		data.set("amount" , product.amount)
 		data.set("description" , product.description)
@@ -66,7 +66,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
 		try {
 		const data = new FormData()
 		data.set("name" , 	product.name)
-		data.set("price" , 	product.price)
+		data.set("price" , 	product.price.low)
 		data.set("discount",product.discount)
 		data.set("amount" , product.amount)
 		data.set("description" , product.description)

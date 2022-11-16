@@ -4,7 +4,7 @@ import _ from "lodash"
 import { useRouter } from "next/router";
 
 
-import MainLayout from "../../../../../components/Layouts/MainLayout";
+import MainLayout from "../../../../../layouts/MainLayout";
 import AdminLayout from "../../../../../components/Admin/AdminLayout";
 import { AdminDashboardContext } from "../../../../../context/context";
 import { Secondary } from "../../../../../helpers/color";

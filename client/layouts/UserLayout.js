@@ -4,9 +4,9 @@ import Link from "next/link";
 import { Home } from "@mui/icons-material";
 import { Box, IconButton, Stack } from "@mui/material";
 import { Router } from "next/router";
-import Loader from "../Loader";
 import { useState } from "react";
 import styled from "@emotion/styled";
+import Loader from "../components/Loader";
 
 const StyledStack = styled(Stack)(({theme}) => ({
 	boxShadow:  theme.shadows[6],

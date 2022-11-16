@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+require('mongoose-long')(mongoose);
+const {Types: {Long}} = mongoose;
 
 const {schema}= require('./validation/productValidation')
 
@@ -12,11 +14,11 @@ const productsSchema = new mongoose.Schema({
         required : true,
     },
     price : {
-        type : String,
+        type : Long,
         required : true,
     },
     discount : {
-        type : String,
+        type : Number,
         default : "0",
     },
     brand : {
