@@ -3,6 +3,7 @@ import Footer from '../components/Footer'
 import Header from '../components/Header'
 import MainContainer from '../containers/MainContainer'
 import Nav from '../components/Nav'
+import { ToastContainer } from 'react-toastify'
 
 function ProductLayout({ children }) {
     return (
@@ -14,6 +15,7 @@ function ProductLayout({ children }) {
                     {children}
                 </MainContainer>
                 <Footer />
+                <ToastContainer/>
             </Box>
         </>
     )

@@ -1,6 +1,8 @@
 const User = require("../models/users")
+const Product = require("../models/products")
 const RefreshToken = require("../models/refreshToken")
 const bcrypt = require('bcryptjs');
+const _ = require('lodash')
 
 const jwt = require('jsonwebtoken');
 
@@ -28,6 +30,7 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
     const { email, password } = req.body
+    let productIsInCart = false
     try {
         const user = await User.findOne({ email })
         if (!user) {
@@ -52,12 +55,13 @@ exports.signIn = async (req, res, next) => {
                     name: user.name
                 }
             }, process.env.REFRESH_TOKEN_SECRET)
-            // let d = new Date()
-            // d.setHours(d.getHours() + 24)
-            // let expireTime = new Date(d)
+
             RefreshToken.create({
                 token: refreshToken,
             })
+
+
+            console.log(accessToken, refreshToken)
             res.status(200).json({ accessToken, refreshToken, userId: user.id.toString() })
         }
 
@@ -103,7 +107,6 @@ exports.refreshToken = async (req, res, next) => {
         } else {
             jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, {user}) => {
                 if (err) {
-                    console.log("didnmsad")
                     res.status(403).json({ "message": "شما مجوز کافی ندارید" })
                 } else {
                     const accessToken = generateAccessToken({
@@ -153,3 +156,4 @@ const generateAccessToken = (user) => {
         expiresIn: "5m"
     })
 }
+

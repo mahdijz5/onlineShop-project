@@ -30,11 +30,11 @@ const userSchema = new mongoose.Schema({
 		type : String,
 		default : 'placeholder.png'
 	},
-    Cart : [{
+    cart : [{
 		type : mongoose.Schema.Types.ObjectId,
 		ref : 'Product'
 	}],
-    Comments : [{
+    list : [{
 		type : mongoose.Schema.Types.ObjectId,
 		ref : 'Product'
 	}],

@@ -1,5 +1,6 @@
 import { toast  } from "react-toastify";
-
+import moment from "jalali-moment"
+import textTruncate  from "truncate"
 
 export const toastNotif = (msg, status,delay) => {
     setTimeout(() => {
@@ -29,5 +30,15 @@ export const toastNotif = (msg, status,delay) => {
 
 //for prices
 export const setPoint = (number) => {
-    return number.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    const num = number || 0
+    return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+
+}
+
+export const convertDate = (date) => {
+    return moment(date, 'YYYY/MM/DD').locale('fa').format('YYYY/MM/DD')
+}
+
+export const truncate = (string,max) => {
+    return textTruncate(string, max)
 }

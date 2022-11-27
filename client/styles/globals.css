@@ -87,8 +87,8 @@ a{
 
 /* button and hover effect ................ */
 
-.hvr-underline-from-center {
-	display: inline-block;
+.activeLink {
+  display: inline-block;
 	vertical-align: middle;
 	-webkit-transform: perspective(1px) translateZ(0);
 	transform: perspective(1px) translateZ(0);
@@ -96,14 +96,14 @@ a{
 	position: relative;
 	overflow: hidden;
 }
-.hvr-underline-from-center:before {
-	content: "";
+.activeLink:before {
+  content: "";
 	position: absolute;
 	z-index: -1;
-	left: 51%;
-	right: 51%;
+	left: 0;
+	right: 0;
 	bottom: 0;
-	background: #ffbf69;
+	background: #7F77E0;
 	height: 4px;
 	-webkit-transition-property: left, right;
 	transition-property: left, right;
@@ -112,12 +112,8 @@ a{
 	-webkit-transition-timing-function: ease-out;
 	transition-timing-function: ease-out;
 }
-.hvr-underline-from-center:hover:before,
-.hvr-underline-from-center:focus:before,
-.hvr-underline-from-center:active:before {
-	left: 0;
-	right: 0;
-}
+
+ 
 
 .hvr-bounce-to-top {
   display: inline-block;
@@ -189,29 +185,8 @@ a{
 .hvr-underline-from-right:hover:before, .hvr-underline-from-right:focus:before, .hvr-underline-from-right:active:before {
   left: 0;
 }
-
-
-.button2 {
-  transition: 0.4s;
-	display: inline-block;
-	padding: 0.5em 3em;
-	border: unset;
-	margin: 0 0.3em 0.3em 0;
-	box-sizing: border-box;
-	text-decoration: none;
-	text-transform: uppercase;
-	font-family: "Roboto", sans-serif;
-	font-weight: 400;
-  font-size: 20px;
-	background-color: #FF9F1C;
-	text-align: center;
-  color: #fff;
-}
-
-.button2:focus-visible {
-  outline: none;
-  border: none;
-}
+ 
+  
 @media all and (max-width:30em){
   a.button1{
   display:block;
@@ -286,5 +261,5 @@ a{
 	right: -5px;
 	left: -5px;
 	background-color: red;
-	transform : rotate(12deg)
+	transform : rotate(5deg)
 }

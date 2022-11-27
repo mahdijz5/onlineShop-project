@@ -2,14 +2,16 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, useContext } from "react";
 import _ from "lodash";
 
-import AdminLayout from "../../../../../components/Admin/AdminLayout";
+import AdminLayout from "../../../../../layouts/AdminLayout";
 import MainLayout from "../../../../../layouts/MainLayout";
+import {
+    editProduct as editSingleProduct,
+} from "../../../../../services/adminDashboard";
 import {
     getAllCategories,
     getAllBrands,
     getSingleProduct,
-    editProduct as editSingleProduct,
-} from "../../../../../services/adminDashboard";
+} from "../../../../../services/product";
 import { toastNotif } from "../../../../../helpers/tools";
 import ProductForm from "../../../../../components/Admin/ProductForm";
 import Meta from "../../../../../components/Meta";

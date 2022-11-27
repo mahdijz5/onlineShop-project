@@ -10,6 +10,7 @@ import { login } from "../../../services/auth";
 import {  Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
 import Loader from "../../../components/Loader";
 import { toastNotif } from "../../../helpers/tools";
+import { mergeCart } from "../../../services/user";
 
 const signIn = () => {
 	const router = useRouter();
@@ -27,6 +28,7 @@ const signIn = () => {
 			try {
 
 				const response = await login(formValues)
+				await mergeCart(formValues.email)
 				localStorage.setItem("accessToken", response.data.accessToken)
 				localStorage.setItem("refreshToken", response.data.refreshToken)
 				console.log(response.data)

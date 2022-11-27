@@ -1,5 +1,5 @@
 import MainLayout from "../../layouts/MainLayout";
-import AdminLayout from "../../components/Admin/AdminLayout";
+import AdminLayout from "../../layouts/AdminLayout";
 
 const userDashboard = () => {
 	return (

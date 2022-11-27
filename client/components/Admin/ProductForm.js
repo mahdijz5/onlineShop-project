@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useTransition } from 'react'
 import dynamic from "next/dynamic";
+
 const CKEditor = dynamic(() => import("../CKEditor.js"), {
 	ssr: false,
 });
-import {Add} from "@mui/icons-material"
-
+import { Add } from "@mui/icons-material"
 import { setPoint } from '../../helpers/tools';
 import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
 import ThumbnailSwiper from "../Swipers/ThumbnailSwipre"
+ 
 
-
-
-function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProductChange, getAllCategories, getAllBrands, addCategory, product, thumbnail, getSelectedCategories, edit }) {
+function ProductForm({ setOpen, onSubmit, setThumbnail, removeCategory, onProductChange, getAllCategories, getAllBrands, addCategory, product, thumbnail, getSelectedCategories, edit }) {
 	const [getThumbnail, setThumbnails] = useState([])
 	const [isPending, startTransition] = useTransition()
 	useEffect(() => {
@@ -25,7 +24,7 @@ function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProduct
 			onSubmit={(e) => {
 				onSubmit(e)
 				setThumbnail([])
-				setOpen({status : false , id : ""})
+				setOpen({ status: false, id: "" })
 			}}
 		>
 			<Stack direction={{ sm: "column", md: "row" }} gap={2}>
@@ -39,7 +38,7 @@ function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProduct
 								<Box position="relative">
 									<ThumbnailSwiper thumbnail={getThumbnail} width={"200px"} height={"200px"} />
 									<label htmlFor="formFile" >
-										<a><Add sx={{position : "absolute",top : "0" , left : "0",zIndex : "3",backgroundColor:"white",borderRadius : "5px",cursor : "pointer"}} /> </a>
+										<a><Add sx={{ position: "absolute", top: "0", left: "0", zIndex: "3", backgroundColor: "white", borderRadius: "5px", cursor: "pointer" }} /> </a>
 									</label>
 								</Box>
 							)
@@ -66,10 +65,11 @@ function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProduct
 
 					<TextField label="قیمت :" variant="outlined"
 						name="price"
-						value={product.price.low}
+						value={product.price}
 						onChange={(e) => {
 							onProductChange(e);
 						}} />
+ 
 
 					<TextField label="تخفیف :" variant="outlined"
 						name="discount"
@@ -83,15 +83,15 @@ function ProductForm({ setOpen,onSubmit, setThumbnail, removeCategory, onProduct
 							<div>
 								<Typography variant='h4' >
 									{setPoint(
-										product.price.low - (product.price.low * product.discount) / 100
+										product.price - (product.price * product.discount) / 100
 									)}
 								</Typography>
 								<Typography variant='h4' className={`  priceWithDiscount`}>
-									{setPoint(product.price.low)}
+									{setPoint(product.price)}
 								</Typography>
 							</div>
 						) : (
-							<h3  >{setPoint(product.price.low)}</h3>
+							<h3  >{setPoint(product.price)}</h3>
 						)}
 					</Box>
 				</Stack>

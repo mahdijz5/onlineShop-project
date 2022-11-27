@@ -1,10 +1,12 @@
 import styled from "@emotion/styled"
-import { BookmarkAddOutlined, ShoppingCartOutlined } from "@mui/icons-material"
+import { Add, BookmarkAddOutlined, ShoppingCartOutlined } from "@mui/icons-material"
 import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { setPoint } from "../../helpers/tools"
+import { useContext, useEffect, useState } from "react"
+import { addToCart } from "../../helpers/action"
+import { setPoint, toastNotif, truncate } from "../../helpers/tools"
+import { General } from "../../context/context"
 import styles from "../../styles/ProductCard.module.css"
 
 
@@ -33,8 +35,10 @@ const StyledIconButton = styled(IconButton)({
     }
 })
 
-const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
-    const router = useRouter() 
+const ProductCard = ({ product: singleProduct, solid, width, height,padding }) => {
+    const {user} = useContext(General)
+    const paddingValue = padding || "20px"
+    const router = useRouter()
     const [product, setProduct] = useState(singleProduct)
     useEffect(() => {
         setProduct(singleProduct)
@@ -45,10 +49,10 @@ const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
         height: height ? height : "auto",
         display: "inline-block",
         margin: solid ? "0" : "10px 4px",
-        borderRadius : solid ? "0" : theme.shape.borderRadius,
-        boxShadow : solid ? theme.shadows[0] : theme.shadows[1],
+        borderRadius: solid ? "0" : theme.shape.borderRadius,
+        boxShadow: solid ? theme.shadows[0] : theme.shadows[1],
         outline: solid ? `1px solid ${theme.palette.grey[200]}` : "0",
-        padding: "20px",
+        padding: paddingValue,
         position: "relative",
     }))
 
@@ -58,12 +62,12 @@ const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
                 <CardMedia
                     component="img"
                     height="230"
-                    image="./images/product1.jpg"
+                    image={`/uploads/thumbnail/${product.thumbnail[0]}`}
                     alt="Paella dish"
                 />
                 <CardContent sx={{ padding: "0 10px 0 10px" }} >
                     <Typography variant="body1" fontWeight={'bold'}>
-                        {product.name}
+                        {truncate(product.name,25)}
                     </Typography>
                 </CardContent>
                 <Box p={1}>
@@ -72,14 +76,18 @@ const ProductCard = ({ product: singleProduct, solid ,width ,height}) => {
                     </Typography>
                 </Box>
                 <HoverBox className={styles.actionBox}>
-                    <StyledIconButton >
-                        <BookmarkAddOutlined />
+                    <StyledIconButton onClick={() => {
+                        addToCart(product._id, user, (res) => {
+                            toastNotif(res.message, res.status, 0)
+                        })
+                    }}>
+                        <Add />
                     </StyledIconButton>
                     <Link href="/product/[id]" as={`/product/${product._id}`}>
                         <a>
-                        <StyledIconButton >
-                        <ShoppingCartOutlined />
-                    </StyledIconButton>
+                            <StyledIconButton >
+                                <ShoppingCartOutlined />
+                            </StyledIconButton>
                         </a>
                     </Link>
                 </HoverBox>

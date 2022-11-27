@@ -1,6 +1,6 @@
 import MainLayout from "../../../layouts/MainLayout";
 import Meta from "../../../components/Meta";
-import AdminLayout from "../../../components/Admin/AdminLayout";
+import AdminLayout from "../../../layouts/AdminLayout";
 import { Box } from "@mui/material";
 
 const userDashboard = () => {
