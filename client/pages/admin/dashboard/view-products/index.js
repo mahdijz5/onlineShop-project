@@ -37,7 +37,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
 		try {
 		const data = new FormData()
 		data.set("name" , 	product.name)
-		data.set("price" , 	product.price.low)
+		data.set("price" , 	product.price)
 		data.set("discount",product.discount)
 		data.set("amount" , product.amount)
 		data.set("description" , product.description)

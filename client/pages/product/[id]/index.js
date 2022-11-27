@@ -1,61 +1,44 @@
 import { Divider, Stack } from '@mui/material'
-import { useRouter } from 'next/router'
-import  { useEffect } from 'react'
 import MainLayout from '../../../layouts/MainLayout'
 import ProductLayout from '../../../layouts/ProductLayout'
 import Meta from '../../../components/Meta'
 import ProductBody from '../../../components/Product/ProductBody'
 import ProductComments from '../../../components/Product/ProductComments'
 import RelatedSwiper from '../../../components/Swipers/RelatedSwiper'
-import { getAllProducts, getSingleProduct } from '../../../services/product'
+import { getComments, getRelatedProducts, getSingleProduct } from '../../../services/product'
 
-function product({ product }) {
-    const router = useRouter()
-    useEffect(() => {
-        if (!product || product == undefined) {
-            router.replace("/404")
-        }
-    }, [])
+function product({ product, relatedProducts, comments }) {
     return (
         <>
             <Meta title={product.name} />
-
-            {product || product != undefined ? (
-                <>
-                    <Stack>
-                        <ProductBody product={product} />
-                        <Divider />
-                        <RelatedSwiper/>
-                        <Divider />
-                        <ProductComments />
-                    </Stack>
-                </>
-            ) :
-                router.replace("/404")
-            }
-
+            <Stack>
+                <ProductBody product={product} />
+                <RelatedSwiper products={relatedProducts} />
+                <Divider />
+                <ProductComments productId={product._id} comments={comments} />
+            </Stack>
+            
         </>
     )
 }
 
 export const getServerSideProps = async (context) => {
-    console.log(context.query)
-    try {
+    let categories = []
 
-         //getAllProducts(Page | limit | sort | searchQuery | category | price | discount | brand)
-        const { data: product } = await getSingleProduct(context.query.id)
-        const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 8, "latest" , "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
+    const { data: product } = await getSingleProduct(context.query.id)
+    product.product.categories.map((c) => {
+        categories.push(c.title)
+    })
 
-        return {
-            props: {
-                product: { ...product.product }
-            }
-        }
-    } catch (error) {
-    }
+    // page,limit,categories,brand
+    console.log(product.product.brand)
+    const { data: relatedProducts } = await getRelatedProducts(context.query.page || 1, 8, categories, product.product.brand.title)
+    const { data: comments } = await getComments(context.query.id)
     return {
         props: {
-            product: false
+            product: product.product,
+            relatedProducts: relatedProducts.products,
+            comments: comments.comments
         }
     }
 }

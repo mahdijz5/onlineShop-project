@@ -16,8 +16,6 @@ export const AdminDashboardContext = createContext({
     
 })
 
-export const general = createContext({
-})
 
 export const ViewProductsContext = createContext({
     setSelectedCategories : () => {},
@@ -32,4 +30,10 @@ export const ViewProductsContext = createContext({
 export const HomeLayoutContext = createContext({
     categories : [],
     brands : [],
+})
+
+export const General = createContext({
+    setRefresh : () => {},
+    refresh : false,
+    user : {},
 })

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import AdminLayout from "../../../../components/Admin/AdminLayout";
+import AdminLayout from "../../../../layouts/AdminLayout";
 import MainLayout from "../../../../layouts/MainLayout";
 import {
 	addCategory as addNewCategory,

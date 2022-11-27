@@ -6,15 +6,11 @@ exports.auth = async (req, res, next) => {
     const token = req.get("Authorization").split(' ')[1]
     try {
         if (!token) {
-            const error = new Error("مجوز کافی ندارید")
-            error.statusCode = 401
-            throw error
+            res.status(401).json({"message": "مجوز کافی ندارید"})
         } else {
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
                 if (err) {
-                    const error = new Error("مجوز کافی ندارید")
-                    error.statusCode = 403
-                    throw error
+                    res.status(403).json({"message" : "مجوز کافی ندارید"})
                 } else {
                     req.userId = decodedToken.id
                     next()

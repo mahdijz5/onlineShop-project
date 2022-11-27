@@ -1,6 +1,7 @@
 const Admin = require("../models/admins")
 const Category = require("../models/categories")
 const Brand = require("../models/brands")
+const Comment = require("../models/comments")
 const Product = require("../models/products")
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -347,7 +348,7 @@ exports.editProduct = async (req, res, next) => {
 }
 
 exports.deleteAllProducts = async (req, res) => {
-    const products = await Product.find({})
+    const products = await Comment.find({})
     products.map(async (p) => {
         await p.remove()
     })
@@ -366,4 +367,6 @@ exports.changeAmount = async (req, res, next) => {
         next(error)
     }
 }
+
+
 

@@ -1,4 +1,4 @@
-import UserSwiper from "../userSwiper";
+import UserSwiper from "../components/Swipers/UserSwiper";
 
 import Link from "next/link";
 import { Home } from "@mui/icons-material";

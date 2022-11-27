@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-import AdminLayout from "../../../../components/Admin/AdminLayout";
+import AdminLayout from "../../../../layouts/AdminLayout";
 import MainLayout from "../../../../layouts/MainLayout";
 import {
 	addBrand as addNewBrand,

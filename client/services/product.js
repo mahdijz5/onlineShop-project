@@ -1,7 +1,11 @@
 import axios from "axios";
+import { authorization } from "../helpers/authorization";
 
 const Server_UrI = process.env.SERVER_URI || "http://localhost:3001";
 
+axios.defaults = {
+	withCredentials: true,
+};
 
 
 //@desc get all categories
@@ -26,13 +30,64 @@ export const getAllProducts = (page,limit,sort,search,categories,giveAll,price,d
     return axios.get(url)
 }
 
+//@desc get related products
+//@route GET  Server_UrI/product/related-products
+export const getRelatedProducts = (page,limit,categories,brand) => {
+    const url = encodeURI(`${Server_UrI}/product/related-products?page=${page}&limit=${limit}&categories=${categories}&brand=${brand}`)
+    return axios.get(url)
+}
 
 
 //@desc get Single product
-//@route GET  Server_UrI/product/get-product
+//@route GET  Server_UrI/product/get-product/id
 export const getSingleProduct = (id) => {
     const url = `${Server_UrI}/product/get-product/${id}`
     return axios.get(url)
 }
 
- 
+//@desc get Single product
+//@route POST  Server_UrI/product/send-product-comment/:id
+export const sendProductComment = async (rate,text,userId,id,callback  ) => {
+    console.log('request')
+    const token = localStorage.getItem("accessToken");
+    const url = `${Server_UrI}/product/send-product-comment/${id}`
+    return axios.post(url,{
+        rate,
+        text,
+        userId,        
+    },{
+        headers: {
+            Authorization: `bearer ${token}`,
+        },
+    }).then(data => {
+        callback(data)
+    }).catch(err => {
+        console.log(err)
+        if(  err.response.status == 401 || err.response.status == 403) {
+            authorization(err.response, (data) => {
+                if(data.status == 401 || data.status == 403) {
+                    callback(false,err)
+                    console.log("authorization failed")
+                }else {
+                    console.log("sebd request again")
+                    sendProductComment(rate,text,userId,id,(data,err) => {
+                        if (err) {
+                            callback(false,err)
+                        } else {
+                            callback(data)
+                        }
+                    })				
+                }
+            })
+        }else {
+            callback(false,err)
+        }
+    })
+}
+
+//@desc get comment of  specific product
+//@route Get  Server_UrI/product/get-comments/:id
+export const getComments = (id) => {
+    const url = `${Server_UrI}/product/get-comments/${id}`
+    return axios.get(url)
+}

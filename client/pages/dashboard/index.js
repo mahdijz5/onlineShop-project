@@ -1,12 +1,15 @@
 import MainLayout from "../../layouts/MainLayout";
 import Meta from "../../components/Meta";
-import DashboardLayout from "../../components/dashboard/DashboardLayout";
+import DashboardLayout from "../../layouts/DashboardLayout";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const userDashboard = () => {
+
 	return (
 		<>
 			<Meta title="داشبورد ادمین" />
-            <h1>Hello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello WorldHello World</h1>
+            
 		</>
 	);
 };

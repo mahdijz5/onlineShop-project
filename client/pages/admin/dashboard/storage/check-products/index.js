@@ -5,11 +5,12 @@ import { useRouter } from "next/router";
 
 
 import MainLayout from "../../../../../layouts/MainLayout";
-import AdminLayout from "../../../../../components/Admin/AdminLayout";
+import AdminLayout from "../../../../../layouts/AdminLayout";
 import { AdminDashboardContext } from "../../../../../context/context";
 import { Secondary } from "../../../../../helpers/color";
 import styles from "../../../../../styles/admin/Product.module.css";
-import { changeAmountOfProduct, getAllCategories, getAllProducts } from "../../../../../services/adminDashboard";
+import { changeAmountOfProduct, getAllCategories } from "../../../../../services/adminDashboard";
+import { getAllProducts } from "../../../../../services/product";
 import ProductTable from "../../../../../components/Admin/ProductTable";
 import { toastNotif } from "../../../../../helpers/tools";
 

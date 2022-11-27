@@ -10,8 +10,12 @@ axios.defaults = {
 //@desc handle login
 //@route POST SERVER_URI/sign-in
 export const login = (values) => {
+	const cart =localStorage.getItem("cart") || ""
 	const url = `${Server_UrI}/sign-in`;
-	return axios.post(url, values);
+	return axios.post(url, {
+		cart : cart.split(",") || '',
+		...values,
+	});
 };
 
 //@desc handle regestring user
@@ -21,7 +25,7 @@ export const register = (values) => {
 	return axios.post(url, values);
 };
 
-//@desc Check user is authenticated or no
+//@desc Check user is authenticated or no it status 401 or 200
 //@route POST SERVER_URI/auth
 export const userAuthenticated = (callback) => {
 	const token = localStorage.getItem("accessToken")
