@@ -1,5 +1,6 @@
 import axios from "axios";
 import { authorization } from "../helpers/authorization";
+import authInstance from "./authInstance";
 
 const Server_UrI = process.env.AUTH_SERVER_URI || "http://localhost:3002/auth";
 
@@ -30,26 +31,11 @@ export const register = (values) => {
 export const userAuthenticated = (callback) => {
 	const token = localStorage.getItem("accessToken")
 	const url = `${Server_UrI}/auth`;
-	axios.post(url, null, {
-		headers: {
-			Authorization: `bearer ${token}`,
-		},
-	}).then((data) => {
+	authInstance.post(url, null).then((data) => {
+		console.log(data)
 		callback(data)
 	}).catch(async (err) => {
-		authorization(err.response, (data) => {
-			if(data.status == 401 || data.status == 403) {
-				callback({status : 401})
-			}else {
-				userAuthenticated((data) => {
-					if (data.status == 401 || data.status == 403) {
-						callback({ status: 401 })
-					} else {
-						callback(data)
-					}
-				})				
-			}
-		})
+ 
 	})
 };
 

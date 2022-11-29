@@ -1,5 +1,6 @@
 import axios from "axios";
 import { authorization } from "../helpers/authorization";
+import authInstance from "./authInstance";
 const Server_UrI = process.env.SERVER_URI || "http://localhost:3001/user";
 
 
@@ -13,26 +14,14 @@ axios.defaults = {
 export const getUser = async (callback) => {
 	const token = localStorage.getItem("accessToken");
 	const url = `${Server_UrI}/get-user`;
-	return axios.get(url, {
+	return authInstance.get(url, {
 		headers: {
 			Authorization: `bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-		authorization(err.response, (data) => {
-			if (data.status == 401 || data.status == 403) {
-				callback({ status: 401 })
-			} else {
-				getUser((data) => {
-					if (data.status == 401 || data.status == 403) {
-						callback({ status: 401 })
-					} else {
-						callback(data)
-					}
-				})
-			}
-		})
+		callback(false,err)
 	})
 };
 
@@ -40,9 +29,9 @@ export const getUser = async (callback) => {
 //@route POST SERVER_URI/merge-cart
 export const mergeCart = async (email) => {
 	const token = localStorage.getItem("accessToken");
-	const cart = localStorage.getItem("cart").split(",");
+	const cart = localStorage.getItem("cart") ? localStorage.getItem("cart").split(",") : null;
 	const url = `${Server_UrI}/merge-cart`;
-	return axios.post(url, {
+	return authInstance.post(url, {
 		email,
 		cart,
 	}, {
@@ -52,13 +41,7 @@ export const mergeCart = async (email) => {
 	}).then((data) => {
 		throw data
 	}).catch(async (err) => {
-		authorization(err.response, (data) => {
-			if (data.status == 401 || data.status == 403) {
-				throw { status: 401 }
-			} else {
-				mergeCart(email)
-			}
-		})
+		callback(err)
 	})
 };
 
@@ -68,7 +51,7 @@ export const mergeCart = async (email) => {
 export const addProductToCart = async (id, callback) => {
 	const token = localStorage.getItem("accessToken");
 	const url = `${Server_UrI}/add-product-cart`;
-	return axios.post(url, {
+	return authInstance.post(url, {
 		product: id
 	}, {
 		headers: {
@@ -77,31 +60,7 @@ export const addProductToCart = async (id, callback) => {
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-		console.log(err)
-		if (err.response.status !== undefined) {
-			if (err.response.status == 401 || err.response.status == 403) {
-				authorization(err.response, (data) => {
-					console.log(data)
-					if (data.status == 401 || data.status == 403) {
-						callback(false, { status: 401 })
-					} else {
-						addProductToCart(id, (data, err) => {
-							if (err) {
-								if (err.status == 401 || err.status == 403) {
-									callback(false, { status: 401 })
-								}
-							} else {
-								callback(data, false)
-							}
-						})
-					}
-				})
-			} else {
-				callback(false, err)
-			}
-		} else {
-			callback(false, err)
-		}
+		callback(false, err)
 	})
 };
 
@@ -110,7 +69,7 @@ export const addProductToCart = async (id, callback) => {
 export const removeProductFromCart = async (id, callback) => {
 	const token = localStorage.getItem("accessToken");
 	const url = `${Server_UrI}/remove-product-cart`;
-	return axios.post(url, {
+	return authInstance.post(url, {
 		product: id
 	}, {
 		headers: {
@@ -119,31 +78,7 @@ export const removeProductFromCart = async (id, callback) => {
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-		console.log(err)
-		if (err.response.status !== undefined) {
-			if (err.response.status == 401 || err.response.status == 403) {
-				authorization(err.response, (data) => {
-					console.log(data)
-					if (data.status == 401 || data.status == 403) {
-						callback(false, { status: 401 })
-					} else {
-						removeProductFromCart(id, (data, err) => {
-							if (err) {
-								if (err.status == 401 || err.status == 403) {
-									callback(false, { status: 401 })
-								}
-							} else {
-								callback(data, false)
-							}
-						})
-					}
-				})
-			} else {
-				callback(false, err)
-			}
-		} else {
 			callback(false, err)
-		}
 	})
 };
 
@@ -152,7 +87,7 @@ export const removeProductFromCart = async (id, callback) => {
 export const addProductToList = async (id, callback) => {
 	const token = localStorage.getItem("accessToken");
 	const url = `${Server_UrI}/add-product-list`;
-	return axios.post(url, {
+	return authInstance.post(url, {
 		product: id
 	}, {
 		headers: {
@@ -162,30 +97,7 @@ export const addProductToList = async (id, callback) => {
 		callback(data)
 	}).catch(async (err) => {
 		console.log(err)
-		if (err.response.status !== undefined) {
-			if (err.response.status == 401 || err.response.status == 403) {
-				authorization(err.response, (data) => {
-					console.log(data)
-					if (data.status == 401 || data.status == 403) {
-						callback(false, { status: 401 })
-					} else {
-						addProductToList(id, (data, err) => {
-							if (err) {
-								if (err.status == 401 || err.status == 403) {
-									callback(false, { status: 401 })
-								}
-							} else {
-								callback(data, false)
-							}
-						})
-					}
-				})
-			} else {
-				callback(false, err)
-			}
-		} else {
 			callback(false, err)
-		}
 	})
 };
 
@@ -206,7 +118,7 @@ export const getCart = (ids) => {
 export const getComments = async (id, callback) => {
 	const token = localStorage.getItem("accessToken");
 	const url = `${Server_UrI}/get-comments/${id}`;
-	return axios.get(url, {
+	return authInstance.get(url, {
 		headers: {
 			Authorization: `bearer ${token}`,
 		},
@@ -214,30 +126,8 @@ export const getComments = async (id, callback) => {
 		callback(data)
 	}).catch(async (err) => {
 		console.log(err)
-		if (err.response.status !== undefined) {
-			if (err.response.status == 401 || err.response.status == 403) {
-				authorization(err.response, (data) => {
-					console.log(data)
-					if (data.status == 401 || data.status == 403) {
-						callback(false, { status: 401 })
-					} else {
-						addProductToList(id, (data, err) => {
-							if (err) {
-								if (err.status == 401 || err.status == 403) {
-									callback(false, { status: 401 })
-								}
-							} else {
-								callback(data, false)
-							}
-						})
-					}
-				})
-			} else {
-				callback(false, err)
-			}
-		} else {
+	
 			callback(false, err)
-		}
 	})
 };
 
@@ -246,37 +136,14 @@ export const getComments = async (id, callback) => {
 export const removeComment = async (id, callback) => {
 	const token = localStorage.getItem("accessToken");
 	const url = `${Server_UrI}/remove-comment/${id}`;
-	return axios.delete(url, {
+	return authInstance.delete(url, {
 		headers: {
 			Authorization: `bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-		console.log(err)
-		if (err.response.status !== undefined) {
-			if (err.response.status == 401 || err.response.status == 403) {
-				authorization(err.response, (data) => {
-					console.log(data)
-					if (data.status == 401 || data.status == 403) {
-						callback(false, { status: 401 })
-					} else {
-						removeComment(id, (data, err) => {
-							if (err) {
-								if (err.status == 401 || err.status == 403) {
-									callback(false, { status: 401 })
-								}
-							} else {
-								callback(data, false)
-							}
-						})
-					}
-				})
-			} else {
-				callback(false, err)
-			}
-		} else {
 			callback(false, err)
-		}
+		
 	})
 };
