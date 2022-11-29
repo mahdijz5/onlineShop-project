@@ -11,21 +11,19 @@ import { userAuthenticated } from "../services/auth";
 import { getUser } from "../services/user";
 
 const MainLayout = ({ children }) => {
-    const [user,setUser] = useState([])
-    const [refresh,setRefresh] = useState(false)
+    const [user, setUser] = useState([])
+    const [refresh, setRefresh] = useState(false)
     useEffect(() => {
-        userAuthenticated((data) => {
-            if(data.status != 401 && data.status != 403) {
-                getUser(({data}) => {
-                    let userCart = []
-                    data.user.cart.map(c => userCart.push(c._id))
-                    localStorage.setItem("cart",userCart)
-                    setUser(data.user)
-                })
+        getUser((data, err) => {
+            if (!err) {
+                let userCart = []
+                data.data.user.cart.map(c => userCart.push(c._id))
+                localStorage.setItem("cart", userCart)
+                setUser(data.data.user)
+
             }
-			
-		}) 
-		
+        })
+
     }, [refresh])
 
     // Create rtl cache

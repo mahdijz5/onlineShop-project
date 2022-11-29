@@ -28,9 +28,9 @@ const signIn = () => {
 			try {
 
 				const response = await login(formValues)
-				await mergeCart(formValues.email)
 				localStorage.setItem("accessToken", response.data.accessToken)
 				localStorage.setItem("refreshToken", response.data.refreshToken)
+				await mergeCart(formValues.email)
 				console.log(response.data)
 				// router.push("/dashboard")
 			} catch (error) {

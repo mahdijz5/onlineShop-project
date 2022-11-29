@@ -1,5 +1,6 @@
 import axios from "axios";
 import { authorization } from "../helpers/authorization";
+import authInstance from "./authInstance";
 
 const Server_UrI = process.env.SERVER_URI || "http://localhost:3001";
 
@@ -51,7 +52,7 @@ export const sendProductComment = async (rate,text,userId,id,callback  ) => {
     console.log('request')
     const token = localStorage.getItem("accessToken");
     const url = `${Server_UrI}/product/send-product-comment/${id}`
-    return axios.post(url,{
+    return authInstance.post(url,{
         rate,
         text,
         userId,        
@@ -62,26 +63,7 @@ export const sendProductComment = async (rate,text,userId,id,callback  ) => {
     }).then(data => {
         callback(data)
     }).catch(err => {
-        console.log(err)
-        if(  err.response.status == 401 || err.response.status == 403) {
-            authorization(err.response, (data) => {
-                if(data.status == 401 || data.status == 403) {
-                    callback(false,err)
-                    console.log("authorization failed")
-                }else {
-                    console.log("sebd request again")
-                    sendProductComment(rate,text,userId,id,(data,err) => {
-                        if (err) {
-                            callback(false,err)
-                        } else {
-                            callback(data)
-                        }
-                    })				
-                }
-            })
-        }else {
             callback(false,err)
-        }
     })
 }
 
