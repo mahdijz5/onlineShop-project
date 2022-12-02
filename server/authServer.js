@@ -21,7 +21,7 @@ app.use(setHeader)
 connectDB()
 
 //routes
-app.use("/auth/",require("./routes/auth"))
+// app.use("/auth/",require("./routes/auth"))
 
 
 app.listen(3002, ()=>{

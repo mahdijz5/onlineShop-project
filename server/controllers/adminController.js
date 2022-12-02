@@ -99,7 +99,6 @@ exports.createCategory = async (req, res, next) => {
 
 exports.editCategory = async (req, res, next) => {
     try {
-        console.log(12213)
         const { title } = req.body;
         const id = req.params.id
         const category = await Category.findOne({ _id: id });
@@ -156,7 +155,6 @@ exports.createBrand = async (req, res, next) => {
 
 exports.editBrand = async (req, res, next) => {
     try {
-        console.log(12213)
         const { title } = req.body;
         const id = req.params.id
         const brand = await Brand.findOne({ _id: id });
@@ -203,7 +201,8 @@ exports.addProduct = async (req, res, next) => {
 
     try {
 
-        fileUpload(req.files, process.env.THUMBNAIL_ADRESS, async (filesList, filesName) => {
+        fileUpload(req.files, process.env.THUMBNAIL_ADDRESS, async (filesList, filesName,path,err) => {
+            console.log(err)
             filesList.map((thumbnail) => {
 
                 Product.productValidation({ ...req.body, thumbnail }).catch((error) => {
@@ -248,6 +247,7 @@ exports.addProduct = async (req, res, next) => {
 
         res.status(201).json({ "message": "محصول با موفقیت ساخته شد." })
     } catch (error) {
+        console.error(error)
         next(error)
     }
 
@@ -263,7 +263,7 @@ exports.removeSelectedProducts = async (req, res, next) => {
                 res.status(404).json({ "message": "محصول مورد نظر یافت نشد" })
             }
             product.thumbnail.map((thumbnail) => {
-                fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADRESS}${thumbnail}`, (err) => {
+                fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADDRESS}${thumbnail}`, (err) => {
                     if (err) next(err)
                 })
             })
@@ -283,14 +283,13 @@ exports.editProduct = async (req, res, next) => {
     const { description, brand: brandTitle, categories, price, name, amount, discount } = await req.body;
 
     try {
-        const product = await Product.findOne({ _id: id })
-        console.log(req.files)
         if(!product) {
             res.status(400).json({"message" : "محصول مورد نظر یافت نشد"})
         }
+        const product = await Product.findOne({ _id: id })
         
         if (req.files !== null) {
-            fileUpload(req.files, process.env.THUMBNAIL_ADRESS, async (filesList, filesName) => {
+            fileUpload(req.files, process.env.THUMBNAIL_ADDRESS, async (filesList, filesName) => {
                 filesList.map((thumbnail) => {
 
                     Product.productValidation({ ...req.body, thumbnail }).catch((error) => {
@@ -300,7 +299,7 @@ exports.editProduct = async (req, res, next) => {
                         }
                     })
                     product.thumbnail.map((thumbnail) => {
-                        fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADRESS}${thumbnail}`, (err) => {
+                        fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADDRESS}${thumbnail}`, (err) => {
                             if (err) next(err)
                         })
                     })

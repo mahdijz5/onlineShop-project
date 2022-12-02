@@ -7,6 +7,7 @@ import Nav from "../components/Nav";
 import styled from "@emotion/styled";
 import DashboardList from "../components/dashboard/DashboardList";
 import Loader from "../components/Loader"
+import { ToastContainer } from "react-toastify";
 
 const StyledGrid = styled(Box)(({theme}) => ({
 	borderRadius : theme.shape.borderRadius,
@@ -43,7 +44,7 @@ const DashboardLayout = ({ children }) => {
 				<Nav/>
  
 				<Container >
-					<Grid container mt='40px' spacing={2}>
+					<Grid container mt='40px' gap={{xs : "35px",md : "0px"}}>
 						<Grid item md={3} xs={12} p="20px" pl={{md : "0"}} >
 							<StyledGrid>
 								<DashboardList/>
@@ -59,7 +60,9 @@ const DashboardLayout = ({ children }) => {
 					</Grid>
 				</Container>
 			</Stack>
+
 			)}
+			<ToastContainer />
 		</>
 	);
 };

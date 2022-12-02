@@ -7,6 +7,7 @@ import { Router } from "next/router";
 import { useState } from "react";
 import styled from "@emotion/styled";
 import Loader from "../components/Loader";
+import { ToastContainer } from "react-toastify";
 
 const StyledStack = styled(Stack)(({theme}) => ({
 	boxShadow:  theme.shadows[6],
@@ -60,7 +61,6 @@ const UserLayout = ({ children }) => {
 					<UserSwiper />
 				</Box>
 			</StyledStack>
-
 		</>
 	);
 };

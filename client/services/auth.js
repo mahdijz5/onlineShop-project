@@ -2,21 +2,25 @@ import axios from "axios";
 import { authorization } from "../helpers/authorization";
 import authInstance from "./authInstance";
 
-const Server_UrI = process.env.AUTH_SERVER_URI || "http://localhost:3002/auth";
+const Server_UrI = process.env.AUTH_SERVER_URI || "http://localhost:3001/auth";
 
 axios.defaults = {
-	withCredentials: true,
-};
+	withCredentials: true
+}
 
 //@desc handle login
 //@route POST SERVER_URI/sign-in
-export const login = (values) => {
-	const cart =localStorage.getItem("cart") || ""
+export const login = async(values,callback) => {
+	const cart = localStorage.getItem("cart") != undefined ? localStorage.getItem("cart") : ""
 	const url = `${Server_UrI}/sign-in`;
-	return axios.post(url, {
+	return  axios.post(url, {
 		cart : cart.split(",") || '',
 		...values,
-	});
+	}).then((res) => {
+		callback(res)
+	}).catch(err => {
+		callback(false,err);
+	})
 };
 
 //@desc handle regestring user
@@ -47,7 +51,7 @@ export const refreshToken = async () => {
 		const url = `${Server_UrI}/refresh-token`;
 		const response = axios.post(url, null, {
 			headers: {
-				Authorization: `bearer ${token}`,
+				Authorization: `Bearer ${refreshToken}`,
 			},
 		});
 

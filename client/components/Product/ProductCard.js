@@ -45,8 +45,20 @@ const ProductCard = ({ product: singleProduct, solid, width, height,padding }) =
     }, [])
 
     const StyledCard = styled(Card)(({ theme }) => ({
-        width: width ? width : 260,
         height: height ? height : "auto",
+        width: width ? width+"!important" : '260px',
+        [theme.breakpoints.up('lg')]: {
+            width: solid ? "20%" : "",
+		},
+        [theme.breakpoints.down('lg')]: {
+			width: solid ? "25%" : "",
+		},
+        [theme.breakpoints.down('md')]: {
+            width: solid ? "50%" : "",
+		},
+        [theme.breakpoints.down('sm')]: {
+            width: solid ? "100%" : "",
+		},
         display: "inline-block",
         margin: solid ? "0" : "10px 4px",
         borderRadius: solid ? "0" : theme.shape.borderRadius,
@@ -62,7 +74,7 @@ const ProductCard = ({ product: singleProduct, solid, width, height,padding }) =
                 <CardMedia
                     component="img"
                     height="230"
-                    image={`/uploads/thumbnail/${product.thumbnail[0]}`}
+                    image={`http://localhost:3001//uploads/thumbnail/${product.thumbnail[0]}`}
                     alt="Paella dish"
                 />
                 <CardContent sx={{ padding: "0 10px 0 10px" }} >

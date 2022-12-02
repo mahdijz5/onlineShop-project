@@ -41,6 +41,10 @@ router.delete("/remove-comment/:id",auth,userController.removeComment)
 //@route PUT /user/edit-comment/:id
 router.put("/edit-comment/:id",auth,userController.editComment)
 
+//@desc edit user data
+//@route PUT /user/edit-data/:id
+router.put("/edit-data/:id",auth,userController.editUser)
+
 
 
 

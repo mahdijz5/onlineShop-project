@@ -16,12 +16,12 @@ export const getUser = async (callback) => {
 	const url = `${Server_UrI}/get-user`;
 	return authInstance.get(url, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-		callback(false,err)
+		callback(false, err)
 	})
 };
 
@@ -36,12 +36,12 @@ export const mergeCart = async (email) => {
 		cart,
 	}, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
-		throw data
+		return data
 	}).catch(async (err) => {
-		callback(err)
+		return err
 	})
 };
 
@@ -55,7 +55,7 @@ export const addProductToCart = async (id, callback) => {
 		product: id
 	}, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
@@ -73,12 +73,12 @@ export const removeProductFromCart = async (id, callback) => {
 		product: id
 	}, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-			callback(false, err)
+		callback(false, err)
 	})
 };
 
@@ -91,13 +91,13 @@ export const addProductToList = async (id, callback) => {
 		product: id
 	}, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
 		console.log(err)
-			callback(false, err)
+		callback(false, err)
 	})
 };
 
@@ -106,9 +106,9 @@ export const addProductToList = async (id, callback) => {
 export const getCart = (ids) => {
 	const idList = typeof ids == 'string' ? ids.split(',') : ids
 	const url = `${Server_UrI}/get-cart`
-	return axios.get(url,{
-		params : {
-			ids : idList,
+	return axios.get(url, {
+		params: {
+			ids: idList,
 		}
 	})
 }
@@ -120,14 +120,34 @@ export const getComments = async (id, callback) => {
 	const url = `${Server_UrI}/get-comments/${id}`;
 	return authInstance.get(url, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
 		console.log(err)
-	
-			callback(false, err)
+
+		callback(false, err)
+	})
+};
+
+//@desc edit specific comment
+//@route Put SERVER_URI/edit-comment
+export const editComment = async (value,id, callback) => {
+	const token = localStorage.getItem("accessToken");
+	const url = `${Server_UrI}/edit-comment/${id}`;
+	return authInstance.put(url, {
+		text : value.text,
+		rate : value.rate,
+	},{
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	}).then((data) => {
+		callback(data)
+	}).catch(async (err) => {
+		console.log(err)
+		callback(false, err)
 	})
 };
 
@@ -138,12 +158,30 @@ export const removeComment = async (id, callback) => {
 	const url = `${Server_UrI}/remove-comment/${id}`;
 	return authInstance.delete(url, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	}).then((data) => {
 		callback(data)
 	}).catch(async (err) => {
-			callback(false, err)
-		
+		callback(false, err)
+
 	})
 };
+
+//@desc edit user data  
+//@route PUT  Server_UrI/edit-data
+export const editUserData = async (data, id,callback) => {
+	const url = `${Server_UrI}/edit-data/${id}`
+	const token = localStorage?.getItem("accessToken");
+	console.log(data.values)
+	return authInstance.put(url, data, {
+		headers: {
+			'Content-Type': 'multipart/form-data',
+			'Authorization': `Bearer ${token}`,
+		}
+	}).then(data => {
+		callback(data)
+	}).catch(err => {
+		callback(false,err)
+	}) 
+}

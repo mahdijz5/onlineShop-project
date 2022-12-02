@@ -2,8 +2,11 @@ const User = require("../models/users")
 const Product = require("../models/products")
 const Comment = require("../models/comments")
 const _ = require("lodash")
-
+const appRoot = require("app-root-path");
 const jwt = require('jsonwebtoken');
+
+const { fileUpload } = require("../helpers/Fileupload");
+const fs = require("fs");
 
 exports.getSingleUser = async (req, res, next) => {
     const token = req.get('Authorization').split(' ')[1]
@@ -68,7 +71,7 @@ exports.addToList = async (req, res, next) => {
     const singleProduct = req.body.product
     let existion = false
     try {
-        const user = await User.findOne({ id: req.params.id })
+        const user = await User.findOne({ id: req.params.id }).populate('list')
         const product = await Product.findOne({ _id: singleProduct })
         if (!product) {
             res.status(404).json({ message: "محصول پیدا نشد" })
@@ -80,7 +83,8 @@ exports.addToList = async (req, res, next) => {
             }
         })
         if (existion) {
-            let index = user.list.indexOf(singleProduct)
+            let index = _.findIndex(user.list, (p) => {return p._id == singleProduct })
+            console.log(index)
             if (index > -1) {
                 user.list.splice(index, 1)
                 await user.save()
@@ -135,19 +139,19 @@ exports.getCart = async (req, res, next) => {
     let products = []
     let counts = {}
     try {
-        if(ids[0] == '') {
-            return res.status(404).json({ "message": "محصولی وجود ندارد"})
+        if (ids[0] == '') {
+            return res.status(404).json({ "message": "محصولی وجود ندارد" })
         }
-        ids.map((i) => { counts[i] = (counts[i] || 0) + 1; }); 
-        for(const id of _.union(ids)){
+        ids.map((i) => { counts[i] = (counts[i] || 0) + 1; });
+        for (const id of _.union(ids)) {
             const asyncPush = async () => {
-                const product = await Product.findOne({_id : id});
-                products.push({ 
-                    ...product._doc, 
-                    count : counts[id] 
-                })  
+                const product = await Product.findOne({ _id: id });
+                products.push({
+                    ...product._doc,
+                    count: counts[id]
+                })
             }
-        
+
             pendingPromises.push(asyncPush())
         }
         await Promise.all(pendingPromises)
@@ -157,33 +161,35 @@ exports.getCart = async (req, res, next) => {
     }
 }
 
-exports.getComments = async (req,res,next) => {
+exports.getComments = async (req, res, next) => {
     const userId = req.params.id
     try {
-        const user = await User.findOne({id : userId})
-        if(!user) {
-            res.status(404).json({"message": "کاربر پیدا نشد"})
+        const user = await User.findOne({ id: userId })
+        if (!user) {
+            res.status(404).json({ "message": "کاربر پیدا نشد" })
         }
-        const comments = await Comment.find({author : user.id}).populate('author').populate('product')
+        const comments = await Comment.find({ author: user.id }).populate('author').populate('product')
 
-        res.status(200).json({"comments": comments})
+        res.status(200).json({ "comments": comments })
     } catch (error) {
         next(error)
     }
 }
 
-exports.removeComment = async (req,res,next) => {
+exports.removeComment = async (req, res, next) => {
     const id = req.params.id
     const token = req.get("Authorization").split(' ')[1]
     try {
-        const comment = await Comment.findOne({_id : id})
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,async (err, decodedToken) => {
-            if(comment._author != decodedToken.id) {
-                res.status(403).json({message : "شما مجوز این کار را ندارید"})
-            }else{
+        const comment = await Comment.findOne({ _id: id })
+        if(!comment) {
+            res.status(404).json({ "message": "دیدگاه پیدا نشد" })
+        }
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decodedToken) => {
+            if (comment._author != decodedToken.user._id) {
+                res.status(403).json({ message: "شما مجوز این کار را ندارید" })
+            } else {
                 await comment.remove()
-                res.status(200).json({message : "نظر شما با موفقیت حذف شد"})
-
+                res.status(200).json({ message: "نظر شما با موفقیت حذف شد" })
             }
         })
     } catch (error) {
@@ -191,36 +197,91 @@ exports.removeComment = async (req,res,next) => {
     }
 }
 
-exports.editComment = async (req, res,next) => {
-    const {rate,text,userId} = req.body
+exports.editComment = async (req, res, next) => {
+    const { rate, text } = req.body
     const commentId = req.params.id
     const token = req.get("Authorization").split(' ')[1]
     try {
-        const comment = await Comment.findOne({_id : commentId})
-        if(!comment) {
-            res.status(404).json({ "message": "کامنت مورد نظر یافت نشد"})
+        const comment = await Comment.findOne({ _id: commentId })
+        if (!comment) {
+            res.status(404).json({ "message": "کامنت مورد نظر یافت نشد" })
         }
 
-        await Comment.commentValidation({...req.body}).catch((error) => {
+        await Comment.commentValidation({ ...req.body }).catch((error) => {
             if (error.errors && error.errors.length > 0) {
                 res.status(400).json({ "message": error.errors[0] })
             }
         })
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
-            if(comment.author != decodedToken.id) {
-                res.status(403).json({message : "شما مجوز این کار را ندارید"})
+            if (comment._author != decodedToken.user._id) {
+                res.status(403).json({ message: "شما مجوز این کار را ندارید" })
             }
         })
-        
+
         comment.rate = rate
         comment.text = text,
-        comment.author = userId
         await comment.save()
-        res.status(201).json({"message": "نظر شما با موفقیت ثبت شد"})
+        res.status(201).json({ "message": "نظر شما با موفقیت ثبت شد" })
 
     } catch (error) {
         console.log(error)
         next(error)
     }
+}
+
+
+
+exports.editUser = async (req, res, next) => {
+    const token = req.get("Authorization").split(' ')[1]
+    const { name, email, address, phoneNumber } = req.body
+    const id = req.params.id
+    let filesNameList;
+    try {
+        const user = await User.findOne({ id: id })
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
+            if (user._id != decodedToken.user.userId) {
+                res.status(403).json({ "message": "شما مجوز این کار را ندارید" })
+            }
+        })
+        if (!req.files) {
+            await User.userValidation({ ...req.body, password: "123456", confirmPassword: "123456" }).catch((error) => {
+                console.log(error);
+                if (error.errors && error.errors.length > 0) {
+                    res.status(400).json({ "message": error.errors[0] })
+                }
+            })
+        } else {
+            fileUpload(req.files, process.env.PROFILE_ADDRESS, async (filesList, filesName, path, err) => {
+                if (err) {
+                    res.status(500).json({ "message": "مشکلی پیش آمده است" })
+                } else {
+                    filesList.map((thumbnail) => {
+                        User.userValidation({ ...req.body, thumbnail, password: "123456", confirmPassword: "123456" }).catch((error) => {
+                            console.log(error);
+                            if (error.errors && error.errors.length > 0) {
+                                res.status(400).json({ "message": error.errors[0] })
+                            }
+                        })
+                        filesNameList = filesName
+                        fs.unlink(`${appRoot}${process.env.PROFILE_ADDRESS}${user.profileImg}`, (err) => {
+                            if (err) next(err)
+                        })
+                    })
+                }
+            })
+
+        }
+        user.email = email
+        user.name = name
+        user.phoneNumber = phoneNumber
+        user.address = address
+        user.profileImg = filesNameList ? filesNameList[0] : user.profileImg
+        await user.save()
+        console.log('sadas')
+        res.status(201).json({ "message": "اطلاعات شخصی با موفقیت تغییر یافت" })
+    } catch (error) {
+        next(error)
+    }
+
 }

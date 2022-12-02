@@ -42,9 +42,9 @@ export const getServerSideProps = async (context) => {
 
 
       //getAllProducts(Page | limit | sort | searchQuery | category | price | discount | brand)
-      const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 8, "latest" , context.query.search || "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
-      const { data:  allPopularProducts} = await getAllProducts(context.query.page || 1, 8, "popularity" , context.query.search || "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
-      // const { data: Allproducts } = await getAllProducts(context.query.page || 1, 10, context.query.sort , context.query.search || "", context.query.category || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
+      const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 8, "latest" , context.query.search || "", context.query.categories || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
+      const { data:  allPopularProducts} = await getAllProducts(context.query.page || 1, 8, "popularity" , context.query.search || "", context.query.categories || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
+      // const { data: Allproducts } = await getAllProducts(context.query.page || 1, 10, context.query.sort , context.query.search || "", context.query.categories || "",false,context.query.price||"",context.query.discount||"",context.query.brand||"")
       latestProducts = [...allLatestProducts.products]
       popularProducts = [...allPopularProducts.products]
 

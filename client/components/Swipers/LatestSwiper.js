@@ -36,7 +36,7 @@ const LatestSwiper = ({products: allProducts}) => {
                                 width: "auto",
                             }}
                         >
-                            <ProductCard product={product}/>
+                            <ProductCard   product={product}/>
                         </SwiperSlide>
                     ))}
 

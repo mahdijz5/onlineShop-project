@@ -27,6 +27,7 @@ export const getAllBrands = () => {
 //@desc get all products
 //@route GET  Server_UrI/product/all-products
 export const getAllProducts = (page,limit,sort,search,categories,giveAll,price,discount,brand) => {
+    console.log(categories)
     const url = encodeURI(`${Server_UrI}/product/all-products?page=${page}&sort=${sort}&limit=${limit}&search=${search}&categories=${categories}&price=${price}&discount=${discount}&brand=${brand}&giveAll=${giveAll}`)
     return axios.get(url)
 }
@@ -58,7 +59,7 @@ export const sendProductComment = async (rate,text,userId,id,callback  ) => {
         userId,        
     },{
         headers: {
-            Authorization: `bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     }).then(data => {
         callback(data)

@@ -23,7 +23,7 @@ const DiscountBox = styled(Box)(({ theme }) => ({
     padding: "5px"
 }))
 
-function ProductCard({ product, user, reducerOption, deleteOption }) {
+function ProductCard({ product, user, reducerOption, deleteOption,count }) {
 
     const { setRefresh } = useContext(General)
 
@@ -74,7 +74,7 @@ function ProductCard({ product, user, reducerOption, deleteOption }) {
                     <CardMedia
                         component="img"
                         sx={{ width: 151 }}
-                        image={`/uploads/thumbnail/${product.thumbnail[0]}`}
+                        image={`http://localhost:3001//uploads/thumbnail/${product.thumbnail[0]}`}
                         alt={product.name}
 
                     />
@@ -106,6 +106,11 @@ function ProductCard({ product, user, reducerOption, deleteOption }) {
                         )}
                     </Box>
                     <Stack height="50%" direction={{ sm: "column", md: "row" }} gap="5px" justifyContent="center" alignItems="center" >
+                        {count ? (
+                            <>
+                                <Button variant="contained" sx={{ width: { sm: "100%", md: "50%" } }}>{product.count}</Button>
+                            </>
+                        ) : null}
                         {reducerOption ? (
                             <>
                                 <Button variant="outlined" sx={{ width: { sm: "100%", md: "25%" } }} onClick={() => {

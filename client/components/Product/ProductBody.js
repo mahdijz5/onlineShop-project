@@ -75,12 +75,14 @@ function ProductBody({ product }) {
     d.innerHTML = product.description
   }, [])
   useEffect(() => {
-    localStorage.getItem('cart').split(',').map(p => {
-      if (p == product._id) {
-        setExistInCart(true)
-        initialState.count++
-      }
-    })
+    if (localStorage.getItem("cart") != undefined) {
+      localStorage.getItem('cart').split(',').map(p => {
+        if (p == product._id) {
+          setExistInCart(true)
+          initialState.count++
+        }
+      })
+    }
     if (user.name != undefined) {
       console.log(user)
       user.list.map(p => {

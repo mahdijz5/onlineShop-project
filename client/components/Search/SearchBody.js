@@ -22,7 +22,7 @@ const SearchBody = ({products : allProducts}) => {
         <StyledBox>
             {products.length > 0 ? 
                 products.map((product,index) => (
-                    <ProductCard product={product} solid={true} width="20%" key={index}/>
+                    <ProductCard product={product} solid={true} key={index}/>
                 ))
             : (
                 <Typography>محصولی وجود ندارد</Typography>

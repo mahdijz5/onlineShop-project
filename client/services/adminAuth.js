@@ -8,7 +8,7 @@ export const adminAuthenticated = () => {
 	const url = `${Server_UrI}/auth`;
 	return axios.post(url, null, {
 		headers: {
-			Authorization: `bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	});
 };

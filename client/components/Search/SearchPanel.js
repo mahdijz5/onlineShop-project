@@ -52,7 +52,7 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
         setQuery((prev) => {
             return {
                 search : router.query.search,
-                categories : router.query.category != '' &&router.query.category != undefined ? router.query.category.split(',') : [],
+                categories :  router.query.categories != undefined ? router.query.categories : [],
                 brand : router.query.brand    ? router.query.brand : "",
                 price : router.query.price && router.query.price != undefined ? router.query.price.split('_') : [0,maxPrice ? maxPrice : 900000000],
                 discount : router.query.discount && router.query.price != undefined ? router.query.discount.split('_') : [0,100],

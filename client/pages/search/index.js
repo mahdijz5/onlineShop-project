@@ -26,8 +26,8 @@ export const getServerSideProps = async (context) => {
         let productPerPage = 1
 
 
-        //getAllProducts(Page | limit | sort | searchQuery | category | price | discount | brand)
-        const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 222, context.query.sort || "latest", context.query.search || "", context.query.category || "", false, context.query.price || "", context.query.discount || "", context.query.brand || "")
+        //getAllProducts(Page | limit | sort | searchQuery | categories | price | discount | brand)
+        const { data: allLatestProducts } = await getAllProducts(context.query.page || 1, 222, context.query.sort || "latest", context.query.search || "", context.query.categories || "", false, context.query.price || "", context.query.discount || "", context.query.brand || "")
         latestProducts = [...allLatestProducts.products]
 
         return {

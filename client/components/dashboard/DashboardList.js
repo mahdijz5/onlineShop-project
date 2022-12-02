@@ -2,6 +2,7 @@ import styled from "@emotion/styled"
 import { Edit, Favorite, Logout, Message, Person, ShoppingBag, ShoppingCart } from "@mui/icons-material"
 import { Avatar, Box, Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, } from "@mui/material"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
 import { General } from "../../context/context"
 import NavLink from "../NavLink"
@@ -23,12 +24,12 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 
 const CustomListItem = ({ label, href, auth, icon }) => {
   const { user } = useContext(General)
-
+  const router = useRouter()
   return (
     <>
       {user.name == undefined && auth ? (
         <StyledListItem >
-          <ListItemButton disabled >
+          <ListItemButton  >
             <StyledListItemIcon>
               <GetAppropirateIcon icon={icon} />
             </StyledListItemIcon>
@@ -36,7 +37,12 @@ const CustomListItem = ({ label, href, auth, icon }) => {
           </ListItemButton>
         </StyledListItem >
       ) : (
-        <StyledListItem >
+        <StyledListItem onClick={() => {
+          if (label === "خروج") {
+            localStorage.clear()
+            router.replace("/")
+          }
+        }}  >
           <NavLink href={href} activeClassName="activeLink" >
             <a style={{ width: "100%" }}>
               <ListItemButton  >
@@ -122,14 +128,12 @@ const DashboardList = () => {
       {
         icon: "logout",
         label: "خروج",
-        href: "/dashboard/logout",
+        href: "#",
         auth: true,
       },
     ])
   }, [])
-  const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
 
-  }))
 
   return (
     <>
@@ -138,20 +142,24 @@ const DashboardList = () => {
           <Stack sx={{ maxWidth: "100%" }} width="100%" >
             {user.name != undefined ? (
               <Stack direction="row" justifyContent="center" alignItems="center" gap='4px' sx={{ maxWidth: "100%" }}>
-                <Avatar alt={user.name} src={`/uploads/profiles/${user.profileImg}`} />
+                <Avatar alt={user.name} src={`http://localhost:3001/uploads/profiles/${user.profileImg}`} />
                 <Stack sx={{ maxWidth: "100%", overflow: "hidden" }} >
                   <Typography variant='subtitle1'>{user.name}</Typography>
                   <Typography variant='subtitle2'>{user.email}</Typography>
                 </Stack>
-                <IconButton sx={{ color: "text.primary" }}>
-                  <Edit />
-                </IconButton>
+                <Link href="/dashboard/user-data">
+                  <IconButton sx={{ color: "text.primary" }} >
+                    <Edit />
+                  </IconButton>
+                </Link>
               </Stack>
             ) : (
               <Stack justifyContent={'center'} alignItems="center" width="100%">
-                <Button variant="outlined" >
-                  ثبت نام / ورود <Person />
-                </Button>
+                <Link href="/user/sign-in">
+                  <Button variant="outlined"  >
+                    ثبت نام / ورود <Person />
+                  </Button>
+                </Link>
               </Stack>
             )}
           </Stack>

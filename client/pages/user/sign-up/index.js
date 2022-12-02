@@ -1,43 +1,21 @@
-import { Formik, Field, ErrorMessage, Form } from "formik";
+import { Formik, Form } from "formik";
 import Link from "next/link";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import Meta from "../../../components/Meta";
 import { userSchema } from "../../../validation/userRegister";
 import { useRouter } from "next/router";
 import UserLayout from "../../../layouts/UserLayout";
 import MainLayout from "../../../layouts/MainLayout";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import {  Button, Stack, Typography } from "@mui/material";
 import TextFieldWrapper from "../../../components/ui/TextFieldWrapper";
+import { toastNotif } from "../../../helpers/tools";
 
 const signUp = () => {
 	const router = useRouter();
 
-	const signUpNotif = (msg, status) => {
-		if (status == 201) {
-			toast.success(msg, {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		} else {
-			toast.error(msg, {
-				position: "top-right",
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-			});
-		}
-	};
-
+	 
 	return (
 		<>
 			<Meta title="ثبت نام" />
@@ -58,20 +36,18 @@ const signUp = () => {
 								: `http://localhost:3001/user/sign-up`,
 							values
 						);
-						console.log(response);
-						signUpNotif(response.data.message, response.status);
+						toastNotif(response.data.message, response.status , 0);
 						if (response.status == 201) {
 							router.push("/user/sign-in");
 						}
 					} catch (error) {
 						console.log(error);
-						signUpNotif(error.response.data.message, error.response.status);
+						toastNotif(error.response.data.message, error.response.status , 0);
 					}
 				}}
 			>
 				<Form
 					method="post"
-					className="input-group w-50 d-inline-block p-0"
 					style={{
 						position: "absolute",
 						top: "50%",

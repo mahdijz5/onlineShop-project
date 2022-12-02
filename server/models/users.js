@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
 
+const {schema}= require('./validation/userValidation')
+
 const userSchema = new mongoose.Schema({
 	email: {
 		type: String,
@@ -21,6 +23,14 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		minlength: 5,
 		maxLength: 255,
+	},
+	address :{
+		type : String,
+		trim : true,
+	},
+	phoneNumber : {
+		type : String,
+		trim :true,
 	},
 	createdAt: {
 		type: Date,
@@ -55,4 +65,9 @@ userSchema.pre('save',function(next) {
 	})
 })
 
-module.exports = mongoose.model("User",userSchema)
+userSchema.statics.userValidation = function (body) {
+    return schema.validate(body,{abortEarly: true})
+}
+
+
+module.exports = mongoose.model("User",userSchema) 

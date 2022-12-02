@@ -63,7 +63,8 @@ exports.getAllProducts = async (req, res, next) => {
         let categorySearchQuery = placeHolderQ
         let brandQuery = placeHolderQ
 
-
+        console.log("category")
+        console.log(req.query)
         if (brand) {
             const singleBrand = await Brand.findOne({ title: brand })
             brandQuery = { brand: { _id: singleBrand.id } }
@@ -121,7 +122,7 @@ exports.getAllProducts = async (req, res, next) => {
                 })
             }
         }
-
+        console.log(categorySearchQuery)
         if (searching) {
             const numberOfFilteredItems = await Product.find({ ...textSearchQuery, ...categorySearchQuery, ...brandQuery, ...priceQuery, ...discountQuery }).countDocuments()
             const filteredproducts = await Product.find({ ...textSearchQuery, ...categorySearchQuery, ...brandQuery, ...priceQuery, ...discountQuery }).sort({
@@ -145,7 +146,7 @@ exports.getAllProducts = async (req, res, next) => {
 
 
 exports.getRelatedProducts = async (req, res, next) => {
-    const category = req.query.category 
+    let category = req.query.categories 
     let brand = req.query.brand 
     const itemPerPage = req.query.limit
     const page = req.query.page || 1
@@ -173,7 +174,7 @@ exports.getRelatedProducts = async (req, res, next) => {
 
             categorySearchQuery = { categories: { $in: categories } }
         }
-
+        console.log(categorySearchQuery)
         const relatedProducts = await Product.find({$or : [brandQuery,categorySearchQuery]}).sort({
             createdAt: "desc" 
         }).populate('categories').populate('brand').limit(itemPerPage).skip((page - 1) * itemPerPage)
