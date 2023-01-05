@@ -3,7 +3,7 @@ const router = new Router();
 
 const userController =  require("../controllers/userController")
 const {auth} =  require("../middlewares/authontication")
-
+const {sendEmail} = require("../middlewares/nodemailer")
 
 //@desc handle login
 //@route GET /user/get-user
@@ -11,11 +11,11 @@ router.get("/get-user",auth,userController.getSingleUser)
 
 //@desc add product to cart 
 //@route POST /user/add-product-cart
-router.post("/add-product-cart",auth,userController.addToCart)
+router.post("/edit-product-cart",auth,userController.editCart)
 
 //@desc remove product from cart 
 //@route POST /user/remove-product-cart
-router.post("/remove-product-cart",auth,userController.removeFromCart)
+// router.post("/remove-product-cart",auth,userController.removeFromCart)
 
 //@desc add product to favorite list 
 //@route POST /user/add-product-List
@@ -41,7 +41,11 @@ router.delete("/remove-comment/:id",auth,userController.removeComment)
 //@route PUT /user/edit-comment/:id
 router.put("/edit-comment/:id",auth,userController.editComment)
 
+//@desc edit user data
+//@route PUT /user/edit-data/:id
+router.put("/edit-data/:id",auth,userController.editUser)
 
+router.post("/email",sendEmail)
 
 
 module.exports = router;

@@ -5,38 +5,38 @@ import React from 'react'
 import SuggestionSwiper from "../components/swipers/SuggestionSwiper"
 
 const StyledBox = styled(Paper)(({ theme }) => ({
-    position: "absolute",
-    top: "185px",
-    left: "100px",
-    right: "100px",
-    bottom: "100px",
+    position: "relative",
+    top: "-45px",
+    height: "auto",
+    display: "flex",
+    left: "5%",
+    width: "90%",
     [theme.breakpoints.down('md')]: {
-        right : 0,
-        left : 0
+        width: "100%",
+        left: 0
     },
     backgroundColor: "white",
     zIndex: "2",
-    // boxShadow: "rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px",
-    overflowY : "auto"
+    overflowY: "auto"
 
 }))
 
 const Container = styled(Box)({
-    height: "1750px",
+    height: "auto",
 })
 
-const MainContainer = ({ children,suggestionSwiper }) => {
+const MainContainer = ({ children, suggestionSwiper }) => {
     return (
         <Container>
             <StyledBox className="niceScroll" elevation={6} >
-                <Box  width="100%" height="100%">
+                <Box width="100%" height="100%">
                     {suggestionSwiper ? (
                         <Box height="20%">
-                        <SuggestionSwiper />
-                    </Box>
+                            <SuggestionSwiper />
+                        </Box>
                     ) : null}
                     <Box height="80%">
-                    {children}
+                        {children}
                     </Box>
                 </Box>
             </StyledBox>

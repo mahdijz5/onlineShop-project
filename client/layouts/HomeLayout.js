@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import MainContainer from "../containers/MainContainer";
 import Nav from "../components/Nav";
+import { ToastContainer } from "react-toastify";
 
 const HomeLayout = ({ children }) => {
     const [categories,setCategories] = useState([])
@@ -34,6 +35,8 @@ const HomeLayout = ({ children }) => {
             </MainContainer>
             <Footer/>
         </Box>
+        <ToastContainer/>
+
         </HomeLayoutContext.Provider>
     )
 }

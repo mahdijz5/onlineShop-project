@@ -58,7 +58,7 @@ export const sendProductComment = async (rate,text,userId,id,callback  ) => {
         userId,        
     },{
         headers: {
-            Authorization: `bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     }).then(data => {
         callback(data)

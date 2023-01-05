@@ -1,10 +1,7 @@
 import axios from "axios";
-import dayjs from "dayjs";
-import jwt_decode from "jwt-decode";
-
 
 const serverUrl = "http://localhost:3001"
-const serverAuthUrl = "http://localhost:3002/auth"
+const serverAuthUrl = "http://localhost:3001/auth"
 let accessToken = 'token'
 
 axios.defaults = {
@@ -17,7 +14,7 @@ if (typeof localStorage != "undefined") {
 
 const authInstance = axios.create({
     baseURL: serverUrl,
-    headers: { 'Authorization': `bearer ${accessToken}` },
+    headers: { 'Authorization': `Bearer ${accessToken}` },
     withCredentials: true,
 
 });
@@ -33,14 +30,14 @@ authInstance.interceptors.request.use(async req => {
     let refreshToken = localStorage.getItem("refreshToken") ? localStorage.getItem("refreshToken") : "token"
     return axios.post(serverAuthUrl + "/auth", null, {
         headers: {
-            Authorization: `bearer ${accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
         },
     }).then((data) => {
         return req
     }).catch(async err => {
         return axios.post(`${serverAuthUrl}/refresh-token/`,null, {
                 headers: {
-                    Authorization: `bearer ${refreshToken}`,
+                    Authorization: `Bearer ${refreshToken}`,
                 },
             }).then(data => {
                 console.log(data)

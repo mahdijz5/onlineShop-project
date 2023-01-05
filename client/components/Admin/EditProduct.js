@@ -57,7 +57,7 @@ const EditProduct = ({ open, setOpen }) => {
 				const { name, price, discount, description, brand, categories, thumbnail, amount } = data.product
 				setProduct({
 					name,
-					price,
+					price : price.low,
 					discount,
 					description,
 					brand: brand.title,

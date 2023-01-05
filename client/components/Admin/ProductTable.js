@@ -5,18 +5,18 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import _ from "lodash"
 
-import {  setPoint, toastNotif } from '../../helpers/tools';
+import { setPoint, toastNotif } from '../../helpers/tools';
 import { removeSelectedProducts } from '../../services/adminDashboard';
 import Confirmation from '../ui/Confirmation';
 
-function ProductTable({ products : allProducts, noCheckBox ,setOpenEdit}) {
+function ProductTable({ products: allProducts, noCheckBox, setOpenEdit }) {
     const router = useRouter()
     const [selectedProducts, setSelectedProducts] = useState([])
-    const [open,setOpen] = useState(false)
-    const [products,setProducts] = useState([])
+    const [open, setOpen] = useState(false)
+    const [products, setProducts] = useState([])
     useEffect(() => {
         setProducts(allProducts)
-    },[allProducts]) 
+    }, [allProducts])
     const checkIt = (id) => {
         let result = false
         selectedProducts.map(p => {
@@ -59,13 +59,13 @@ function ProductTable({ products : allProducts, noCheckBox ,setOpenEdit}) {
     return (
         <>
             <Box my={2}>
-            <Button sx={{ visibility: selectedProducts.length > 0 ? 'visible' : "hidden" }} color="error" variant="contained" onClick={() => {
-                setOpen(true)
-            }}><Delete /></Button>
-            {" "}
-            <Button sx={{ visibility: selectedProducts.length == 1 ? 'visible' : "hidden" }} color="warning" variant="contained" onClick={() => {
-                setOpenEdit({status : true , id : selectedProducts[0]})
-            }}><Edit /></Button>
+                <Button sx={{ visibility: selectedProducts.length > 0 ? 'visible' : "hidden" }} color="error" variant="contained" onClick={() => {
+                    setOpen(true)
+                }}><Delete /></Button>
+                {" "}
+                <Button sx={{ visibility: selectedProducts.length == 1 ? 'visible' : "hidden" }} color="warning" variant="contained" onClick={() => {
+                    setOpenEdit({ status: true, id: selectedProducts[0] })
+                }}><Edit /></Button>
             </Box>
 
             <TableContainer component={Paper} sx={{ marginBottom: "25px" }}>
@@ -93,24 +93,28 @@ function ProductTable({ products : allProducts, noCheckBox ,setOpenEdit}) {
                                 }}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Link href={`/product/${product.id}`}>
+                                    <Link href={`/product/${product._id}`}>
                                         {product.name}
                                     </Link>
                                 </TableCell>
                                 <TableCell align="right">
-                                {product.brand ? (product.brand.title) : null}
-                                
+                                    <Link href={`/search/?brand=${product.brand.title}`} >
+                                        <a>
+                                            {product.brand ? (product.brand.title) : null}
+                                        </a>
+                                    </Link>
+
                                 </TableCell>
                                 <TableCell align="right">
-                                
+
                                     {product.categories.length > 0 ? product.categories.map((category, index) => (
-                                    <div key={index}>
-                                        <Link href={'/product/[id]'} as={`/brand/${product._id}`} >
-                                          <a>{category.title}</a>
-                                        </Link>
-                                        <br />
-                                    </div>
-                                )) : null}
+                                        <div key={index}>
+                                            <Link href={`/search/?categories=${category.title}`}  >
+                                                <a>{category.title}</a>
+                                            </Link>
+                                            <br />
+                                        </div>
+                                    )) : null}
                                 </TableCell>
                                 <TableCell align="right"> {product.discount == 0 ? (<Typography>
                                     {setPoint(product.price.low)}
@@ -138,10 +142,10 @@ function ProductTable({ products : allProducts, noCheckBox ,setOpenEdit}) {
                             </TableRow>
                         )}
                     </TableBody>
-                    <Confirmation title="ایا مطمعن هستید ؟" description={"ایا از پاک کردن این محصول اطمینان دارید ؟"} open={open} setOpen={setOpen} func={handleDelete} funcParameter={selectedProducts}/>
+                    <Confirmation title="ایا مطمعن هستید ؟" description={"ایا از پاک کردن این محصول اطمینان دارید ؟"} open={open} setOpen={setOpen} func={handleDelete} funcParameter={selectedProducts} />
                 </Table>
             </TableContainer>
-        
+
         </>
     )
 }

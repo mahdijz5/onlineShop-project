@@ -91,7 +91,7 @@ const editProduct = ({ singleProduct, categories, brands }) => {
         <>
             <Meta title={'My shop | ویرایش محصول'} />
             <div className={` h-100 ${styles.addProductBody}`}>
-                <ProductForm onSubmit={onSubmit} setThumbnail={setThumbnail} removeCategory={removeCategory} onProductChange={onProductChange} getAllCategories={getAllCategories} getAllBrands={getAllBrands} addCategory={addCategory} product={product} getSelectedCategories={getSelectedCategories} />
+                <ProductForm onSubmit={onSubmit} setThumbnail={setThumbnail} removeCategory={removeCategory} onProductChange={onProductChange} getAllCategories={getAllCategories} getAllBrands={getAllBrands} addCategory={addCategory} product={product} getSelectedCategories={getSelectedCategories} thumbnail={getThumbnail}/>
             </div>
 
         </>

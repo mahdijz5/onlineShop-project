@@ -3,8 +3,9 @@ import { Search } from '@mui/icons-material'
 import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Modal, Select, Slider, TextField, Typography } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { setPoint } from '../../helpers/tools'
+import _ from 'lodash'
 
 const StyledBox = styled(Box)(({ theme }) => ({
     position: 'absolute',
@@ -37,12 +38,12 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
     const valuetext = (value) => {
         return setPoint(value);
     }
-
+    
     const marks = [
         {
             value: 0,
         },
-    
+        
         {
             value: maxPrice || 9000000000,
         },
@@ -52,13 +53,14 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
         setQuery((prev) => {
             return {
                 search : router.query.search,
-                categories : router.query.category != '' &&router.query.category != undefined ? router.query.category.split(',') : [],
+                categories :  router.query.categories != undefined ? _.concat(router.query.categories) : [],
                 brand : router.query.brand    ? router.query.brand : "",
-                price : router.query.price && router.query.price != undefined ? router.query.price.split('_') : [0,maxPrice ? maxPrice : 900000000],
+                price : router.query.price && router.query.price != undefined ? router.query.price.split('_') : [0,maxPrice ? maxPrice : 9000000000],
                 discount : router.query.discount && router.query.price != undefined ? router.query.discount.split('_') : [0,100],
             }
         })
     },[])
+
 
     //Handle searching 
     const addCategory = (e) => {
@@ -76,7 +78,7 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
             })
         }
     };
-
+    
     const removeCategory = (cate) => {
         setQuery((prev) => {
             const prevCategories = [...prev.categories];
@@ -88,7 +90,7 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
             return { ...prev, categories: prevCategories };
         })
     };
-
+    
     const handleChange = (event) => {
         setQuery((prev) => {
             let value = event.target.value == undefined || !event.target.value ? '' : event.target.value
@@ -98,7 +100,6 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
     }
 
     const onsubmit = () => {
-        // router.push(`${pathBase}?search=${query.search}&category=${query.categories}&brand=${query.brand}&discount=${query.discount}&price=${query.price}`)
         const queries = {
             ...router.query,
             ...query,
@@ -117,8 +118,6 @@ function SearchPanel({ maxPrice, categories, brands ,pathBase,open,setOpen}) {
     return (
         <Modal
             open={open}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
             onClose={() => {
                 setOpen(false)
             }}

@@ -17,7 +17,7 @@ function product({ product, relatedProducts, comments }) {
                 <Divider />
                 <ProductComments productId={product._id} comments={comments} />
             </Stack>
-            
+
         </>
     )
 }
@@ -31,7 +31,6 @@ export const getServerSideProps = async (context) => {
     })
 
     // page,limit,categories,brand
-    console.log(product.product.brand)
     const { data: relatedProducts } = await getRelatedProducts(context.query.page || 1, 8, categories, product.product.brand.title)
     const { data: comments } = await getComments(context.query.id)
     return {

@@ -48,11 +48,9 @@ const AdminLayout = ({ children }) => {
 
 	//loading spinner>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 	Router.events.on("routeChangeStart", (url) => {
-		NProgress.start();
 		setLoading(true)
 	})
 	Router.events.on("routeChangeComplete", (url) => {
-		NProgress.done();
 		setLoading(false)
 	})
 

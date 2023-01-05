@@ -15,7 +15,7 @@ const StyledBox = styled(Box)(({theme}) => ({
 const Header = () => {
     return (
         <StyledBox >
-            <Typography variant="h5" display="inline-block" color="white">کفش های مردانه</Typography>
+            <Typography variant="h5" display="inline-block" color="white">فروشگاه کتاب</Typography>
         </StyledBox>
     )
 }

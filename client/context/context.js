@@ -34,6 +34,8 @@ export const HomeLayoutContext = createContext({
 
 export const General = createContext({
     setRefresh : () => {},
+    setMyCart : () => {},
     refresh : false,
     user : {},
+    myCart : [],
 })

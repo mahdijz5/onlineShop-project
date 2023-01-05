@@ -22,6 +22,9 @@ export const theme = () => {
             danger : {
                 main : "#e63946"
             },
+            warning : {
+                main : "#ffcc00"
+            },
             text: {
                 primary: "#3A354D"
             }

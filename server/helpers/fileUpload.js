@@ -2,35 +2,34 @@ const short = require('short-uuid');
 const appRoot = require("app-root-path");
 
 exports.fileUpload = (files, path,callback) => {
- console.log(files);
     let filesNameList = []
     let filesList = []
     let filepath = ''
-    if(files.thumbnail.length > 0) {
-        files.thumbnail.map((thumbnail) => {
-            const thumbnailName = `${short.generate()}${short.generate()}_${thumbnail.name}`
-            const uploadPath = `${appRoot}${path}${thumbnailName}`
-            thumbnail.mv(uploadPath, (err) => {
+    if(files.image.length > 0) {
+        files.image.map((image) => {
+            const imageName = `${short.generate()}${short.generate()}_${image.name}`
+            const uploadPath = `${appRoot}${path}${imageName}`
+            image.mv(uploadPath, (err) => {
                 if (err) {
-                    console.log(err)
+                    callback(false,false,false ,err)
                 }
             })
-            filesList.push(thumbnail)
-            filesNameList.push(thumbnailName)
+            filesList.push(image)
+            filesNameList.push(imageName)
             filepath = uploadPath
         })
     }else {
-        const thumbnailName = `${short.generate()}${short.generate()}_${files.thumbnail.name}`
-            const uploadPath = `${appRoot}${path}${thumbnailName}`
-            files.thumbnail.mv(uploadPath, (err) => {
+        const imageName = `${short.generate()}${short.generate()}_${files.image.name}`
+            const uploadPath = `${appRoot}${path}${imageName}`
+            files.image.mv(uploadPath, (err) => {
                 if (err) {
-                    return next(err);
+                    callback(false,false,false ,err)
                 }
             })
-            filesList.push(files.thumbnail)
-            filesNameList.push(thumbnailName)
+            filesList.push(files.image)
+            filesNameList.push(imageName)
             filepath = uploadPath
     }
     console.log(filesList);
-    callback(filesList,filesNameList,path)
+    callback(filesList,filesNameList,path )
 }

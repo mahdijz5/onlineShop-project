@@ -36,7 +36,7 @@ const LatestSwiper = ({products: allProducts}) => {
                                 width: "auto",
                             }}
                         >
-                            <ProductCard product={product}/>
+                            <ProductCard height={"370px"}  product={product}/>
                         </SwiperSlide>
                     ))}
 

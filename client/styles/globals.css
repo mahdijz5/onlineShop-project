@@ -248,7 +248,7 @@ a{
 
 /* >>>>>>>>>>>>>>>>>>>>>> products */
 
-.priceWithDiscount{
+.priceWithDiscount , .solidPriceWithDiscount{
 	position: relative;
 	display : inline-block;
 }
@@ -258,8 +258,17 @@ a{
 	position: absolute;
 	top: 40%;
 	bottom: 52%;
-	right: -5px;
-	left: -5px;
-	background-color: red;
+	right: -2px;
+	left: -2px;
+	background-color: #7F77E0;
 	transform : rotate(5deg)
+}
+.solidPriceWithDiscount::after {
+	content: " ";
+	position: absolute;
+	top: 45%;
+	bottom: 52%;
+	right: -2px;
+	left: -2px;
+	background-color: #7F77E0;
 }

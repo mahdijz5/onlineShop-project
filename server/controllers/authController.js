@@ -9,9 +9,9 @@ const jwt = require('jsonwebtoken');
 exports.signUp = async (req, res, next) => {
     const { name, email, password } = req.body;
     try {
-
+        
         const existedEmail = await User.findOne({ email })
-
+        
         if (existedEmail) {
             res.status(422).json({ "message": "این ایمیل وجود دارد." })
         } else {
@@ -30,13 +30,14 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
     const { email, password } = req.body
+    console.log(21323)
     let productIsInCart = false
     try {
         const user = await User.findOne({ email })
         if (!user) {
             res.status(404).json({ "message": "کاربری با این ایمیل وجود ندارد." })
         }
-
+        
         const checkPass = await bcrypt.compare(password, user.password)
         if (!checkPass) {
             res.status(422).json({ "message": "ایمیل یا رمز عبور اشتباه است." })
@@ -44,24 +45,22 @@ exports.signIn = async (req, res, next) => {
             const accessToken = generateAccessToken({
                 user: {
                     email,
-                    userId: user.id,
-                    name: user.name
+                    userId: user._id,
+                    name: user.name,
                 }
             })
             const refreshToken = jwt.sign({
                 user: {
                     email,
-                    userId: user.id,
-                    name: user.name
+                    userId: user._id,
+                    name: user.name,
                 }
             }, process.env.REFRESH_TOKEN_SECRET)
 
-            RefreshToken.create({
+            await RefreshToken.create({
                 token: refreshToken,
             })
 
-
-            console.log(accessToken, refreshToken)
             res.status(200).json({ accessToken, refreshToken, userId: user.id.toString() })
         }
 
@@ -97,7 +96,7 @@ exports.auth = (req, res, next) => {
 exports.refreshToken = async (req, res, next) => {
     const authHeader = req.get("Authorization")
     const token = authHeader.split(" ")[1]
-
+    console.log(token)
     try {
         const tokenIsExist = await RefreshToken.findOne({ token })
 
@@ -112,14 +111,14 @@ exports.refreshToken = async (req, res, next) => {
                     const accessToken = generateAccessToken({
                         user: {
                             email : user.email,
-                            userId: user.id,
+                            userId: user.userId,
                             name: user.name
                         }
                     })
                     const refreshToken = jwt.sign({
                         user: {
                             email : user.email,
-                            userId: user.id,
+                            userId: user.userId,
                             name: user.name
                         }
                     }, process.env.REFRESH_TOKEN_SECRET)

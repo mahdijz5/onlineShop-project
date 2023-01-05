@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Router, { useRouter } from "next/router";
 
 import { userAuthenticated } from "../services/auth";
 import { Box, Container, Grid, Paper, Stack } from "@mui/material";
@@ -7,9 +7,10 @@ import Nav from "../components/Nav";
 import styled from "@emotion/styled";
 import DashboardList from "../components/dashboard/DashboardList";
 import Loader from "../components/Loader"
+import { ToastContainer } from "react-toastify";
 
-const StyledGrid = styled(Box)(({theme}) => ({
-	borderRadius : theme.shape.borderRadius,
+const StyledGrid = styled(Box)(({ theme }) => ({
+	borderRadius: theme.shape.borderRadius,
 	height: "60vh",
 }))
 
@@ -17,49 +18,60 @@ const StyledGrid = styled(Box)(({theme}) => ({
 
 const DashboardLayout = ({ children }) => {
 	const router = useRouter();
-	const [loading,setLoading] = useState(false)
+	const [loading, setLoading] = useState(false)
+
+	Router.events.on("routeChangeStart", (url) => {
+		setLoading(true)
+	})
+	Router.events.on("routeChangeComplete", (url) => {
+		setLoading(false)
+	})
 
 
 	useEffect(() => {
 		setLoading(true)
 		userAuthenticated((data) => {
-			if(data.status == 401 || data.status == 403){
-				if(router.pathname != "/dashboard/cart" || router.pathname != "/dashboard") {
+			if (data.status == 401 || data.status == 403) {
+				if (router.pathname != "/dashboard/cart" || router.pathname != "/dashboard") {
 					router.replace("user/sign-in")
 				}
-			}else {
+			} else {
 				setLoading(false)
 			}
-		}) 
+		})
 		setLoading(false)
-		
+
 	}, []);
-	
-	
+
+
 	return (
 		<>
-			{loading ? <Loader/> : (
-				<Stack>
-				<Nav/>
- 
+
+			<Stack>
+				<Nav />
+
 				<Container >
-					<Grid container mt='40px' spacing={2}>
-						<Grid item md={3} xs={12} p="20px" pl={{md : "0"}} >
+					<Grid container mt='40px' gap={{ xs: "35px", md: "0px" }}>
+						<Grid item md={3} xs={12} p="20px" pl={{ md: "0" }} >
 							<StyledGrid>
-								<DashboardList/>
+								<DashboardList />
 							</StyledGrid>
 						</Grid>
-						<Grid item md={9} xs={12} p="20px" pr={{md : "0"}}>
+						
+						<Grid item md={9} xs={12} p="20px" pr={{ md: "0" }}>
 							<StyledGrid>
-								<Paper elevation={3} sx={{padding :"10px"}}>
-								{children}
-								</Paper>		
+								<Paper elevation={3} sx={{ padding: "10px", position: "relative" }}>
+									{loading ? <Loader /> : children}
+								
+								</Paper>
 							</StyledGrid>
 						</Grid>
 					</Grid>
 				</Container>
 			</Stack>
-			)}
+
+
+			<ToastContainer />
 		</>
 	);
 };

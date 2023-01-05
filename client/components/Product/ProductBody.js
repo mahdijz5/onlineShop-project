@@ -1,10 +1,11 @@
 import styled from '@emotion/styled'
 import { Add, CheckCircleOutline, Clear, Favorite, FavoriteBorder, Remove, ShoppingCart, ShoppingCartOutlined } from '@mui/icons-material'
 import { Box, Button, Chip, Divider, Fab, Paper, Rating, Stack, Typography } from '@mui/material'
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import { grey } from '@mui/material/colors'
+import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
 import { General } from '../../context/context'
-import { addToCart, removeFromCart } from '../../helpers/action'
 import { setPoint, toastNotif } from '../../helpers/tools'
+import useEditCart from '../../hooks/useEditCart'
 import { addProductToList } from '../../services/user'
 import ThumbnailSwipre from '../Swipers/ThumbnailSwipre'
 
@@ -20,6 +21,16 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   height: "100%"
 }))
 
+const DiscountBox = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.danger.main,
+  color: "white",
+  borderRadius: "2px",
+  display: "inline-block",
+  position: "absolute",
+  padding: "3px 10px",
+  top: 10,
+  left: 10,
+}))
 
 
 function ProductBody({ product }) {
@@ -27,71 +38,57 @@ function ProductBody({ product }) {
   const { user, setRefresh } = useContext(General)
   const [existInCart, setExistInCart] = useState(false)
   const [existInList, setExistInList] = useState(false)
-  const [amount, dispatch] = useReducer(reducer, initialState);
-  const changeCart = (action) => {
-    console.log(amount.count)
-    if (amount.count <= 0) {
-      setExistInCart(false)
-    }
-    if (action == "increment") {
-      if (amount.count !== product.amount) {
-        addToCart(product._id, user, (res) => {
-
-        })
-      }
-    } else {
-      if (amount.count <= 1) {
-        console.log(false)
-        setExistInCart(false)
-      }
-      removeFromCart(product._id, user, (res) => {
-      })
-    }
-  }
-
-  function reducer(amount, action) {
-    switch (action.type) {
-      case 'increment':
-        if (amount.count != product.amount) {
-          return { count: amount.count + 1 };
-        } else {
-          return { count: amount.count };
-        }
-      case 'decrement':
-        if (amount.count > 1) {
-          return { count: amount.count - 1 };
-        } else {
-          return { count: 1 };
-        }
-      default:
-        throw new Error();
-    }
-  }
-
-
-
+  const [count,setCount] = useState(0)
+  const avoidRunningTwice = useRef(false);
+  const value = useEditCart(count,0,1000,product._id,user)
+  console.log(count)
+  console.log(user)
   useEffect(() => {
+    if(avoidRunningTwice.current) return 
+    avoidRunningTwice.current = true
     const d = document.getElementsByClassName("desc")[0]
     d.innerHTML = product.description
-  }, [])
-  useEffect(() => {
-    localStorage.getItem('cart').split(',').map(p => {
-      if (p == product._id) {
-        setExistInCart(true)
-        initialState.count++
-      }
-    })
-    if (user.name != undefined) {
-      console.log(user)
-      user.list.map(p => {
-        if (p._id == product._id) {
+    if(user.name != undefined) {
+      user.cart.map((p) => {
+        if(p == product._id) {
+          setExistInCart(true)
+          setCount((per) => per+1)
+        }
+      })
+      user.list.map((p) => {
+        if(p == product._id) {
           setExistInList(true)
-          return
+        }
+      })
+    }else {
+      localStorage.getItem('cart')?.split(',').map((p) => {
+        if(p == product._id) {
+          setExistInCart(true)
+          setCount((per) => per+1)
         }
       })
     }
+  }, [])
+ 
+  let countOfProduct = 1
+  const addToCart = () => {
+      if (user.cart == undefined) {
+          let myCart = localStorage.getItem('cart')?.split(',')
+          myCart.push(product._id)
+          localStorage.setItem('cart', mycart)
+      } else {
+          let myCart = [...user.cart]
+          for (let product of myCart) {
+              if (product == product._id) {
+                  countOfProduct++;
+              }
+          }
 
-  }, [existInList, existInCart, user])
+          editCart({ id: product._id, count: countOfProduct }, (data, err) => {
+              countOfProduct++;
+          })
+      }
+  }
 
   return (
     <>
@@ -121,8 +118,8 @@ function ProductBody({ product }) {
               </Box>
             </Box>
             <StyledPaper elevation={3} >
-              <Stack height="100%" p="15px">
-                <Box height="90%" textAlign="center">
+              <Stack height="100%" p="15px" position="relative">
+                <Box height="90%" textAlign="center" >
                   {product.discount > 0 ? (
                     <>
                       <Typography variant='h5' className="priceWithDiscount">{setPoint(product.price.low)}</Typography>
@@ -138,34 +135,47 @@ function ProductBody({ product }) {
                     <Typography py="10px" variant='body1' display="flex" justifyContent="center" alignItems="center"> فقط {product.amount} عدد در انبار باقی مانده است <Clear sx={{ color: "danger.main" }} /></Typography>
                   )}
                   <Divider />
+
+                  <Stack direction="row" justifyContent="center" alignItems="center" mt="40px">
+                    <img src='/icon/support.svg' style={{width : "60px"}}/> <Typography variant="subtitle1" color={grey[500]}>پیشتیبانی 24 ساعته</Typography>
+                  </Stack>
+                  <Divider />
+                  <Stack direction="row" justifyContent="center" alignItems="center">
+                    <img src='/icon/days-return.svg' style={{width : "60px"}}/> <Typography variant="subtitle1" color={grey[500]}>هفت روز ضمانت بازگشت</Typography>
+                  </Stack>
+                  <Divider />
+                  <Stack direction="row" justifyContent="center" alignItems="center">
+                    <img src='/icon/express-delivery.svg' style={{width : "60px"}}/> <Typography variant="subtitle1" color={grey[500]}>امکان تحویل سریع</Typography>
+                  </Stack>
                 </Box>
 
-                <Box role="interacable" height="10%">
+                <Box role="interaction box" height="10%">
                   {existInCart ? (
                     <Stack direction={{ sm: "column", md: "row" }} gap="5px">
                       <Button variant="outlined" sx={{ width: { sm: "100%", md: "25%" } }} onClick={() => {
-                        dispatch({ type: 'increment' })
-                        changeCart("increment")
+                         setCount((p) => p+1)
                       }} ><Add /></Button>
-                      <Button variant="contained" sx={{ width: { sm: "100%", md: "50%" } }}>{amount.count}</Button>
+                      <Button variant="contained" sx={{ width: { sm: "100%", md: "50%" } }}>{count}</Button>
                       <Button variant="outlined" sx={{ width: { sm: "100%", md: "25%" } }} onClick={() => {
-                        dispatch({ type: 'decrement' })
-                        changeCart("decrement")
+                      setCount((p) => {
+                        if(p==1) {
+                          setExistInCart(false)
+                        }
+                        return p-1
+                      })
                       }} ><Remove /></Button>
                     </Stack>
                   ) : (
                     <Button variant="contained" sx={{ width: "100%", height: "100%" }} onClick={() => {
-                      addToCart(product._id, user, (res) => {
-                        toastNotif(res.message, res.status, 0)
-                        if (res.status >= 200 && res.status < 300) {
-                          setExistInCart(true)
-                        }
-                      })
+                       setCount((p) => p+1)
+                       setExistInCart(true)
                     }}>
                       افزودن به سبد خرید
                       <ShoppingCart />
                     </Button>
                   )}
+
+                  <DiscountBox><Typography variant="subtitle2" color="white">{product.discount}% تخفیف</Typography></DiscountBox>
                 </Box>
               </Stack>
             </StyledPaper>
@@ -175,13 +185,7 @@ function ProductBody({ product }) {
       </Stack >
       <FixedIcons>
         <Fab color="secondary" onClick={() => {
-          addToCart(product._id, user, (res) => {
-            toastNotif(res.message, res.status, 0)
-            if (res.status >= 200 && res.status < 300) {
-              setExistInCart(true)
-            }
-          })
-          dispatch({ type: 'increment' })
+          
         }}>
           {!existInCart ? <ShoppingCartOutlined /> : <ShoppingCart />}
         </Fab>
@@ -198,6 +202,7 @@ function ProductBody({ product }) {
               }
             }
           })
+        
         }} >
           {!existInList ? <FavoriteBorder /> : <Favorite />}
         </Fab>

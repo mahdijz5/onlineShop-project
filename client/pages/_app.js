@@ -8,15 +8,7 @@ import Loader from "../components/Loader";
 function MyApp({ Component, pageProps }) {
 	const [loading,setLoading] = useState(false)
 	
-	Router.events.on("routeChangeStart", (url) => {
-		NProgress.start();
-		// setLoading(true)
-	})
-	Router.events.on("routeChangeComplete", (url) => {
-		NProgress.done();
-		// setLoading(false)
-	})
-
+	
 	const getLayout = Component.getLayout || ((page) => page); 
 	return (
 		<>

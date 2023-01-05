@@ -27,15 +27,21 @@ const signIn = () => {
 		startTransition(async () => {
 			try {
 
-				const response = await login(formValues)
-				localStorage.setItem("accessToken", response.data.accessToken)
-				localStorage.setItem("refreshToken", response.data.refreshToken)
-				await mergeCart(formValues.email)
-				console.log(response.data)
-				// router.push("/dashboard")
+				login(formValues,async(response,err) => {
+					console.log(response,err)
+					if(err) {
+						toastNotif(err?.response?.data.message, err?.response?.data.status,0)
+
+					}else {
+						localStorage.setItem("accessToken", response.data.accessToken)
+						localStorage.setItem("refreshToken", response.data.refreshToken)
+						toastNotif(response.data.message, response.status, 0);
+						router.push("/dashboard")
+						await mergeCart(formValues.email)
+					}
+				})
 			} catch (error) {
 				console.log(error)
-				toastNotif(error.response.data.message, error.response.data.status,0)
 			}
 		})
 	}

@@ -22,8 +22,8 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
 
     useEffect(() => {
         setProducts(getAllOfProducts)
-        if (router.query != {} && router.query.category != undefined && router.query.category != '') {
-            setSelectedCategories(router.query.category.split(','))
+        if (router.query != {} && router.query.categories != undefined && router.query.categories != '') {
+            setSelectedCategories(router.query.categories.split(','))
         }
     }, [])
 
@@ -32,7 +32,7 @@ const viewProducts = ({ products: getAllOfProducts, categories, productPerPage, 
             const response = await changeAmountOfProduct(value,id)
             toastNotif(response.data.message, response.status, 0);
             if(response.status==200) {
-                const { data: product } = await getAllProducts(router.query.page || 1 , 10 , router.query.search || "" , router.query.category || "");
+                const { data: product } = await getAllProducts(router.query.page || 1 , 10 , router.query.search || "" , router.query.categories || "");
                 setProducts(product.products)
             }
         } catch (error) {
@@ -93,7 +93,7 @@ export const getServerSideProps = async (context) => {
 
     try {
         //getAllProducts(Page | limit | searchQuery | category)
-        const { data: product } = await getAllProducts(context.query.page || 1 , 10 , context.query.search || "" , context.query.category || "");
+        const { data: product } = await getAllProducts(context.query.page || 1 , 10 , context.query.search || "" , context.query.categories || "");
 
         products= product.products
         numberOfProducts= product.numberOfItems

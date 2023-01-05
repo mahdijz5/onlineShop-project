@@ -2,14 +2,15 @@ const jwt = require('jsonwebtoken');
 const Admin = require('../models/admins');
 
 exports.auth = async (req, res, next) => {
-    console.log(req.get("Authorization"))
-    const token = req.get("Authorization").split(' ')[1]
+ 
+    const token = req.get("Authorization") ? req.get("Authorization").split(' ')[1] : false
     try {
         if (!token) {
             res.status(401).json({"message": "مجوز کافی ندارید"})
         } else {
             jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
                 if (err) {
+                    console.log(err)
                     res.status(403).json({"message" : "مجوز کافی ندارید"})
                 } else {
                     req.userId = decodedToken.id

@@ -31,7 +31,7 @@ const SearchSidebar = ({ maxPrice }) => {
         setQuery((prev) => {
             return {
                 search: router.query.search || "",
-                categories: router.query.category != '' && router.query.category != undefined ? router.query.category.split(',') : [],
+                categories: router.query.categories != undefined ? router.query.categories : [],
                 brand: router.query.brand ? router.query.brand : "",
                 price: router.query.price && router.query.price != undefined ? router.query.price.split('_') : [0, maxPrice ? maxPrice : 900000000],
                 discount: router.query.discount && router.query.price != undefined ? router.query.discount.split('_') : [0, 100],
@@ -65,12 +65,12 @@ const SearchSidebar = ({ maxPrice }) => {
         const queries = {
             ...router.query,
             ...query,
-            price : `${query.price[0]}_${query.price[1]}`,
-            discount : `${query.discount[0]}_${query.discount[1]}`,
+            price: `${query.price[0]}_${query.price[1]}`,
+            discount: `${query.discount[0]}_${query.discount[1]}`,
         }
         router.push({
-            pathname : "/search/",
-            query : {
+            pathname: "/search/",
+            query: {
                 ...queries
             }
         })
@@ -78,12 +78,11 @@ const SearchSidebar = ({ maxPrice }) => {
 
     return (
         <>
-            <Box height="100%" width="20%" flexGrow={2}   >
-                <Box height="5%" display="flex" justifyContent={"space-between"}  pl="10px" alignItems="center" color="text.primary">
+            <Box height="100%" width="100%" flexGrow={2}   >
+                <Box height="60px" display="flex" justifyContent={"space-between"} pl="10px" alignItems="center" color="text.primary">
                     <Typography variant='h6' textAlign="center" color="text.primary">فیلتر ها </Typography>
-
-                    <Stack  borderLeft={`1px solid #e0e0e0`} p="7px" sx={{":hover" : {backgroundColor : "#e0e0e0"},cursor : "pointer"}} height="100%" alignItems={"center"} justifyContent="center" onClick={() => onsubmit()}>
-                            <Refresh sx={{ fontSize: "30px", color: "text.primary" }} />
+                    <Stack borderRight={`1px solid #e0e0e0`} p="7px" sx={{ ":hover": { backgroundColor: "#e0e0e0" }, cursor: "pointer" }} height="100%" alignItems={"center"} justifyContent="center" onClick={() => onsubmit()}>
+                        <Refresh sx={{ fontSize: "30px", color: "text.primary" }} />
                     </Stack>
                 </Box>
                 <Divider />
@@ -96,9 +95,9 @@ const SearchSidebar = ({ maxPrice }) => {
                 <Collapse in={openCategory} timeout="auto" unmountOnExit>
                     <Stack pl="20px" >
                         {categories && categories.length > 0 ? categories.map((c, index) => (
-                            <ListItemButton onClick={() => { handleChange({ target: { name: "categories", value: c.title } }) }} sx={{ ":hover": { color: 'primary.main' }, color: query.categories == c.title ? "primary.main" : "text.primary" }}>
+                            <ListItemButton key={index} onClick={() => { handleChange({ target: { name: "categories", value: c.title } }) }} sx={{ ":hover": { color: 'primary.main' }, color: query.categories == c.title ? "primary.main" : "text.primary" }}>
                                 <Box >
-                                    <Typography key={index}  >{c.title}</Typography>
+                                    <Typography   >{c.title}</Typography>
                                 </Box>
                             </ListItemButton>
                         )) : "دسته ای وجود ندارد"}
@@ -151,9 +150,9 @@ const SearchSidebar = ({ maxPrice }) => {
                 <Collapse in={openBrand} timeout="auto" unmountOnExit>
                     <Stack pl="20px" >
                         {brands && brands.length > 0 ? brands.map((b, index) => (
-                            <ListItemButton onClick={() => { handleChange({ target: { name: "brand", value: b.title } }) }} sx={{ ":hover": { color: 'primary.main' }, color: query.brand == b.title ? "primary.main" : "text.primary" }}>
+                            <ListItemButton key={index} onClick={() => { handleChange({ target: { name: "brand", value: b.title } }) }} sx={{ ":hover": { color: 'primary.main' }, color: query.brand == b.title ? "primary.main" : "text.primary" }}>
                                 <Box >
-                                    <Typography key={index}  >{b.title}</Typography>
+                                    <Typography   >{b.title}</Typography>
                                 </Box>
                             </ListItemButton>
                         )) : "برندی وجود ندارد"}

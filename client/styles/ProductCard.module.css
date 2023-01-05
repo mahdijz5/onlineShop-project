@@ -3,5 +3,6 @@
     bottom : 0;
     background-color : rgba(127,119,224,0.97);
     visibility : visible;
+    z-index: 3;
 }
  

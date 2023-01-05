@@ -52,7 +52,6 @@ export const editBrand = (id,title) => {
 //@route POST  Server_UrI/admin/dashboard/add-product
 export const createProduct = (data) => {
     const url = `${Server_UrI}/admin/dashboard/add-product`
-    console.log(data)
     return axios.post(url , data,{
         headers: {
             'Content-Type': 'multipart/form-data'
