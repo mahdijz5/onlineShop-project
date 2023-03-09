@@ -1,0 +1,1 @@
+exports.RESPONSE = require("../languages/english.json") 

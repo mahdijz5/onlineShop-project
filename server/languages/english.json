@@ -1,0 +1,27 @@
+{
+    "USER": {
+        "SIGNED_UP": "You'r acount has been created successfully",
+        "SIGNED_IN": "You logged in successfully",
+        "LOGE_OUT": "Email or password  is incorrect",
+        "LOGIN_FAILED": "You successfully logged out"
+    },
+    "ERROR": {
+        "UN_AUTHORIZED": "You don't have enough permision",
+        "NOT_FOUND": "Target not found",
+        "SERVER_SIDE": "Something went wrong",
+        "_ITS_REQUIRED": " is needed",
+        "_EXISTION": " already exist",
+        "REPETITIVE" : "it's repetitive"
+    },
+    "SUCCESS": {
+        "AUTHORIZED": "You'r authorized",
+        "UPDATED": "Target has been updated successfully",
+        "CREATED": "Target has been created successfully",
+        "DELETED": "Target has been deleted successfully",
+        "ADDED": "Target has been added successfully",
+        "_ADDED": " has been added successfully",
+        "_UPDATED": " has been updated successfully",
+        "_CREATED": " has been created successfully",
+        "_DELETED": " has been deleted successfully"
+    }
+}

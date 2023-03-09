@@ -3,12 +3,13 @@ const Brand = require("../models/brands")
 const Product = require("../models/products")
 const Comment = require("../models/comments")
 const _ = require("lodash")
+const { RESPONSE } = require("../languages/responseMsg")
 
 exports.getAllBrands = async (req, res, next) => {
     try {
         const brands = await Brand.find({})
         if (!brands) {
-            res.status(404).json({ "message": "هیچ برند ای وجود ندارد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
         res.status(200).json({ brands })
     } catch (error) {
@@ -20,7 +21,7 @@ exports.getAllCategories = async (req, res, next) => {
     try {
         const categories = await Category.find({})
         if (!categories) {
-            res.status(404).json({ "message": "هیچ دسته ای وجود ندارد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
         res.status(200).json({ categories })
     } catch (error) {
@@ -35,7 +36,7 @@ exports.getProduct = async (req, res, next) => {
     const id = req.params.id
     try {
         const product = await Product.findOne({ _id: id }).populate('categories').populate('brand')
-        if (!product) { res.status(404).json({ "message": "محصول مورد نظر یافت نشد" }) }
+        if (!product) { res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND }) }
         res.status(200).json({ product })
     } catch (error) {
         next(error)
@@ -111,7 +112,7 @@ exports.getAllProducts = async (req, res, next) => {
         //send Products
         const sendData = (products, numberOfItems) => {
             if (!products || products.length == 0) {
-                res.status(404).json({ "message": "محصولی وجود ندارد", products: [] })
+                res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND, products: [] })
             } else {
                 res.status(200).json({
                     products,
@@ -195,7 +196,7 @@ exports.sendProductComment = async (req, res,next) => {
     try {
         const product = await Product.findOne({ _id: productId })
         if(!product) {
-            res.status(404).json({ "message": "محصول مورد نظر یافت نشد"})
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
 
         await Comment.commentValidation({...req.body}).catch((error) => {
@@ -210,7 +211,7 @@ exports.sendProductComment = async (req, res,next) => {
             product : product.id,
             author : userId,
         })
-        res.status(201).json({"message": "نظر شما با موفقیت ثبت شد"})
+        res.status(201).json({"message":  "You'r comment" +RESPONSE.SUCCESS._ADDED})
 
     } catch (error) {
         console.log(error)

@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const _ = require('lodash')
 
 const jwt = require('jsonwebtoken');
+const { RESPONSE } = require("../languages/responseMsg");
 
 exports.signUp = async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -13,14 +14,14 @@ exports.signUp = async (req, res, next) => {
         const existedEmail = await User.findOne({ email })
         
         if (existedEmail) {
-            res.status(422).json({ "message": "این ایمیل وجود دارد." })
+            res.status(422).json({ "message": "This email" + RESPONSE.ERROR._EXISTION })
         } else {
             await User.create({
                 name,
                 email,
                 password,
             })
-            res.status(201).json({ "message": "شما با موفقیت ثبت نام شدید" })
+            res.status(201).json({ "message": RESPONSE.USER.SIGNED_IN })
         }
     } catch (error) {
         console.log(error)
@@ -35,12 +36,12 @@ exports.signIn = async (req, res, next) => {
     try {
         const user = await User.findOne({ email })
         if (!user) {
-            res.status(404).json({ "message": "کاربری با این ایمیل وجود ندارد." })
+            res.status(404).json({ "message": RESPONSE.USER.LOGIN_FAILED})
         }
         
         const checkPass = await bcrypt.compare(password, user.password)
         if (!checkPass) {
-            res.status(422).json({ "message": "ایمیل یا رمز عبور اشتباه است." })
+            res.status(422).json({ "message": RESPONSE.USER.LOGIN_FAILED})
         } else {
             const accessToken = generateAccessToken({
                 user: {
@@ -79,14 +80,14 @@ exports.auth = (req, res, next) => {
     const token = authHeader.split(" ")[1]
     
     if (!token) {
-        res.status(401).json({ "message": "شما مجوز کافی ندارید" })
+        res.status(401).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED })
     } else {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
             if (err) {
-                res.status(403).json({ "message": "شما مجوز کافی ندارید" })
+                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED })
             } else {
                 req.userId = decodedToken.id
-                res.status(200).json({ "message": "شما مجاز هستید" });
+                res.status(200).json({ "message": RESPONSE.SUCCESS.AUTHORIZED});
             }
         })
     }
@@ -101,12 +102,12 @@ exports.refreshToken = async (req, res, next) => {
         const tokenIsExist = await RefreshToken.findOne({ token })
 
         if (!token || !tokenIsExist) {
-            res.status(401).json({ "message": "شما مجوز کافی ندارید" })
+            res.status(401).json({ "message":RESPONSE.ERROR.UN_AUTHORIZED})
             
         } else {
             jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, {user}) => {
                 if (err) {
-                    res.status(403).json({ "message": "شما مجوز کافی ندارید" })
+                    res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED })
                 } else {
                     const accessToken = generateAccessToken({
                         user: {
@@ -141,10 +142,10 @@ exports.logout = async (req, res, next) => {
     try {
         const refreshToken = await RefreshToken.findOne({ token })
         if (!refreshToken) {
-            res.status(404).json({ "message": "توکن پیدا نشد" })
+            res.status(404).json({ "message":RESPONSE.ERROR.NOT_FOUND })
         }
         await refreshToken.remove()
-        res.status(200).json({ "message": "you successfully logged out" })
+        res.status(200).json({ "message": RESPONSE.USER.LOGE_OUT})
     } catch (error) {
         next(error)
     }

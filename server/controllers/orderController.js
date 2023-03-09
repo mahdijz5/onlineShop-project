@@ -3,6 +3,7 @@ const User = require('../models/users')
 const Product = require('../models/products')
 const jwt = require('jsonwebtoken')
 const _ = require("lodash")
+const { RESPONSE } = require('../languages/responseMsg')
 
 exports.createOrder = async (req, res, next) => {
     const token = req.get('Authorization')?.split(' ')[1]
@@ -13,17 +14,17 @@ exports.createOrder = async (req, res, next) => {
     let discount = 0;
     try {
         if (productsList.length <= 0) {
-            res.status(404).json({ "message": "سبد خرید شما خالی است" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, { user }) => {
             if (err) {
-                res.status(403).json({ message: "شما مجوز این کار را ندارید" })
+                res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
             }
             userID = user.userId
         })
         const user = await User.findOne({ _id: userID })
         if (user.address === "" || user.address == undefined || user.phoneNumber === "" || user.phoneNumber == undefined) {
-            res.status(400).json({ message: "ادرس خود در اطلاعات شخصی وارد کنید" })
+            res.status(400).json({ message: "You'r phone number and address are needed" })
         }
 
         for (const id of productsList) {
@@ -48,7 +49,7 @@ exports.createOrder = async (req, res, next) => {
 
         user.cart = []
         await user.save()
-        res.status(200).json({ "message": "سفارش شما ثبت شد" })
+        res.status(201).json({ "message": "You'r order"+RESPONSE.SUCCESS._CREATED })
     } catch (err) {
         next(err)
     }
@@ -62,7 +63,7 @@ exports.getOrders = async (req, res, next) => {
     try {
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, { user }) => {
             if (err) {
-                res.status(403).json({ message: "مجوز کافی ندارید" })
+                res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
             }
             id = user.userId;
         })

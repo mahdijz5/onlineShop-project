@@ -5,20 +5,21 @@ const _ = require("lodash")
 const appRoot = require("app-root-path");
 const jwt = require('jsonwebtoken');
 
-const { fileUpload } = require("../helpers/Fileupload");
+const { fileUpload } = require("../helpers/fileUpload");
 const fs = require("fs");
+const { RESPONSE } = require("../languages/responseMsg");
 
 exports.getSingleUser = async (req, res, next) => {
     const token = req.get('Authorization').split(' ')[1]
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decodedToken) => {
         if (err) {
-            res.status(403).json({ message: "شما مجوز ندارید" })
+            res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
         }
 
         try {
             const user = await User.findOne({ email: decodedToken.user.email }).populate('cart').populate('list')
             if (!user) {
-                res.status(404).json({ message: "کاربر پیدا نشد" })
+                res.status(404).json({ message: RESPONSE.ERROR.NOT_FOUND })
             }
             res.status(200).json({ user: user })
 
@@ -26,8 +27,6 @@ exports.getSingleUser = async (req, res, next) => {
             next(err)
         }
     })
-
-
 }
 
 exports.editCart = async (req, res, next) => {
@@ -36,13 +35,13 @@ exports.editCart = async (req, res, next) => {
     const productId = req.body.product
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, {user}) => {
         if (err) {
-            res.status(403).json({ message: "شما مجوز ندارید" })
+            res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
         }
 
         try {
             const singleUser = await User.findOne({ id: user._id })
             if (!singleUser) {
-                res.status(404).json({ message: "کاربر پیدا نشد" })
+                res.status(404).json({ message: RESPONSE.ERROR.NOT_FOUND })
             }
             let  cart = [...singleUser.cart]
 
@@ -54,7 +53,7 @@ exports.editCart = async (req, res, next) => {
             }
             singleUser.cart = cart;
             await singleUser.save()
-            res.status(200).json({"message" : "ُسبد خرید ویرایش شد" })
+            res.status(200).json({"message" : RESPONSE.SUCCESS.UPDATED })
 
         } catch (err) {
             next(err)
@@ -73,7 +72,7 @@ exports.addToList = async (req, res, next) => {
         const user = await User.findOne({ id: req.params.id }).populate('list')
         const product = await Product.findOne({ _id: singleProduct })
         if (!product) {
-            res.status(404).json({ message: "محصول پیدا نشد" })
+            res.status(404).json({ message: RESPONSE.ERROR.NOT_FOUND })
 
         }
         user.list.map(i => {
@@ -87,15 +86,15 @@ exports.addToList = async (req, res, next) => {
             if (index > -1) {
                 user.list.splice(index, 1)
                 await user.save()
-                res.status(200).json({ message: "محصول با موفقیت از لیست علاقمندی حذف شد", action: "remove" })
+                res.status(200).json({ message:  `Product ${RESPONSE.SUCCESS._ADDED} from you'r favorite list`, action: "remove" })
             } else {
-                res.status(404).json({ message: "محصول پیدا نشد" })
+                res.status(404).json({ message: RESPONSE.ERROR.NOT_FOUND})
             }
 
         } else {
             user.list.push(singleProduct)
             await user.save()
-            res.status(200).json({ "message": "محصول با موفقیت به لیست علاقمندی اضافه شد", action: "add" })
+            res.status(200).json({ "message": `Product ${RESPONSE.SUCCESS._ADDED} to you'r favorite list`, action: "add" })
         }
     } catch (error) {
         next(error)
@@ -109,7 +108,7 @@ exports.mergeCart = async (req, res, next) => {
     try {
         const user = await User.findOne({ email })
         if (!user) {
-            return res.status(404).json({ "message": "کاربر پیدا نشد" })
+            return res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
         user.cart.map(c => {
             userCart.push(c.toString())
@@ -125,7 +124,7 @@ exports.mergeCart = async (req, res, next) => {
             })
 
         })
-        res.status(200).json({ message: "کالا ها با موفقیت به سبد خرید اضافه شدند" })
+        res.status(200).json({ message: "Products"+RESPONSE.SUCCESS._ADDED })
 
     } catch (error) {
         next(error)
@@ -139,7 +138,7 @@ exports.getCart = async (req, res, next) => {
     let counts = {}
     try {
         if (ids.length <= 0) {
-            return res.status(404).json({ "message": "محصولی وجود ندارد", "products": [] })
+            return res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND, "products": [] })
         }
         ids.map((i) => { counts[i] = (counts[i] || 0) + 1; });
         for (const id of _.union(ids)) {
@@ -165,7 +164,7 @@ exports.getComments = async (req, res, next) => {
     try {
         const user = await User.findOne({ id: userId })
         if (!user) {
-            res.status(404).json({ "message": "کاربر پیدا نشد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND })
         }
         const comments = await Comment.find({ author: user.id }).populate('author').populate('product')
 
@@ -181,14 +180,14 @@ exports.removeComment = async (req, res, next) => {
     try {
         const comment = await Comment.findOne({ _id: id })
         if (!comment) {
-            res.status(404).json({ "message": "دیدگاه پیدا نشد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decodedToken) => {
             if (comment._author != decodedToken.user._id) {
-                res.status(403).json({ message: "شما مجوز این کار را ندارید" })
+                res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
             } else {
                 await comment.remove()
-                res.status(200).json({ message: "نظر شما با موفقیت حذف شد" })
+                res.status(200).json({ message:   "You'r comment"+RESPONSE.SUCCESS._DELETED })
             }
         })
     } catch (error) {
@@ -203,7 +202,7 @@ exports.editComment = async (req, res, next) => {
     try {
         const comment = await Comment.findOne({ _id: commentId })
         if (!comment) {
-            res.status(404).json({ "message": "کامنت مورد نظر یافت نشد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND })
         }
 
         await Comment.commentValidation({ ...req.body }).catch((error) => {
@@ -214,14 +213,14 @@ exports.editComment = async (req, res, next) => {
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
             if (comment._author != decodedToken.user._id) {
-                res.status(403).json({ message: "شما مجوز این کار را ندارید" })
+                res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED})
             }
         })
 
         comment.rate = rate
         comment.text = text,
             await comment.save()
-        res.status(201).json({ "message": "نظر شما با موفقیت ثبت شد" })
+        res.status(201).json({ "message": "Comment"+RESPONSE.SUCCESS._UPDATED})
 
     } catch (error) {
         console.log(error)
@@ -240,7 +239,7 @@ exports.editUser = async (req, res, next) => {
         const user = await User.findOne({ id: id })
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
             if (user._id != decodedToken.user.userId) {
-                res.status(403).json({ "message": "شما مجوز این کار را ندارید" })
+                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED})
             }
         })
         if (!req.files) {
@@ -253,7 +252,7 @@ exports.editUser = async (req, res, next) => {
         } else {
             fileUpload(req.files, process.env.PROFILE_ADDRESS, async (filesList, filesName, path, err) => {
                 if (err) {
-                    res.status(500).json({ "message": "مشکلی پیش آمده است" })
+                    res.status(500).json({ "message": RESPONSE.ERROR.SERVER_SIDE})
                 } else {
                     filesList.map((thumbnail) => {
                         User.userValidation({ ...req.body, thumbnail, password: "123456", confirmPassword: "123456" }).catch((error) => {
@@ -278,7 +277,7 @@ exports.editUser = async (req, res, next) => {
         user.profileImg = filesNameList ? filesNameList[0] : user.profileImg
         await user.save()
         console.log('sadas')
-        res.status(201).json({ "message": "اطلاعات شخصی با موفقیت تغییر یافت" })
+        res.status(201).json({ "message":  "Personal info"+RESPONSE.SUCCESS._UPDATED})
     } catch (error) {
         next(error)
     }

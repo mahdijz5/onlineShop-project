@@ -10,7 +10,8 @@ const short = require('short-uuid');
 const appRoot = require("app-root-path");
 
 const fs = require("fs");
-const { fileUpload } = require("../helpers/Fileupload");
+const { fileUpload } = require("../helpers/fileUpload");
+const { RESPONSE } = require("../languages/responseMsg")
 
 exports.AdminLogin = async (req, res, next) => {
     const { email, password } = req.body
@@ -18,12 +19,12 @@ exports.AdminLogin = async (req, res, next) => {
         try {
             const user = await Admin.findOne({ email })
             if (!user) {
-                res.status(404).json({ "message": " کاربری با این ایمیل وجود ندارد." })
+                res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
             }
 
             const checkPass = await bcrypt.compare(password, user.password)
             if (!checkPass) {
-                res.status(422).json({ "message": "ایمیل یا رمز عبور اشتباه است." })
+                res.status(422).json({ "message": RESPONSE.USER.LOGIN_FAILED })
             } else {
                 const token = jwt.sign({
                     user: {
@@ -52,19 +53,19 @@ exports.adminAuth = (req, res, next) => {
     const token = authHeader.split(" ")[1]
 
     if (!token) {
-        res.status(401).json({ "message": "شما مجوز کافی ندارید" })
+        res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED })
     } else {
         jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if (err) {
-                res.status(402).json({ "message": "شما مجوز کافی ندارید" })
+                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED})
             } else {
                 try {
                     const admin = await Admin.findOne({ email: decodedToken.email })
                     if (!admin || _.isUndefined(decodedToken.user.Access)) {
-                        res.status(403).json({ "message": "شما مجوز کافی ندارید" })
+                        res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED })
                     } else {
                         req.userId = decodedToken.id
-                        res.status(200).json({ "message": "شما مجاز هستید" });
+                        res.status(200).json({ "message": RESPONSE.SUCCESS.AUTHORIZED });
                     }
                 } catch (error) {
                     next(error)
@@ -84,12 +85,12 @@ exports.createCategory = async (req, res, next) => {
     try {
         const category = await Category.findOne({ title });
         if (category) {
-            res.status(406).json({ "message": "این دسته تکراری است" })
+            res.status(409).json({ "message": RESPONSE.ERROR.REPETITIVE})
         } else {
             await Category.create({
                 title,
             })
-            res.status(201).json({ "message": "دسته با موفقیت ساخته شد" })
+            res.status(201).json({ "message": RESPONSE.SUCCESS.CREATED })
         }
     } catch (error) {
         next(error)
@@ -103,11 +104,11 @@ exports.editCategory = async (req, res, next) => {
         const id = req.params.id
         const category = await Category.findOne({ _id: id });
         if (!category) {
-            res.status(404).json({ "message": "این دسته وجود ندارد" })
+            res.status(404).json({ "message":RESPONSE.ERROR.NOT_FOUND})
         } else {
             category.title = title;
             await category.save()
-            res.status(200).json({ "message": "دسته با موفقیت ویرایش شد" })
+            res.status(200).json({ "message": RESPONSE.SUCCESS.UPDATED })
         }
     } catch (error) {
         next(error)
@@ -121,7 +122,7 @@ exports.removeCategory = (req, res, next) => {
         try {
             const category = await Category.findOne({ _id: id })
             if (!category) {
-                res.status(404).json({ "message": "این دسته وجود ندارد" })
+                res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND })
                 next()
             }
             await category.remove()
@@ -129,7 +130,7 @@ exports.removeCategory = (req, res, next) => {
             next(error)
         }
     })
-    res.status(200).json({ "message": "دسته با موفقیت حذف شد" })
+    res.status(200).json({ "message": RESPONSE.SUCCESS.DELETED })
 }
 
 //* brand_ >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -140,12 +141,12 @@ exports.createBrand = async (req, res, next) => {
     try {
         const brand = await Brand.findOne({ title });
         if (brand) {
-            res.status(406).json({ "message": "این برند تکراری است" })
+            res.status(409).json({ "message": RESPONSE.ERROR.REPETITIVE})
         } else {
             await Brand.create({
                 title,
             })
-            res.status(201).json({ "message": "برند با موفقیت ساخته شد" })
+            res.status(201).json({ "message": RESPONSE.SUCCESS.CREATED })
         }
     } catch (error) {
         next(error)
@@ -159,11 +160,11 @@ exports.editBrand = async (req, res, next) => {
         const id = req.params.id
         const brand = await Brand.findOne({ _id: id });
         if (!brand) {
-            res.status(404).json({ "message": "این برند وجود ندارد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND })
         } else {
             brand.title = title;
             await brand.save()
-            res.status(200).json({ "message": "برند با موفقیت ویرایش شد" })
+            res.status(200).json({ "message": "Brand "+RESPONSE.SUCCESS._UPDATED })
         }
     } catch (error) {
         next(error)
@@ -177,7 +178,7 @@ exports.removeBrand = (req, res, next) => {
         try {
             const brand = await Brand.findOne({ _id: id })
             if (!brand) {
-                res.status(404).json({ "message": "این برند وجود ندارد" })
+                res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
                 next()
             }
             await brand.remove()
@@ -185,7 +186,7 @@ exports.removeBrand = (req, res, next) => {
             next(error);
         }
     })
-    res.status(200).json({ "message": "برند با موفقیت حذف شد" })
+    res.status(200).json({ "message": RESPONSE.SUCCESS.CREATED })
 }
 
 //* product >>>>>>>>>>>>>>>>>>>>>>>>
@@ -193,7 +194,7 @@ exports.removeBrand = (req, res, next) => {
 
 exports.addProduct = async (req, res, next) => {
     if (!req.files) {
-        return res.status(400).json({ "message": "لطفا تصویری را برای محصول اپلود کنید" })
+        return res.status(400).json({ "message": "Product's thumbnail"+RESPONSE.ERROR._ITS_REQUIRED })
     }
     let filesNameList = []
     const allCategories = []
@@ -217,7 +218,7 @@ exports.addProduct = async (req, res, next) => {
 
         //* Get brand
         if (!brandTitle || brandTitle == '') {
-            return res.status(400).json({ "message": "لطفا برند محصول را وارد کنید" })
+            return res.status(400).json({ "message": "Brand title"+RESPONSE.ERROR._ITS_REQUIRED})
         }
         const brand = await Brand.findOne({ title: brandTitle })
 
@@ -227,7 +228,7 @@ exports.addProduct = async (req, res, next) => {
             for (const c of everyCategory) {
                 const category = await Category.findOne({ title: c })
                 if (!category) {
-                    res.status(400).json({ "message": "لطفا مقدار دسته را تغییر ندهید" })
+                    res.status(400).json({ "message": RESPONSE.ERROR.SERVER_SIDE })
                 } else {
                     allCategories.push(category.id)
                 }
@@ -245,7 +246,7 @@ exports.addProduct = async (req, res, next) => {
             categories: allCategories,
         })
 
-        res.status(201).json({ "message": "محصول با موفقیت ساخته شد." })
+        res.status(201).json({ "message": RESPONSE.SUCCESS.CREATEDs })
     } catch (error) {
         console.error(error)
         next(error)
@@ -260,7 +261,7 @@ exports.removeSelectedProducts = async (req, res, next) => {
         try {
             const product = await Product.findOne({ _id: id })
             if (!product) {
-                res.status(404).json({ "message": "محصول مورد نظر یافت نشد" })
+                res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
             }
             product.thumbnail.map((thumbnail) => {
                 fs.unlink(`${appRoot}${process.env.THUMBNAIL_ADDRESS}${thumbnail}`, (err) => {
@@ -273,7 +274,7 @@ exports.removeSelectedProducts = async (req, res, next) => {
             next(error)
         }
     })
-    res.status(200).json({ "message": "محصولات با موفقیت حذف شدند" })
+    res.status(200).json({ "message": RESPONSE.SUCCESS.DELETED })
 }
 
 exports.editProduct = async (req, res, next) => {
@@ -285,7 +286,7 @@ exports.editProduct = async (req, res, next) => {
     try {
         const product = await Product.findOne({ _id: id })
         if (!product) {
-            res.status(400).json({ "message": "محصول مورد نظر یافت نشد" })
+            res.status(404).json({ "message": RESPONSE.ERROR.NOT_FOUND})
         }
 
         if (req.files !== null) {
@@ -310,7 +311,7 @@ exports.editProduct = async (req, res, next) => {
 
         //* Get brand
         if (!brandTitle || brandTitle == '') {
-            return res.status(400).json({ "message": "لطفا برند محصول را وارد کنید" })
+            return res.status(400).json({ "message":  "Brand title"+RESPONSE.ERROR._ITS_REQUIRED})
         }
         const brand = await Brand.findOne({ title: brandTitle })
 
@@ -320,7 +321,7 @@ exports.editProduct = async (req, res, next) => {
             for (const c of everyCategory) {
                 const category = await Category.findOne({ title: c })
                 if (!category) {
-                    res.status(400).json({ "message": "لطفا مقدار دسته را تغییر ندهید" })
+                    res.status(400).json({ "message": RESPONSE.ERROR.SERVER_SIDE })
                 } else {
                     allCategories.push(category.id)
                 }
@@ -339,7 +340,7 @@ exports.editProduct = async (req, res, next) => {
         await product.save()
 
 
-        res.status(201).json({ "message": "محصول با موفقیت ویرایش شد." })
+        res.status(201).json({ "message": RESPONSE.SUCCESS.UPDATED })
     } catch (error) {
         next(error)
     }
@@ -361,7 +362,7 @@ exports.changeAmount = async (req, res, next) => {
         const product = await Product.findOne({ _id: id })
         product.amount = value == "" ? 0 : value;
         await product.save()
-        res.status(200).json({ "message": "مقدار محصول با موفقیت تغییر کرد" })
+        res.status(200).json({ "message":"Product's amount"+RESPONSE.SUCCESS._UPDATED})
     } catch (error) {
         next(error)
     }
