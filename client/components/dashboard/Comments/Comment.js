@@ -7,7 +7,7 @@ import { convertDate, toastNotif } from '../../../helpers/tools'
 import { editComment, removeComment } from '../../../services/user'
 import ProductCard from '../../Product/ProductCard'
 import { General } from '../../../context/context'
-import EditComment from './editComment'
+import EditComment from './EditComment'
 
 const StyledBox = styled(Stack)(({ theme }) => ({
     border: `1px solid ${grey[300]} `,

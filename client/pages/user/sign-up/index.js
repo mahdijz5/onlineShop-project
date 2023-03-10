@@ -32,8 +32,8 @@ const signUp = () => {
 					try {
 						const response = await axios.post(
 							process.env.SERVER_URI
-								? `${process.env.SERVER_URI}/user/sign-up`
-								: `http://localhost:3001/user/sign-up`,
+								? `${process.env.SERVER_URI}/auth/sign-up`
+								: `http://localhost:3001/auth/sign-up`,
 							values
 						);
 						toastNotif(response.data.message, response.status , 0);

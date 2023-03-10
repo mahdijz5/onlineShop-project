@@ -42,3 +42,19 @@ export const convertDate = (date) => {
 export const truncate = (string,max) => {
     return textTruncate(string, max)
 }
+
+export const isEmpty = (value) => {
+   if (value === null) {
+        return true;
+    } else if (typeof value !== 'number' && value === '') {
+        return true;
+    } else if (typeof value === 'undefined' || value === undefined) {
+        return true;
+    } else if (value !== null && typeof value === 'object' && !Object.keys(value).length) {
+        return true;
+    }else if ( typeof value === 'object' && value.length <=0)  {
+        return true;
+    }  else {
+        return false;
+    }
+}

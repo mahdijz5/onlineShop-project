@@ -11,7 +11,7 @@ import { Add, Search } from "@mui/icons-material";
 import SearchPanel from "../../../../components/Search/SearchPanel";
 import { getAllBrands, getAllCategories, getAllProducts } from "../../../../services/product";
 import AppPagination from "../../../../components/ui/Pagination";
-import AddProduct from "../../../../components/Admin/addProduct";
+import AddProduct from "../../../../components/Admin/AddProduct";
 import { createProduct, editProduct } from "../../../../services/adminDashboard";
 import { toastNotif } from "../../../../helpers/tools";
 import EditProduct from "../../../../components/Admin/EditProduct";

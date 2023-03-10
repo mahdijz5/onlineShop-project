@@ -3,7 +3,7 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider, ThemeProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { theme } from "../components/ui/theme"
 import { General } from "../context/context";
@@ -27,7 +27,7 @@ const MainLayout = ({ children }) => {
     })
 
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         getUser((data, err) => {
             if (!err) {
                 let userCart = []

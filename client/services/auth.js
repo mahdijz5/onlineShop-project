@@ -2,7 +2,7 @@ import axios from "axios";
 import { authorization } from "../helpers/authorization";
 import authInstance from "./authInstance";
 
-const Server_UrI = process.env.AUTH_SERVER_URI || "http://localhost:3001/auth";
+const Server_UrI = "http://localhost:3001/auth";
 
 axios.defaults = {
 	withCredentials: true

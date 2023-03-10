@@ -41,9 +41,9 @@ const SearchBody = ({ productPerPage }) => {
                 {getProducts.length > 0 ?
                     getProducts.map((product, index) => {
                         if (getProducts.length == index + 1) {
-                            return (<ProductCard product={product} solid={true} key={index}><div ref={lastProductRef}></div></ProductCard>)
+                            return (<ProductCard product={product} solid padding key={index}><div ref={lastProductRef}></div></ProductCard>)
                         } else {
-                            return <ProductCard product={product} solid={true} key={index} />
+                            return <ProductCard product={product} solid key={index} />
                         }
                     })
                     : (
@@ -51,10 +51,10 @@ const SearchBody = ({ productPerPage }) => {
                     )}
                 {loading ? (
                     <>
-                        <ProductCardSkeleton solid={true} />
-                        <ProductCardSkeleton solid={true} />
-                        <ProductCardSkeleton solid={true} />
-                        <ProductCardSkeleton solid={true} />
+                        <ProductCardSkeleton solid />
+                        <ProductCardSkeleton solid />
+                        <ProductCardSkeleton solid />
+                        <ProductCardSkeleton solid />
                     </>
                 ) : null}
             </StyledBox>

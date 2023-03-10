@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import { Box, Paper } from '@mui/material'
 import React from 'react'
 
-import SuggestionSwiper from "../components/swipers/SuggestionSwiper"
+import SuggestionSwiper from "../components/Swipers/SuggestionSwiper"
 
 const StyledBox = styled(Paper)(({ theme }) => ({
     position: "relative",

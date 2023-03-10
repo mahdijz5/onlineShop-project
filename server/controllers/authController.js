@@ -1,8 +1,9 @@
 const User = require("../models/users")
 const Product = require("../models/products")
-const RefreshToken = require("../models/refreshToken")
 const bcrypt = require('bcryptjs');
 const _ = require('lodash')
+const RefreshToken = require("../models/refreshToken")
+
 
 const jwt = require('jsonwebtoken');
 const { RESPONSE } = require("../languages/responseMsg");
@@ -31,7 +32,6 @@ exports.signUp = async (req, res, next) => {
 
 exports.signIn = async (req, res, next) => {
     const { email, password } = req.body
-    console.log(21323)
     let productIsInCart = false
     try {
         const user = await User.findOne({ email })
@@ -46,19 +46,19 @@ exports.signIn = async (req, res, next) => {
             const accessToken = generateAccessToken({
                 user: {
                     email,
-                    userId: user._id,
+                    _id: user._id,
                     name: user.name,
                 }
             })
             const refreshToken = jwt.sign({
                 user: {
                     email,
-                    userId: user._id,
+                    _id: user._id,
                     name: user.name,
                 }
             }, process.env.REFRESH_TOKEN_SECRET)
 
-            await RefreshToken.create({
+ await RefreshToken.create({
                 token: refreshToken,
             })
 
@@ -97,7 +97,6 @@ exports.auth = (req, res, next) => {
 exports.refreshToken = async (req, res, next) => {
     const authHeader = req.get("Authorization")
     const token = authHeader.split(" ")[1]
-    console.log(token)
     try {
         const tokenIsExist = await RefreshToken.findOne({ token })
 
@@ -112,13 +111,13 @@ exports.refreshToken = async (req, res, next) => {
                     const accessToken = generateAccessToken({
                         user: {
                             email : user.email,
-                            userId: user.userId,
+                            _id: user.userId,
                             name: user.name
                         }
                     })
                     const refreshToken = jwt.sign({
                         user: {
-                            email : user.email,
+                            _id : user.email,
                             userId: user.userId,
                             name: user.name
                         }
@@ -137,19 +136,7 @@ exports.refreshToken = async (req, res, next) => {
 
 }
 
-exports.logout = async (req, res, next) => {
-    const token = req.get("Authorization").split(" ")[1]
-    try {
-        const refreshToken = await RefreshToken.findOne({ token })
-        if (!refreshToken) {
-            res.status(404).json({ "message":RESPONSE.ERROR.NOT_FOUND })
-        }
-        await refreshToken.remove()
-        res.status(200).json({ "message": RESPONSE.USER.LOGE_OUT})
-    } catch (error) {
-        next(error)
-    }
-}
+
 
 const generateAccessToken = (user) => {
     return accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {

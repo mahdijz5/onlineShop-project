@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "nodemon app",
     "devAuth": "nodemon authServer",
-    "client": "cd ../client && npm run dev",
-    "start": "concurrently \"npm run dev\" \"npm run devAuth\" \"npm run client\"",
-    "server": "concurrently \"npm run dev\" \"npm run devAuth\""
+    "client:dev": "cd ../client && npm run dev",
+    "client": "cd ../client && npm start",
+    "start:dev": "concurrently \"npm run dev\"  \"npm run client:dev\"",
+    "start": "concurrently \"node app\"  \"npm run client\"",
+    "server": "concurrently \"npm run dev\" "
   },
   "author": "",
   "license": "ISC",

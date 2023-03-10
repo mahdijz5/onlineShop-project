@@ -10,7 +10,7 @@ import Meta from '../components/Meta'
 
 
 const Home =({  categories, productPerPage, numberOfProducts, brands,latestProducts,popularProducts }) => {
-
+console.log(23123)
   const router = useRouter()
   return (
     <>

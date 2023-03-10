@@ -20,10 +20,4 @@ router.post("/auth",authController.auth)
 //@route POST /auth/refresh-token
 router.post("/refresh-token",authController.refreshToken)
 
-//@desc logout
-//@route POST /auth/logout
-router.post("/logout",authController.logout)
-
-
-
 module.exports = router;

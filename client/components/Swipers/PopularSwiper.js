@@ -11,12 +11,8 @@ import { Box } from "@mui/material";
 import DviderTitle from "../ui/DviderTitle";
 
 
-const PopularSwiper = ({ products: allProducts }) => {
-    const [products, setProducts] = useState([])
-    useEffect(() => {
-        setProducts(allProducts)
-    }, [])
-
+const PopularSwiper = ({ products }) => {
+  
     return (
         <>
             <Box>
@@ -29,7 +25,7 @@ const PopularSwiper = ({ products: allProducts }) => {
                     loop={false}
 
                 >
-                    {products.map((product, index) => (
+                    {products != undefined ?products.map((product, index) => (
                         <SwiperSlide
                             key={index}
                             style={{
@@ -38,7 +34,7 @@ const PopularSwiper = ({ products: allProducts }) => {
                         >
                             <ProductCard height={"370px"} product={product}/>
                         </SwiperSlide>
-                    ))}
+                    )) : null}
 
                 </Swiper>
             </Box>

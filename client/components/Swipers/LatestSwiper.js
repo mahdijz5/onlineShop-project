@@ -11,12 +11,8 @@ import DviderTitle from "../ui/DviderTitle";
 import { Box, Stack, Typography } from "@mui/material";
 
 
-const LatestSwiper = ({products: allProducts}) => {
-    const [products,setProducts] = useState([])
-    useEffect(() => {
-        setProducts(allProducts)
-    },[])
-
+const LatestSwiper = ({products}) => {
+ 
     return (
         <>
             <Box>
@@ -29,7 +25,7 @@ const LatestSwiper = ({products: allProducts}) => {
                     loop={false}
 
                 >
-                    {products.map((product, index) => (
+                    {products != undefined ? products.map((product, index) => (
                         <SwiperSlide
                             key={index}
                             style={{
@@ -38,7 +34,7 @@ const LatestSwiper = ({products: allProducts}) => {
                         >
                             <ProductCard height={"370px"}  product={product}/>
                         </SwiperSlide>
-                    ))}
+                    )) : null}
 
                 </Swiper>
             </Box>

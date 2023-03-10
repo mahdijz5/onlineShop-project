@@ -4,7 +4,7 @@ import ProductCard from '../ProductCard'
 import { General } from '../../../context/context'
 import { getCart } from "../../../services/user"
 import EmptyCart from "../../EmptyCart"
-import PurchaseCard from "./purchaseCard"
+// import PurchaseCard from "./purchaseCard"
 import { setPoint, toastNotif } from "../../../helpers/tools"
 import styled from "@emotion/styled"
 import { grey } from "@mui/material/colors"

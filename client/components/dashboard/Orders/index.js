@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { getOrders } from "../../../services/order";
-import Order from "./order";
+import Order from "./Order";
 import EmptyCart from '../../EmptyCart'
 import { Stack, Typography } from "@mui/material";
+import { isEmpty } from "../../../helpers/tools";
 
 const Orders = () => {
     const [orders, setOrders] = useState([])
 
     useEffect(() => {
         getOrders(({ data }, err) => {
-            setOrders(data.orders);
+            setOrders(isEmpty(data) ? []: data.orders  );
         })
     }, [])
     console.log(orders)

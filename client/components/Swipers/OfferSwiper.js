@@ -17,12 +17,8 @@ const StyledBox = styled(Box)(({theme}) => ({
         padding : "20px 15px"
 }))
 
-const OfferSwiper = ({products: allProducts}) => {
-    const [products,setProducts] = useState([])
-    useEffect(() => {
-        setProducts(allProducts)
-    },[])
-
+const OfferSwiper = ({products }) => {
+ 
     return (
         <>
             <StyledBox>
@@ -36,7 +32,7 @@ const OfferSwiper = ({products: allProducts}) => {
                     loop={false}
                     
                 >
-                    {products.map((product, index) => (
+                    {products != undefined ? products.map((product, index) => (
                         <SwiperSlide
                             key={index}
                             style={{
@@ -45,7 +41,7 @@ const OfferSwiper = ({products: allProducts}) => {
                         >
                             <ProductCard height={"370px"} product={product}/>
                         </SwiperSlide>
-                    ))}
+                    )) : null}
 
                 </Swiper>
             </StyledBox>

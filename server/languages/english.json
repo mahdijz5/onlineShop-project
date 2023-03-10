@@ -3,7 +3,7 @@
         "SIGNED_UP": "You'r acount has been created successfully",
         "SIGNED_IN": "You logged in successfully",
         "LOGE_OUT": "Email or password  is incorrect",
-        "LOGIN_FAILED": "You successfully logged out"
+        "LOGIN_FAILED": "Username or password is incorrect "
     },
     "ERROR": {
         "UN_AUTHORIZED": "You don't have enough permision",
