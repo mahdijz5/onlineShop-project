@@ -240,7 +240,7 @@ exports.editUser = async (req, res, next) => {
         const user = await User.findOne({ id: id })
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
             if (user._id != decodedToken.user._id) {
-                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED,sd : user._id,ds : decodedToken.user._id})
+                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED,sd : user._id,ds : decodedToken.user})
             }
         })
         if (!req.files) {

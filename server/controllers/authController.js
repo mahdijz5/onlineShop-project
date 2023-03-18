@@ -111,14 +111,14 @@ exports.refreshToken = async (req, res, next) => {
                     const accessToken = generateAccessToken({
                         user: {
                             email : user.email,
-                            _id: user.userId,
+                            _id: user._id,
                             name: user.name
                         }
                     })
                     const refreshToken = jwt.sign({
                         user: {
                             _id : user.email,
-                            userId: user.userId,
+                            userId: user._id,
                             name: user.name
                         }
                     }, process.env.REFRESH_TOKEN_SECRET)

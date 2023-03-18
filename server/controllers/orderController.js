@@ -20,7 +20,7 @@ exports.createOrder = async (req, res, next) => {
             if (err) {
                 res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
             }
-            userID = user.userId
+            userID = user._id
         })
         const user = await User.findOne({ _id: userID })
         if (user.address === "" || user.address == undefined || user.phoneNumber === "" || user.phoneNumber == undefined) {
