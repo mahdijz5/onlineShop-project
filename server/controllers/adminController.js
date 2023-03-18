@@ -36,7 +36,7 @@ exports.AdminLogin = async (req, res, next) => {
                 }, process.env.JWT_SECRET, {
                     expiresIn: 300
                 })
-                res.status(200).json({ token, userId: user.id.toString() })
+                res.status(200).json({ token, userId: user._id.toString() })
             }
 
 

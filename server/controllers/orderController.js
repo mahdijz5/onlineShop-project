@@ -65,7 +65,7 @@ exports.getOrders = async (req, res, next) => {
             if (err) {
                 res.status(403).json({ message: RESPONSE.ERROR.UN_AUTHORIZED })
             }
-            id = user.userId;
+            id = user._id;
         })
         const user = await User.findOne({ _id: id })
         const orders = await Order.find({ customer: user._id }).populate('products').populate('customer').sort({ createdAt: "desc" });

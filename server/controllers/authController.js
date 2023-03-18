@@ -86,7 +86,7 @@ exports.auth = (req, res, next) => {
             if (err) {
                 res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED })
             } else {
-                req.userId = decodedToken.id
+                req.userId = decodedToken.user._id
                 res.status(200).json({ "message": RESPONSE.SUCCESS.AUTHORIZED});
             }
         })
@@ -117,8 +117,8 @@ exports.refreshToken = async (req, res, next) => {
                     })
                     const refreshToken = jwt.sign({
                         user: {
-                            _id : user.email,
-                            userId: user._id,
+                            email : user.email,
+                            _id: user._id,
                             name: user.name
                         }
                     }, process.env.REFRESH_TOKEN_SECRET)
