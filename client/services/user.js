@@ -175,7 +175,6 @@ export const removeComment = async (id, callback) => {
 export const editUserData = async (data, id,callback) => {
 	const url = `${Server_UrI}/edit-data/${id}`
 	const token = localStorage?.getItem("accessToken");
-	console.log(data.values)
 	return authInstance.put(url, data, {
 		headers: {
 			'Content-Type': 'multipart/form-data',

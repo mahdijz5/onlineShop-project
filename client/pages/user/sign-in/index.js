@@ -30,7 +30,7 @@ const signIn = () => {
 				login(formValues,async(response,err) => {
 					console.log(response,err)
 					if(err) {
-						toastNotif(err?.response?.data.message, err?.response?.data.status,0)
+						toastNotif(err?.response?.data?.message, err?.response?.data?.status,0)
 
 					}else {
 						localStorage.setItem("accessToken", response.data.accessToken)

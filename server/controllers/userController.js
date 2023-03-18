@@ -18,6 +18,7 @@ exports.getSingleUser = async (req, res, next) => {
 
         try {
             const user = await User.findOne({ email: decodedToken.user.email }).populate('cart').populate('list')
+            console.log(user)
             if (!user) {
                 res.status(404).json({ message: RESPONSE.ERROR.NOT_FOUND })
             }
@@ -238,8 +239,8 @@ exports.editUser = async (req, res, next) => {
     try {
         const user = await User.findOne({ id: id })
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
-            if (user._id != decodedToken.user.userId) {
-                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED})
+            if (user._id != decodedToken.user._id) {
+                res.status(403).json({ "message": RESPONSE.ERROR.UN_AUTHORIZED,sd : user._id,ds : decodedToken.user._id})
             }
         })
         if (!req.files) {
@@ -256,15 +257,16 @@ exports.editUser = async (req, res, next) => {
                 } else {
                     filesList.map((thumbnail) => {
                         User.userValidation({ ...req.body, thumbnail, password: "123456", confirmPassword: "123456" }).catch((error) => {
-                            console.log(error);
                             if (error.errors && error.errors.length > 0) {
-                                res.status(400).json({ "message": error.errors[0] })
+                                // res.status(400).json({ "message": error.errors[0] })
                             }
                         })
                         filesNameList = filesName
-                        fs.unlink(`${appRoot}${process.env.PROFILE_ADDRESS}${user.profileImg}`, (err) => {
-                            if (err) next(err)
-                        })
+                        if(user.profileImg != "placeholder.png") {
+                            fs.unlink(`${appRoot}${process.env.PROFILE_ADDRESS}${user.profileImg}`, (err) => {
+                                if (err) next(err)
+                            })
+                        }
                     })
                 }
             })
